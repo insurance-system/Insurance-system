@@ -30,6 +30,7 @@ public class CustomerRepository {
 
     public String insertInterest(ArrayList<String> clientStr){
         String asd = "";
+        System.out.println(asd);
         for (String s : clientStr) asd += s + " ";
 //        return FileCRUD.insertOne(clientInterestFile, asd);
         return null;

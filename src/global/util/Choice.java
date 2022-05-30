@@ -18,7 +18,7 @@ public class Choice {
 
     public ArrayList<String> customerInitial() {
         System.out.println("고객님 안녕하세요. 회원가입을 하셨다면 로그인을 아직 회원이 아니라면 회원가입을 진행해주세요.");
-        System.out.println("1.로그인\n2.회원가입");
+        System.out.println("1.로그인\n 2.회원가입");
         System.out.println("ID: ");
         ArrayList<String> abc = new ArrayList<>();
         abc.add(scanner.next());
