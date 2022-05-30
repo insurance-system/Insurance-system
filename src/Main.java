@@ -18,6 +18,8 @@ public class Main {
                     "jdbc:mysql://umcdb.cuiea55gxaoy.ap-northeast-2.rds.amazonaws.com:3306/Insurance",
                     "admin",
                     "sojung210");
+            System.out.println("dd");
+
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
