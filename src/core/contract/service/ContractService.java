@@ -1,4 +1,4 @@
-package global.service;
+package core.contract.service;
 
 public class ContractService {
 

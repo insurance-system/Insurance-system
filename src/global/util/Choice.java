@@ -15,6 +15,14 @@ public class Choice {
         System.out.println("1.보험사 고객 \n2.사원\n3.종료");
         return scanner.nextInt();
     }
+
+    public int customerInitial(){
+        System.out.println("고객님 안녕하세요. 회원가입을 하셨다면 로그인을 아직 회원이 아니라면 회원가입을 진행해주세요.\n상담사 연결은 3번을 눌러주세요!");
+        System.out.println("1.로그인\n2.회원가입\n3.상담사 연결");
+        System.out.print("번호 입력:");
+        return scanner.nextInt();
+
+    }
 //
 //    public ArrayList<String> customerInitial() {
 //        System.out.println("고객님 안녕하세요. 회원가입을 하셨다면 로그인을 아직 회원이 아니라면 회원가입을 진행해주세요.");
@@ -60,5 +68,21 @@ public class Choice {
 
     public ArrayList<String> employeeInital() {
         return null;
+    }
+
+    public String getPassword() {
+        System.out.print("Password 입력:");
+        return scanner.next();
+    }
+
+    public String getCustomerId() {
+        System.out.print("ID 입력:");
+        return scanner.next();
+    }
+
+    public int customerEnter() {
+        System.out.println("1.보험급 납부내역 \n 2. 보험 관련 문의 \n 3.사고 처리 접수");
+        System.out.print("번호 입력:");
+        return scanner.nextInt();
     }
 }

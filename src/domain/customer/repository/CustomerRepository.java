@@ -9,9 +9,14 @@ import java.util.ArrayList;
 
 public class CustomerRepository {
 
-    private static final String clientFile = "client-informations";
-    //고객 관심사항 파일
-    private static final String clientInterestFile = "customer-advice";
+//    private static final String clientFile = "client-informations";
+//    //고객 관심사항 파일
+//    private static final String clientInterestFile = "customer-advice";
+//
+
+
+    public CustomerRepository() {
+    }
 
     public String insert(Customer customer){
 //        Statement statement = null;
@@ -80,6 +85,52 @@ public class CustomerRepository {
         String asd = "";
         for (String s : clientStr) asd += s + " ";
 //        return FileCRUD.insertOne(clientInterestFile, asd);
+        return null;
+    }
+
+    public Customer login(String id, String password) {
+        ResultSet rs = null;
+        try{
+            String sql = "select * from Customer where customerId = ? and password = ?;";
+            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setInt(1, Integer.parseInt(id));
+            st.setString(2,password);
+            rs = st.executeQuery();
+            if(rs.next()){
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getInt("customerId"));
+                customer.setName(rs.getString("name"));
+                customer.setAddress(rs.getString("email"));
+                customer.setPhoneNumber(rs.getString("phoneNumber"));
+                customer.setAddress(rs.getString("address"));
+                customer.setDetailAddress(rs.getString("detailAddress"));
+                customer.setZipcode(rs.getString("zipCode"));
+                customer.setKindOfJob(rs.getString("kindOfJob"));
+                customer.setPassword(rs.getString("password"));
+
+                System.out.println(customer.getCustomerId());
+                return customer;
+            }
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Connection sqlConnection(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            return conn;
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }
