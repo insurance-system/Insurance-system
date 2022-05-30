@@ -1,7 +1,7 @@
-package domain.employee;
+package domain.employee.entity;
 
 //CA = Compensation Appraise
-public class CaEmployee  extends Employee{
+public class CompensationAppriseEmployee extends Employee{
 
 
     public String toFileString() {

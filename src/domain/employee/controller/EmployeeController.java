@@ -1,14 +1,9 @@
 package domain.employee.controller;
 
-import domain.employee.Employee;
 import domain.employee.exception.EmployeeException;
 import domain.employee.exception.NOEMPLOYEEEXCEPTION;
 import domain.employee.service.EmployeeService;
 import global.util.Choice;
-
-import java.util.ArrayList;
-
-import static domain.employee.exception.EmployeeExceptionList.NOEMPLOYEE;
 
 public class EmployeeController {
 
@@ -21,7 +16,7 @@ public class EmployeeController {
         this.choice = choice;
     }
 
-    public void inital() {
+    public void initial() {
 //        try {
 //
 //        }catch (Exception exception){
