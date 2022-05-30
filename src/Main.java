@@ -13,11 +13,11 @@ public class Main {
         CustomerController customerController = new CustomerController();
         EmployeeController employeeController = new EmployeeController(new Choice());
         try {
-            Class.forName("org.mariadb.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(
-                    "jdbc:mariadb://127.0.0.1:3306/insurance",
-                    "root",
-                    "1234");
+                    "jdbc:mysql://umcdb.cuiea55gxaoy.ap-northeast-2.rds.amazonaws.com:3306/Insurance",
+                    "admin",
+                    "sojung210");
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
