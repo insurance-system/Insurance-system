@@ -1,6 +1,10 @@
 package domain.customer.repository;
 
+import domain.customer.entity.Customer;
+import global.util.Constants;
+
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class CustomerRepository {
@@ -9,8 +13,52 @@ public class CustomerRepository {
     //고객 관심사항 파일
     private static final String clientInterestFile = "customer-advice";
 
-    public String insert(String clientStr){
-//        return FileCRUD.insertOne(clientFile, clientStr);
+    public String insert(Customer customer){
+//        Statement statement = null;
+//        ResultSet rs = null;
+//        try{
+//            String sql = "insert into Customer (" +
+//                    "customerId," +
+//                    "password," +
+//                    "name," +
+//                    "email," +
+//                    "phoneNumber," +
+//                    "address," +
+//                    "detailAddress," +
+//                    "zipcode," +
+//                    "kindOfJob) " +
+//                    "values (?,?,?,?,?,?,?,?,?);";
+//
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Connection conn = null;
+//            conn = DriverManager.getConnection(
+//                    Constants.URL,
+//                    Constants.USER,
+//                    Constants.PW);
+//
+////                rs = statement.executeQuery(sql);
+//
+//            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+//
+//            st.setInt(1, customer.getCustomerId());
+//            st.setString(2, customer.getPassword());
+//            st.setString(3, customer.getName());
+//            st.setString(4, customer.getEmail());
+//            st.setString(5, customer.getPhoneNumber());
+//            st.setString(6, customer.getAddress());
+//            st.setString(7, customer.getDetailAddress());
+//            st.setString(8, customer.getZipcode());
+//            st.setString(9, customer.getKindOfJob());
+//
+//            int result = st.executeUpdate();
+//
+//            st.close();
+////            conn.close();
+//        }catch(SQLException e){
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 
