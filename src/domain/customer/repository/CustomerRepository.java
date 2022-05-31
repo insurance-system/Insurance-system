@@ -13,7 +13,7 @@ public class CustomerRepository {
         ResultSet rs = null;
         try{
             String sql =
-                    "insert into Employee (" +
+                    "insert into Customer (" +
                     "customerId," +
                     "password," +
                     "name," +
@@ -21,8 +21,10 @@ public class CustomerRepository {
                     "phoneNumber," +
                     "address," +
                     "detailAddress," +
-                    "zipcode)" +
-                    "values (?,?,?,?,?,?,?,?);";
+                    "zipcode,"+
+                    "kindOfInsurance,"+
+                    "kindOfJob)" +
+                    "values (?,?,?,?,?,?,?,?,?,?);";
 
             PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
 
@@ -34,6 +36,8 @@ public class CustomerRepository {
             st.setString(6, customer.getAddress());
             st.setString(7, customer.getDetailAddress());
             st.setString(8, customer.getZipcode());
+            st.setString(9, customer.getKindOfInsurance().name());
+            st.setString(10, customer.getKindOfJob().name());
 
             int result = st.executeUpdate();
             st.close();

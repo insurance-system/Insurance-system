@@ -88,8 +88,16 @@ public class Choice {
         System.out.println("3. 보험급 납부내역");
         System.out.println("4. 보험 관련 문의");
         System.out.println("5. 사고 처리 접수");
+        System.out.println("6. 보험 가입하기");
         System.out.println("위 중 해당 번호 입력");
         return scanner.nextInt();
 
+    }
+
+    public int employeeInitial() {
+        System.out.println("안녕하세요. 회원가입을 하셨다면 로그인을 해주세요.");
+        System.out.println("1.로그인\n2.회원가입\n3.상담사 연결");
+        System.out.print("번호 입력:");
+        return scanner.nextInt();
     }
 }
