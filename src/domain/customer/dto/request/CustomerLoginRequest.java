@@ -1,5 +1,7 @@
 package domain.customer.dto.request;
 
+import domain.customer.entity.Customer;
+
 public class CustomerLoginRequest {
     String id;
     String password;
@@ -8,6 +10,8 @@ public class CustomerLoginRequest {
         this.id = id;
         this.password = password;
     }
+
+
 
     public String getId() {
         return id;
