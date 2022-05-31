@@ -1,25 +1,23 @@
 package domain.customer.controller;
 
+import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
+import domain.customer.entity.Customer;
 import domain.customer.service.CustomerService;
-import java.util.Scanner;
+import global.util.Choice;
 
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final Scanner scanner;
+    private final Choice choice;
 
-    public CustomerController() {
+    public CustomerController(Choice choice) {
         this.customerService = new CustomerService();
-        this.scanner = new Scanner(System.in);
+        this.choice = choice;
     }
 
     public void initial() {
-        System.out.println("고객님 안녕하세요. 회원가입을 하셨다면 로그인을 아직 회원이 아니라면 회원가입을 진행해주세요.\n상담사 연결은 3번을 눌러주세요!");
-        System.out.println("1.로그인\n2.회원가입\n3.상담사 연결");
-        System.out.print("번호 입력:");
-        int n = scanner.nextInt();
-        switch(n){
+        switch(choice.customerInitial()){
             case 1:
                 login();
                 break;
@@ -36,12 +34,12 @@ public class CustomerController {
     }
 
     public boolean login() {
-        System.out.print("ID 입력:");
-        String id = scanner.next();
-        System.out.print("Password 입력:");
-        String password = scanner.next();
-        if(customerService.login(new CustomerLoginRequest(id, password))){
+        CustomerLoginRequest customerLoginRequest
+                = new CustomerLoginRequest(choice.getCustomerId(), choice.getPassword());
+        Customer customer = customerService.login(customerLoginRequest);
+        if(customer != null){
             System.out.println("로그인 성공!");
+            enter(customer);
             return false;
         }
         else{
@@ -50,13 +48,53 @@ public class CustomerController {
         }
     }
 
-    public void join() {
+    public void enter(Customer customer){
+        System.out.println(customer.getName() + "님 안녕하세요!");
 
+        switch (choice.afterLogin()){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
+
+    }
+
+    public void join() {
+        String customerId = choice.getCustomerId();
+        String password = choice.getPassword();
+        String name = choice.getName();
+        String address = choice.getAddress();
+        String detailAddress = choice.getDetailAddress();
+        String zipcode = choice.getZipcode();
+        String email = choice.getEmail();
+        String phoneNumber = choice.getPhoneNumber();
+        int kindOfJob = choice.getKindOfJob();
+        int kindOfInsuranceId = choice.getKindOfInsuranceId();
+
+        CustomerJoinRequest customer = new CustomerJoinRequest(
+                customerId,
+                password,
+                name,
+                address,
+                detailAddress,
+                zipcode,
+                email,
+                phoneNumber,
+                kindOfJob,
+                kindOfInsuranceId
+        );
+
+        System.out.println("customer = " + customer);
+
+        customerService.join(customer);
+        System.out.println("회원가입이 완료되었습니다. 로그인을 해주세요!");
+        login();
     }
 
     public void connect() {
-//        ArrayList<String> strings = choice.customerInterest();
-//        Customer customer = customerService.connect(strings);
+        choice.afterLogin();
     }
-
 }

@@ -10,5 +10,4 @@ public class Insurance {
     private String insuranceName;
     private int fee;
     private InsuranceStatus insuranceStatus;
-
 }
