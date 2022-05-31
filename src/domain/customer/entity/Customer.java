@@ -1,26 +1,78 @@
 package domain.customer.entity;
 
 import core.insurance.entity.enumeration.KindOfInsurance;
+import domain.customer.enumeration.KindOfJob;
+
+import static core.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceBy;
+import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
 
 public class Customer{
 
-    private int customerId;
+    private String customerId;
     private String password;
     private int interestInsuranceId;
     private String name;
-    private KindOfInsurance kindOfInsurance;
+    private String email;
     private String address;
     private String detailAddress;
     private String zipcode;
-    private String email;
     private String phoneNumber;
-    private String kindOfJob;
+    private KindOfInsurance kindOfInsurance;
+    private KindOfJob kindOfJob;
 
-    public int getCustomerId() {
+    public Customer() {}
+
+    public Customer(String customerId,
+                    String password,
+                    String name,
+                    String address,
+                    String detailAddress,
+                    String zipcode,
+                    String email,
+                    String phoneNumber,
+                    int kindOfJobId,
+                    int kindOfInsuranceId) {
+        this.customerId = customerId;
+        this.password = password;
+        this.name = name;
+        this.kindOfInsurance = getKindOfInsuranceBy(kindOfInsuranceId);
+
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zipcode = zipcode;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.kindOfJob = getKindOfJobBy(kindOfJobId);
+    }
+
+    public Customer(String customerId,
+                    String password,
+                    String name,
+                    String address,
+                    String detailAddress,
+                    String zipcode,
+                    String email,
+                    String phoneNumber,
+                    KindOfJob kindOfJobId,
+                    KindOfInsurance kindOfInsuranceId) {
+        this.customerId = customerId;
+        this.password = password;
+        this.name = name;
+        this.kindOfInsurance = kindOfInsuranceId;
+
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zipcode = zipcode;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.kindOfJob = kindOfJobId;
+    }
+
+    public String getCustomerId() {
         return this.customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
@@ -96,11 +148,11 @@ public class Customer{
         this.phoneNumber = phoneNumber;
     }
 
-    public String getKindOfJob() {
+    public KindOfJob getKindOfJob() {
         return kindOfJob;
     }
 
-    public void setKindOfJob(String kindOfJob) {
+    public void setKindOfJob(KindOfJob kindOfJob) {
         this.kindOfJob = kindOfJob;
     }
 }
