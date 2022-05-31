@@ -13,7 +13,7 @@ public class InsuranceRepository {
         ResultSet rs = null;
         try{
             String sql =
-                    "insert into Employee (" +
+                    "insert into Insurance (" +
                     "employeeId," +
                     "password," +
                     "name," +
