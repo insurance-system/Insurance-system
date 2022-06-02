@@ -97,7 +97,4 @@ public class Choice {
         return scanner.nextInt();
     }
 
-    public int employeeHome(){
-    return 0;
-    }
 }

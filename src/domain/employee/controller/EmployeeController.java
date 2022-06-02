@@ -1,8 +1,6 @@
 package domain.employee.controller;
 
 import domain.employee.entity.Employee;
-import domain.employee.exception.EmployeeException;
-import domain.employee.exception.NOEMPLOYEEEXCEPTION;
 import domain.employee.service.EmployeeService;
 import global.util.Choice;
 
