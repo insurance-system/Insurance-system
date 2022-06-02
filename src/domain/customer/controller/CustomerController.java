@@ -4,6 +4,7 @@ import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
 import domain.customer.service.CustomerService;
+import domain.insurance.entity.Insurance;
 import global.util.Choice;
 
 public class CustomerController {
@@ -82,8 +83,9 @@ public class CustomerController {
         customerService.findPayment();
     }
 
-    private void findJoinedInsurances() {
-//        customerService.findJoinedInsurances(choice.getId());
+    private Insurance findJoinedInsurances() {
+        return customerService.findJoinedInsurances(choice.getId());
+
 
     }
 

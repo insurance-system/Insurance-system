@@ -4,6 +4,7 @@ import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
 import domain.customer.repository.CustomerRepository;
+import domain.insurance.entity.Insurance;
 
 public class CustomerService {
 
@@ -29,8 +30,8 @@ public class CustomerService {
     }
 
 
-//    public Insurance findJoinedInsurances(String id) {
-//        return customerRepository.findJoinedInsurances(id);
-//
-//    }
+    public Insurance findJoinedInsurances(String id) {
+        return customerRepository.findJoinedInsurances(id);
+
+    }
 }

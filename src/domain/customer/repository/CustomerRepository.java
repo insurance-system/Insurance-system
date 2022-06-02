@@ -1,6 +1,8 @@
 package domain.customer.repository;
 
 import domain.customer.entity.Customer;
+import domain.employee.entity.Employee;
+import domain.insurance.entity.Insurance;
 import global.util.Constants;
 
 import java.io.IOException;
@@ -94,35 +96,33 @@ public class CustomerRepository {
         return null;
     }
 
-    public String findJoinedInsurances(String id) {
-
-        return null;
-    }
-    /*
-    public String select(int employeeId) throws IOException {
-        Statement statement = null;
+    public Insurance findJoinedInsurances(String id) {
         ResultSet rs = null;
-        try{
-            String sql = "select * from Employee where id = ?;";
+        try {
+            String sql = "select insuranceName, fee " +
+                    "from Insurance, Customer, Contract " +
+                    "where Customer.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId and Customer.customerId = ?";
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
 
-            st.setInt(1, employeeId);
-            int result = st.executeUpdate();
-            st.close();
-//            conn.close();
-        }catch(SQLException e){
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            st.setString(1, id);
+            rs = st.executeQuery();
+            if (rs.next()){
+                Insurance insurance = new Insurance(
+                        rs.getString("insuranceName"),
+                        rs.getInt("fee")
+                );
+//                System.out.println("-------------------보험 가입 내역-------------------");
+//                System.out.print(" 보험 이름 : "+insurance.getInsuranceName());
+//                System.out.println(" 보험금 : "+insurance.getFee());
+//                System.out.println("--------------------------------------------------");
+                return insurance;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return null;
     }
-     */
+
 }
