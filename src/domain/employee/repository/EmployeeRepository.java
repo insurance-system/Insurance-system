@@ -36,7 +36,7 @@ public class EmployeeRepository {
 
             PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
 
-            st.setInt(1, employee.getEmployeeId());
+            st.setString(1, employee.getEmployeeId());
             st.setString(2, employee.getPassword());
             st.setString(3, employee.getName());
             st.setString(4, employee.getEmail());
@@ -110,7 +110,49 @@ public class EmployeeRepository {
         return null;
     }
 
-    public void login(String employeeId, String password) {
+    public Employee login(String employeeId, String password) {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * from employee where employeeId = ? and password = ?";
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
 
+            st.setString(1, employeeId);
+            st.setString(2, password);
+            rs = st.executeQuery();
+            if (rs.next()){
+                Employee employee = new Employee(
+                        rs.getString("employeeId"),
+                        rs.getString("password"),
+                        rs.getString("departmentId"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("phoneNumber"),
+                        rs.getString("address"),
+                        rs.getString("detailAddress"),
+                        rs.getString("zipCode")
+                );
+                System.out.println(employee.getEmployeeId());
+                return employee;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    private Connection sqlConnection(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            return conn;
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

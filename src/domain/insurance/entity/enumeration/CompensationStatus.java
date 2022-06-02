@@ -1,4 +1,4 @@
-package core.insurance.entity.enumeration;
+package domain.insurance.entity.enumeration;
 
 public enum CompensationStatus {
     허가, 심사중, 불허

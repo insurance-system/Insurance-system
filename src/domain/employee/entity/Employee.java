@@ -1,8 +1,8 @@
 package domain.employee.entity;
 
 public class Employee {
-    private int employeeId;
-    private int departmentId;
+    private String employeeId;
+    private String departmentId;
     private String password;
     private String name;
     private String email;
@@ -21,7 +21,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(int employeeId, String name, String email, String phoneNumber, String address, String detailAddress, String zipcode) {
+    public Employee(String employeeId, String name, String email, String phoneNumber, String address, String detailAddress, String zipcode) {
         this.employeeId = employeeId;
         this.name = name;
         this.email = email;
@@ -31,7 +31,7 @@ public class Employee {
         this.zipcode = zipcode;
     }
 
-    public Employee(int employeeId, String password, int departmentId, String name, String email, String phoneNumber, String address, String detailAddress, String zipcode) {
+    public Employee(String employeeId, String password, String departmentId, String name, String email, String phoneNumber, String address, String detailAddress, String zipcode) {
         this.employeeId = employeeId;
         this.password = password;
         this.departmentId = departmentId;
@@ -43,11 +43,11 @@ public class Employee {
         this.zipcode = zipcode;
     }
 
-    public int getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -59,11 +59,11 @@ public class Employee {
         this.password = password;
     }
 
-    public int getDepartmentId() {
+    public String getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(int departmentId) {
+    public void setDepartmentId(String departmentId) {
         this.departmentId = departmentId;
     }
 
