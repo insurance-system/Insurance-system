@@ -1,6 +1,7 @@
 package domain.employee.repository;
 
 import domain.employee.entity.Employee;
+import domain.employee.exception.excution.NoEmployeeException;
 import global.util.Constants;
 
 import java.io.IOException;
@@ -9,6 +10,12 @@ import java.sql.*;
 * 여기에 CRUD 있어요~ argument만 바꿔서 쓰면됨
 * */
 public class EmployeeRepository {
+
+    private Connection connection;
+
+    public EmployeeRepository() {
+        this.connection = this.sqlConnection();
+    }
 
     public String insert(Employee employee) throws IOException {
         Statement statement = null;
@@ -113,8 +120,8 @@ public class EmployeeRepository {
     public Employee login(String employeeId, String password) {
         ResultSet rs = null;
         try {
-            String sql = "SELECT * from employee where employeeId = ? and password = ?";
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            String sql = "SELECT * from Employee where employeeId = ? and password = ?";
+            PreparedStatement st = this.connection.prepareStatement(sql);
 
             st.setString(1, employeeId);
             st.setString(2, password);
@@ -138,6 +145,7 @@ public class EmployeeRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        new NoEmployeeException();
         return null;
     }
 
