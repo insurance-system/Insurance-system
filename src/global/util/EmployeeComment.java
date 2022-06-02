@@ -20,7 +20,7 @@ public class EmployeeComment {
         System.out.println("11. 상담 대기 신규 고객 명단 조회 \n12. 영업 교육 수강");
         System.out.println("------------------------------------");
         System.out.println("2. 영업 교육 팀");
-        System.out.println("21. 영업 교육 강의 업로드 \n22. 수강 명단 체크");
+        System.out.println("21. 영업 교육 강의 자료 업로드 \n22. 강의 자료 리스트 출력 \n23. 수강 명단 체크");
         System.out.println("------------------------------------");
         System.out.println("3. 사후 관리 팀");
         System.out.println("31. 보험 정보 안내 해당 고객 명단 조회");
