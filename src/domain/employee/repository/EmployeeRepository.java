@@ -1,5 +1,8 @@
 package domain.employee.repository;
 
+import domain.customer.entity.Customer;
+import domain.customer.enumeration.KindOfJob;
+import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
 import global.dao.Lecture;
@@ -18,6 +21,21 @@ public class EmployeeRepository {
 
     public EmployeeRepository() {
         this.connection = this.sqlConnection();
+    }
+
+    private Connection sqlConnection(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            return conn;
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String insert(Employee employee) throws IOException {
@@ -111,7 +129,6 @@ public class EmployeeRepository {
             st.setInt(1, employeeId);
             int result = st.executeUpdate();
             st.close();
-//            conn.close();
         }catch(SQLException e){
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -152,17 +169,32 @@ public class EmployeeRepository {
         return null;
     }
 
-    private Connection sqlConnection(){
+    public ArrayList<CustomerConsultResponse> customerConsult(Employee employee) {
+        ResultSet rs = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            return conn;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            String sql = "Select Emp_Cus.emp_CusId, Customer.customerId, Customer.name, Customer.phoneNumber, Customer.kindOfInsurance, Customer.kindOfJob" +
+                    " from Emp_Cus, Customer " +
+                    "where Customer.customerId = Emp_Cus.customerId and Emp_Cus.satisfaction is null;";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+
+            rs = st.executeQuery();
+
+            ArrayList<CustomerConsultResponse> customerList = new ArrayList<>();
+            while (rs.next()){
+                CustomerConsultResponse customerConsultResponse = new CustomerConsultResponse();
+                customerConsultResponse.setEmpCusId(rs.getString("emp_CusId"));
+                customerConsultResponse.setCustomerId(rs.getString("customerId"));
+                customerConsultResponse.setName(rs.getString("name"));
+                customerConsultResponse.setPhoneNumber(rs.getString("phoneNumber"));
+                customerConsultResponse.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getInt("kindOfInsurance")));
+                customerConsultResponse.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
+                customerList.add(customerConsultResponse);
+            }
+
+                return customerList;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return null;
     }
@@ -219,5 +251,23 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
         return lectureList;
+    }
+
+    public void consultExcute(Employee employee, CustomerConsultResponse customerConsultResponse) {
+        ResultSet rs = null;
+        try {
+            String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, employee.getEmployeeId());
+            st.setString(2, customerConsultResponse.getEmpCusId());
+            st.executeUpdate();
+
+
+
+
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
