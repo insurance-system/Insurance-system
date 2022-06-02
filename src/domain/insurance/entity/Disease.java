@@ -1,6 +1,6 @@
-package core.insurance.entity;
+package domain.insurance.entity;
 
-import global.entity.KindOfDisease;
+import domain.customer.entity.KindOfDisease;
 
 public class Disease {
     private String id;
