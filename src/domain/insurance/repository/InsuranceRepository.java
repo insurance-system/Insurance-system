@@ -1,68 +1,59 @@
 package domain.insurance.repository;
 
-import domain.customer.entity.Customer;
+import domain.insurance.entity.Insurance;
 import global.util.Constants;
 
 import java.io.IOException;
 import java.sql.*;
 
 public class InsuranceRepository {
-    private static final String insuranceFile = "insurance.txt";
 
-    public void asd() {
+    public String insert(Insurance insurance) throws IOException {
+        Statement statement = null;
+        ResultSet rs = null;
+        try{
+            String sql =
+                    "insert into Insurance (" +
+                    "employeeId," +
+                    "password," +
+                    "name," +
+                    "email," +
+                    "phoneNumber," +
+                    "address," +
+                    "detailAddress," +
+                    "zipcode)" +
+                    "values (?,?,?,?,?,?,?,?);";
 
-    }
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
 
-    public String insert(Customer customer) throws IOException {
+//                rs = statement.executeQuery(sql);
 
-//
-//        Statement statement = null;
-//        ResultSet rs = null;
-//        try{
-//            String sql = "insert into customer (" +
-//                    "customerId," +
-//                    "password," +
-//                    "healthInformationId," +
-//                    "name," +
-//                    "email," +
-//                    "phoneNumber," +
-//                    "address," +
-//                    "detailAddress," +
-//                    "zipcode," +
-//                    "kindOfJob) " +
-//                    "values (?,?,?,?,?,?,?,?,?,?);";
-//
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-//            Connection conn = null;
-//            conn = DriverManager.getConnection(
-//                    Constants.URL,
-//                    Constants.USER,
-//                    Constants.PW);
-//
-////                rs = statement.executeQuery(sql);
-//
-//            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
-//
-//            st.setInt(1, customer.getCustomerId());
-//            st.setString(2, customer.getPassword());
-//            st.setInt(3, customer.getHealthInformationId());
-//            st.setString(4, customer.getName());
-//            st.setString(5, customer.getEmail());
-//            st.setString(6, customer.getPhoneNumber());
-//            st.setString(7, customer.getAddress());
-//            st.setString(8, customer.getDetailAddress());
-//            st.setString(9, customer.getZipcode());
-//            st.setString(10, customer.getKindOfJob());
-//
-//            int result = st.executeUpdate();
-//
-//            st.close();
+            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+
+//            st.setInt(1, insurance.getEmployeeId());
+//            st.setString(2, insurance.getPassword());
+//            st.setString(3, insurance.getName());
+//            st.setString(4, insurance.getEmail());
+//            st.setString(5, insurance.getPhoneNumber());
+//            st.setString(6, insurance.getAddress());
+//            st.setString(7, insurance.getDetailAddress());
+//            st.setString(8, insurance.getZipcode());
+
+
+            int result = st.executeUpdate();
+
+            st.close();
 //            conn.close();
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
-//
-
+        }catch(SQLException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
