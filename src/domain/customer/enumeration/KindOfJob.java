@@ -1,7 +1,5 @@
 package domain.customer.enumeration;
 
-import core.insurance.entity.enumeration.KindOfInsurance;
-
 import java.util.Objects;
 
 public enum KindOfJob {

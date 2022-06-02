@@ -1,10 +1,10 @@
 package domain.customer.dto.request;
 
-import core.insurance.entity.enumeration.KindOfInsurance;
+import domain.insurance.entity.enumeration.KindOfInsurance;
 import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
 
-import static core.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceBy;
+import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceBy;
 import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
 
 public class CustomerJoinRequest {
