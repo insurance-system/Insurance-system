@@ -10,25 +10,27 @@ public class EmployeeController {
     private EmployeeService employeeService;
     private Choice choice;
 
-    private EmployeeException exception;
 
     public EmployeeController(Choice choice) {
         this.choice = choice;
     }
 
     public void initial() {
-//        try {
-//
-//        }catch (Exception exception){
-//            throw new NOEMPLOYEEEXCEPTION();
-//        }
-        if (true) {
-            System.out.println("오류가 발생했습니다");
-//            System.out.println(NOEMPLOYEE.getErrorCode() + NOEMPLOYEE.getMessage());
-            new NOEMPLOYEEEXCEPTION();
+        switch(choice.employeeInitial()){
+            case 1:
+                login();
+                break;
+            case 2:
+                connect();
+                break;
+            default:
+                System.out.println("메뉴 1,2,3 중 하나만 입력해주세요.");
+                break;
         }
+    }
 
-
+    private void login() {
+        System.out.println("직원 로그인");
     }
 
     //TODO
