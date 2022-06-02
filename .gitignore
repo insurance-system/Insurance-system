@@ -85,7 +85,11 @@ fabric.properties
 ### Intellij+iml Patch ###
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
 
+<<<<<<< HEAD
+#*.iml
+=======
 *.iml
+>>>>>>> 78de550498f8048d52bef3288aa80dd10f35a10c
 modules.xml
 .idea/misc.xml
 *.ipr

@@ -67,6 +67,11 @@ public class Choice {
         return scanner.next();
     }
 
+    public String getSatisfaction() {
+        System.out.println("만족도(0~10):");
+        return scanner.next();
+    }
+
     public int getKindOfJob() {
         System.out.println("1. 직장인");
         System.out.println("2. 학생");
@@ -95,5 +100,18 @@ public class Choice {
     public String getText(String message) {
         System.out.println(message);
         return scanner.next();
+    }
+
+    public int afterfindJoinedInsurances() {
+        System.out.println("1. 보험 해지하기");
+        System.out.println("2. 돌아가기");
+        System.out.print("번호 입력:");
+        return scanner.nextInt();
+    }
+
+    public int afterLoginInterest() {
+        System.out.println("1. 상담사 연결하기");
+        System.out.println("2. 상담사 평가하기");
+        return scanner.nextInt();
     }
 }
