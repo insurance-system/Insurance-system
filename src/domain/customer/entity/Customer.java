@@ -10,7 +10,6 @@ public class Customer{
 
     private String customerId;
     private String password;
-    private int interestInsuranceId;
     private String name;
     private String email;
     private String address;
@@ -82,14 +81,6 @@ public class Customer{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public int getInterestInsuranceId() {
-        return interestInsuranceId;
-    }
-
-    public void setInterestInsuranceId(int interestInsuranceId) {
-        this.interestInsuranceId = interestInsuranceId;
     }
 
     public String getName() {
