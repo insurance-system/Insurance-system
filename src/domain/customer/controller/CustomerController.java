@@ -39,15 +39,17 @@ public class CustomerController {
     }
 
     public void login() {
+        String id = choice.getId();
+        String pw = choice.getPassword();
         CustomerLoginRequest customerLoginRequest
-                = new CustomerLoginRequest(choice.getId(), choice.getPassword());
-
+                = new CustomerLoginRequest(id, pw);
             Customer customer = customerService.login(customerLoginRequest);
             if(customer != null){
                 System.out.println("로그인 성공");
-                if(choice.getPassword() == null) {
+                if(pw.equals("0")) {
                     enterInterest(customer);
-                } else enter(customer);
+                } else
+                    enter(customer);
             }
             else{
                 System.out.println("아이디 혹은 비번이 틀렸음");
@@ -64,6 +66,7 @@ public class CustomerController {
                 break;
             case 2: //2. 상담사 평가하기
                 evaluateSatisfaction(customer);
+                choice.employeeInitial();
                 break;
             default:
                 break;
