@@ -1,4 +1,4 @@
-package global.entity;
+package domain.customer.entity;
 
 public class CreditInformation {
     private int creditInformationId;

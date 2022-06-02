@@ -1,6 +1,6 @@
-package core.insurance.entity;
+package domain.insurance.entity;
 
-import global.entity.Grade;
+import domain.customer.entity.Grade;
 
 public class InsuranceCondition {
     private int insuranceConditionId;

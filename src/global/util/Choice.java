@@ -96,4 +96,8 @@ public class Choice {
         System.out.print("번호 입력:");
         return scanner.nextInt();
     }
+
+    public int employeeHome(){
+    return 0;
+    }
 }
