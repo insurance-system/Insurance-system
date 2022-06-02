@@ -39,4 +39,8 @@ public class CustomerService {
     public Customer interestLogin(CustomerLoginRequest customerLoginRequest) {
         return null;
     }
+
+    public void connectSalesEmployee(Customer interestCustomer) {
+        customerRepository.connectSalesEmployee(interestCustomer);
+    }
 }

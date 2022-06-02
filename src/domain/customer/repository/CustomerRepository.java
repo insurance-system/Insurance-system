@@ -151,4 +151,41 @@ public class CustomerRepository {
         }
         return null;
     }
+
+    public void connectSalesEmployee(Customer interestCustomer) {
+        ResultSet rs = null;
+        try{
+            String sql =
+                    "insert into Customer (" +
+                            "customerId," +
+                            "password," +
+                            "name," +
+                            "email," +
+                            "phoneNumber," +
+                            "address," +
+                            "detailAddress," +
+                            "zipcode,"+
+                            "kindOfInsurance,"+
+                            "kindOfJob)" +
+                            "values (?,?,?,?,?,?,?,?,?,?);";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, interestCustomer.getCustomerId());
+            st.setString(2, interestCustomer.getPassword());
+            st.setString(3, interestCustomer.getName());
+            st.setString(4, interestCustomer.getEmail());
+            st.setString(5, interestCustomer.getPhoneNumber());
+            st.setString(6, interestCustomer.getAddress());
+            st.setString(7, interestCustomer.getDetailAddress());
+            st.setString(8, interestCustomer.getZipcode());
+            st.setString(9, interestCustomer.getKindOfInsurance().name());
+            st.setString(10, interestCustomer.getKindOfJob().name());
+
+            int result = st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
