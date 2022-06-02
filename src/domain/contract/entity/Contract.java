@@ -1,4 +1,4 @@
-package global.entity;
+package domain.contract.entity;
 
 import java.time.LocalDate;
 

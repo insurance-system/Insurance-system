@@ -1,6 +1,6 @@
-package core.insurance.entity;
+package domain.insurance.entity;
 
-import core.insurance.entity.enumeration.CompensationStatus;
+import domain.insurance.entity.enumeration.CompensationStatus;
 
 
 public class Compensation {

@@ -15,9 +15,7 @@ public class EmployeeService {
     }
 
     public Employee login(String employeeId, String password) {
-        this.employeeRepository.login(employeeId,password);
-
-        return null;
+        return this.employeeRepository.login(employeeId,password);
     }
 
 }
