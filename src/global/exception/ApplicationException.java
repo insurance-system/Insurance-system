@@ -11,7 +11,7 @@ public abstract class ApplicationException {
     public ApplicationException(String errorCode, String message) {
         this.errorCode = errorCode;
         this.message = message;
-        System.out.println(FONT_RED+"************************************"+RESET);
-        System.out.println(FONT_RED+"에러코드: "+ errorCode +" \n"+ message+RESET);
+        System.out.println(FONT_RED+"*******************************"+RESET);
+        System.out.println(FONT_RED+"에러코드: "+ errorCode +"    "+ message+RESET);
     }
 }
