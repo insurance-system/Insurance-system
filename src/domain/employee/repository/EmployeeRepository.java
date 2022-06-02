@@ -1,10 +1,10 @@
 package domain.employee.repository;
 
-import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
+import domain.insurance.entity.enumeration.KindOfInsurance;
 import global.dao.Lecture;
 import global.util.Constants;
 
@@ -261,10 +261,6 @@ public class EmployeeRepository {
             st.setString(1, employee.getEmployeeId());
             st.setString(2, customerConsultResponse.getEmpCusId());
             st.executeUpdate();
-
-
-
-
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
