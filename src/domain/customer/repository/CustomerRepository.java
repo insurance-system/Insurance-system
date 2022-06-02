@@ -3,6 +3,7 @@ package domain.customer.repository;
 import domain.customer.entity.Customer;
 import global.util.Constants;
 
+import java.io.IOException;
 import java.sql.*;
 
 import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
@@ -92,4 +93,36 @@ public class CustomerRepository {
         }
         return null;
     }
+
+    public String findJoinedInsurances(String id) {
+
+        return null;
+    }
+    /*
+    public String select(int employeeId) throws IOException {
+        Statement statement = null;
+        ResultSet rs = null;
+        try{
+            String sql = "select * from Employee where id = ?;";
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setInt(1, employeeId);
+            int result = st.executeUpdate();
+            st.close();
+//            conn.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+     */
 }

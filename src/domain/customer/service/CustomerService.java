@@ -23,4 +23,10 @@ public class CustomerService {
     public Customer login(CustomerLoginRequest customerLoginRequest) {
         return customerRepository.login(customerLoginRequest.getId(), customerLoginRequest.getPassword());
     }
+
+
+//    public Insurance findJoinedInsurances(String id) {
+//        return customerRepository.findJoinedInsurances(id);
+//
+//    }
 }
