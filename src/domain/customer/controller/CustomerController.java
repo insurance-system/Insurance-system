@@ -41,7 +41,10 @@ public class CustomerController {
             System.out.println("로그인 성공");
             enter(customer);
         }
-        else System.out.println("아이디 혹은 비번이 틀렸음");
+        else{
+            System.out.println("아이디 혹은 비번이 틀렸음");
+            login();
+        }
     }
 
     public void enter(Customer customer){
@@ -79,6 +82,8 @@ public class CustomerController {
     }
 
     private void findJoinedInsurances() {
+//        customerService.findJoinedInsurances(choice.getId());
+
     }
 
     private void connectSalesEmployee() {
