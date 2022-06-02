@@ -69,6 +69,11 @@ public class Choice {
         return scanner.next();
     }
 
+    public String getSatisfaction() {
+        System.out.println("만족도(0~10):");
+        return scanner.next();
+    }
+
     public int getKindOfJob() {
         System.out.println("1. 직장인");
         System.out.println("2. 학생");
