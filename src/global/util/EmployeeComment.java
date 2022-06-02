@@ -1,5 +1,9 @@
 package global.util;
 
+import domain.customer.entity.Customer;
+import domain.employee.dto.CustomerConsultResponse;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class EmployeeComment {
@@ -38,6 +42,19 @@ public class EmployeeComment {
         System.out.println("------------------------------------");
         System.out.println("0. 로그아웃");
 
+        return scanner.nextInt();
+    }
+
+    public int customerConsultList(ArrayList<CustomerConsultResponse> arrayList) {
+        System.out.println("");
+        System.out.println("미 상담 고객 목록");
+        for(int i=0; arrayList.size() > i; i++){
+            System.out.println("| 번호: "+i+"  "+"이름: "+arrayList.get(i).getName()+"  전화번호: "+arrayList.get(i).getPhoneNumber());
+            System.out.println("  직군: "+arrayList.get(i).getKindOfJob());
+            System.out.println("  관심 보험 종류: "+arrayList.get(i).getKindOfInsurance().name() +"\n");
+        }
+        System.out.println("");
+        System.out.print("상담을 진행하려는 고객의 번호를 입력해주세요. \n번호 입력: ");
         return scanner.nextInt();
     }
 }
