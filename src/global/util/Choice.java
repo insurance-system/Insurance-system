@@ -24,17 +24,13 @@ public class Choice {
 
     }
 
-    public ArrayList<String> employeeInital() {
-        return null;
-    }
-
     public String getPassword() {
-        System.out.println("Password 입력:");
+        System.out.print("Password 입력:");
         return scanner.next();
     }
 
-    public String getCustomerId() {
-        System.out.println("ID 입력:");
+    public String getId() {
+        System.out.print("ID 입력:");
         return scanner.next();
     }
 
