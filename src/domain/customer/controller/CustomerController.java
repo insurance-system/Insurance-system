@@ -41,6 +41,7 @@ public class CustomerController {
     public void login() {
         CustomerLoginRequest customerLoginRequest
                 = new CustomerLoginRequest(choice.getId(), choice.getPassword());
+
             Customer customer = customerService.login(customerLoginRequest);
             if(customer != null){
                 System.out.println("로그인 성공");
@@ -70,8 +71,9 @@ public class CustomerController {
     }
 
     private void evaluateSatisfaction(Customer customer) {
-
-
+        String satisfaction = choice.getSatisfaction();
+        customerService.evaluateSatisfaction(satisfaction,customer.getCustomerId());
+        System.out.println(customer.getName()+"님 만족도 평가에 참여해주셔서 감사합니다");
     }
 
     public void enter(Customer customer){

@@ -151,4 +151,30 @@ public class CustomerRepository {
         }
         return null;
     }
+
+    public void evaluateSatisfaction(String satisfaction, String id) {
+        Statement statement = null;
+        ResultSet rs = null;
+        try{
+            String sql = "update Emp_Cus set satisfaction = ? where customerId = ?;";
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, satisfaction);
+            st.setString(2, id);
+            int result = st.executeUpdate();
+            st.close();
+//            conn.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
