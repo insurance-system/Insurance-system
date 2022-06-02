@@ -4,6 +4,8 @@ import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
+import domain.customer.exception.excution.CheckMenuNumberException;
+import domain.customer.exception.excution.NoCustomerException;
 import domain.customer.service.CustomerService;
 import domain.insurance.entity.Insurance;
 import global.util.Choice;
@@ -33,7 +35,8 @@ public class CustomerController {
                 connectSalesEmployee();
                 break;
             default:
-                System.out.println("메뉴 1,2,3 중 하나만 입력해주세요.");
+                new CheckMenuNumberException();
+                initial();
                 break;
         }
     }
@@ -41,6 +44,7 @@ public class CustomerController {
     public void login() {
         String id = choice.getId();
         String pw = choice.getPassword();
+
         CustomerLoginRequest customerLoginRequest
                 = new CustomerLoginRequest(id, pw);
             Customer customer = customerService.login(customerLoginRequest);
@@ -48,14 +52,8 @@ public class CustomerController {
                 System.out.println("로그인 성공");
                 if(customer.getAddress() == null) {
                     enterInterest(customer);
-                } else
-                    enter(customer);
-            }
-            else{
-                System.out.println("아이디 혹은 비번이 틀렸음");
-                login();
-            }
-
+                } else enter(customer);
+            } else login();
     }
 
     private void enterInterest(Customer customer) {
@@ -69,8 +67,10 @@ public class CustomerController {
                 choice.employeeInitial();
                 break;
             default:
+                new CheckMenuNumberException();
                 break;
         }
+        enterInterest(customer);
     }
 
     private void evaluateSatisfaction(Customer customer) {
@@ -87,13 +87,13 @@ public class CustomerController {
                 break;
             case 2: //2. 가입된 보험 조회하기
                 Insurance insurance = findJoinedInsurances(customer.getCustomerId());
-                customerComment.insuranceInformation(insurance);
-                afterfindJoinedInsurances(customer);
+                if(insurance!=null) {
+                    customerComment.insuranceInformation(insurance);
+                    afterfindJoinedInsurances(customer);}
                 break;
             case 3: //성식 3. 보험급 납부내역
                 FindPayment findPayment = findPaymentHistory(customer.getCustomerId());
-                customerComment.findPaymentHistory(findPayment);
-                enter(customer);
+                if(findPayment!=null) customerComment.findPaymentHistory(findPayment);
                 break;
             case 4:
                 writeQnA();
@@ -104,6 +104,7 @@ public class CustomerController {
                 registerInsurance();
                 break;
             default:
+                new CheckMenuNumberException();
                 break;
         }
         enter(customer);
@@ -117,6 +118,9 @@ public class CustomerController {
                 break;
             case 2:
                 enter(customer);
+                break;
+            default:
+                new CheckMenuNumberException();
                 break;
         }
     }

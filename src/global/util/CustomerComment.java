@@ -13,7 +13,7 @@ public class CustomerComment {
     }
 
     public void findPaymentHistory(FindPayment findPayment) {
-        System.out.println("-------------------보험 가입 내역-------------------");
+        System.out.println("-------------------보험금 납부 내역-------------------");
         System.out.print(" 보험 이름 : "+findPayment.getInsuranceName());
         System.out.print(" 납부 금액 : "+findPayment.getFee());
         System.out.println(" 납부 일 : "+findPayment.getPayDate());

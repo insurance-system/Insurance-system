@@ -2,6 +2,9 @@ package domain.customer.repository;
 
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
+import domain.customer.exception.excution.NoCustomerException;
+import domain.customer.exception.excution.NoJoinedInsuranceException;
+import domain.customer.exception.excution.NoPaymentHistoryException;
 import domain.employee.entity.Employee;
 import domain.insurance.entity.Insurance;
 import global.util.Constants;
@@ -12,6 +15,8 @@ import java.sql.*;
 import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
 
 public class CustomerRepository {
+
+    private Connection connection;
 
     public Customer insert(Customer customer){
         ResultSet rs = null;
@@ -79,6 +84,7 @@ public class CustomerRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        new NoCustomerException();
         return null;
     }
 
@@ -119,6 +125,7 @@ public class CustomerRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        new NoJoinedInsuranceException();
         return null;
     }
 
@@ -149,6 +156,7 @@ public class CustomerRepository {
         }catch(SQLException e){
             e.printStackTrace();
         }
+        new NoPaymentHistoryException();
         return null;
     }
 
@@ -214,4 +222,5 @@ public class CustomerRepository {
             e.printStackTrace();
         }
     }
+
 }
