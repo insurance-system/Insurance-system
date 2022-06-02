@@ -4,6 +4,7 @@ import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
+import domain.customer.exception.excution.NoCustomerException;
 import domain.customer.repository.CustomerRepository;
 import domain.insurance.entity.Insurance;
 
@@ -25,6 +26,7 @@ public class CustomerService {
     public Customer login(CustomerLoginRequest customerLoginRequest) {
         return customerRepository.login(customerLoginRequest.getId(), customerLoginRequest.getPassword());
     }
+
     //Customer, Payer, Contract, Insurance, PayHistory
     public FindPayment findPayment(String id) {
         return customerRepository.findPayment(id);
