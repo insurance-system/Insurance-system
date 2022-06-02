@@ -35,7 +35,7 @@ public class EmployeeService {
         return employeeRepository.insertLecture(lecturer);
     }
 
-    public ArrayList<Lecture> findLectureList() {
+    public ArrayList<Lecture> findLectureList(){
         return employeeRepository.selectLectureList();
     }
 }
