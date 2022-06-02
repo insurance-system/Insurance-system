@@ -1,11 +1,15 @@
 package domain.employee.controller;
 
+import domain.customer.entity.Customer;
+import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
 import domain.employee.service.EmployeeService;
 import global.util.Choice;
 import global.util.EmployeeComment;
+
+import java.util.ArrayList;
 
 public class EmployeeController {
 
@@ -40,11 +44,17 @@ public class EmployeeController {
             switch (this.employeeComment.home()){
                 case 11:
                     //상담 대기 신규 고객 명단 조회
-                    if (employee.getDepartmentId() == "DP1") {
-
+                    if (employee.getDepartmentId().equals("DP1")){
+                        ArrayList<CustomerConsultResponse> arrayList = employeeService.customerConsult(employee);
+                        if (!arrayList.isEmpty()){
+                            System.out.println("상담 진행");
+                            employeeService.consultExcute(employee,
+                                    arrayList.get(employeeComment.customerConsultList(arrayList)));
+                        }
                     }else{
                         new NoAuthorityDPException();
                     }
+                    break;
                 case 12:
                     //영업 교육 수강
                     if (employee.getDepartmentId() == "DP1") {

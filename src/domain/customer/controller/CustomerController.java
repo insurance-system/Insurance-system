@@ -53,7 +53,7 @@ public class CustomerController {
             case 2:
                 findJoinedInsurances();
                 break;
-            case 3:
+            case 3: //성식 3. 보험급 납부내역
                 findPaymentHistory();
                 break;
             case 4:
@@ -74,8 +74,9 @@ public class CustomerController {
 
     private void writeQnA() {
     }
-
+    //보험금 납부 내역
     private void findPaymentHistory() {
+        customerService.findPayment();
     }
 
     private void findJoinedInsurances() {
