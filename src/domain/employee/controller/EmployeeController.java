@@ -24,10 +24,10 @@ public class EmployeeController {
                 if(employee != null){
                     home(employee);
                 }
-                connect();
+//                connect();
                 break;
             case 2:
-                connect();
+//                connect();
                 break;
             default:
                 System.out.println("메뉴 1,2,3 중 하나만 입력해주세요.");

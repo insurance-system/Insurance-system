@@ -3,6 +3,7 @@ package domain.customer.service;
 import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
+import domain.customer.entity.FindPayment;
 import domain.customer.repository.CustomerRepository;
 
 public class CustomerService {
@@ -24,7 +25,7 @@ public class CustomerService {
         return customerRepository.login(customerLoginRequest.getId(), customerLoginRequest.getPassword());
     }
     //Customer, Payer, Contract, Insurance, PayHistory
-    public void findPayment() {
-
+    public FindPayment findPayment(String id) {
+        return customerRepository.findPayment(id);
     }
 }
