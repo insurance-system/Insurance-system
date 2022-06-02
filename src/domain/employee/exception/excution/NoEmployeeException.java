@@ -4,6 +4,7 @@ import domain.employee.exception.EmployeeException;
 
 import static domain.employee.exception.EmployeeExceptionList.NOEMPLOYEE;
 
+
 public class NoEmployeeException extends EmployeeException {
 
     public NoEmployeeException() {
