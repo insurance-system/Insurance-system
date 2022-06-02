@@ -1,6 +1,5 @@
 package domain.employee.service;
 
-import domain.insurance.entity.Insurance;
 import domain.insurance.service.InsuranceService;
 import global.dao.client.SubscriptionReq;
 

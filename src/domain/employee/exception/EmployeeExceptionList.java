@@ -8,6 +8,7 @@ public enum EmployeeExceptionList {
 
     private String ErrorCode;
     private String Message;
+
     private EmployeeExceptionList(String errorCode, String message) {
         ErrorCode = errorCode;
         Message = message;
