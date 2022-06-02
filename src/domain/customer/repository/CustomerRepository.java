@@ -1,6 +1,7 @@
 package domain.customer.repository;
 
 import domain.customer.entity.Customer;
+import domain.customer.entity.FindPayment;
 import domain.employee.entity.Employee;
 import domain.insurance.entity.Insurance;
 import global.util.Constants;
@@ -125,4 +126,33 @@ public class CustomerRepository {
         return null;
     }
 
+
+    public FindPayment findPayment(String id) {
+        ResultSet rs = null;
+        try{
+            String sql = "select I.insuranceName, I.fee, Ph.PayDate " +
+                    "from Customer C, Contract Ct, Payer P, PayHistory Ph, Insurance I " +
+                    "where C.customerId = Ct.customerId and Ct.contractId = Ph.contractId and P.payerId = Ph.payerId " +
+                    "and Ct.insuranceId = I.insuranceId and C.customerId = ?";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, id);
+            rs = st.executeQuery();
+            if(rs.next()){
+                FindPayment findPayment = new FindPayment(
+                        rs.getString("insuranceName"),
+                        rs.getInt("fee"),
+                        rs.getString("payDate")
+                );
+                System.out.println(findPayment.getFee());
+                return findPayment;
+            }
+            ;
+//            conn.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
