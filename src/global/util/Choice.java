@@ -100,4 +100,17 @@ public class Choice {
     public int employeeHome(){
     return 0;
     }
+
+    public int afterfindJoinedInsurances() {
+        System.out.println("1. 보험 해지하기");
+        System.out.println("2. 돌아가기");
+        System.out.print("번호 입력:");
+        return scanner.nextInt();
+    }
+
+    public int afterLoginInterest() {
+        System.out.println("1. 상담사 연결하기");
+        System.out.println("2. 상담사 평가하기");
+        return scanner.nextInt();
+    }
 }

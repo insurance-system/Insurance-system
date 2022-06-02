@@ -35,4 +35,8 @@ public class CustomerService {
         return customerRepository.findJoinedInsurances(id);
 
     }
+
+    public Customer interestLogin(CustomerLoginRequest customerLoginRequest) {
+        return null;
+    }
 }
