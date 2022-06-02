@@ -15,5 +15,4 @@ public enum KindOfInsurance {
         if(number == 1) return KindOfInsurance.LIFE;
         else return KindOfInsurance.NON_LIFE;
     }
-
 }

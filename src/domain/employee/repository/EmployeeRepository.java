@@ -1,14 +1,42 @@
 package domain.employee.repository;
 
+import domain.customer.enumeration.KindOfJob;
+import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
+import domain.employee.exception.excution.NoEmployeeException;
+import domain.insurance.entity.enumeration.KindOfInsurance;
+import global.dao.Lecture;
 import global.util.Constants;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+
 /*
 * 여기에 CRUD 있어요~ argument만 바꿔서 쓰면됨
 * */
 public class EmployeeRepository {
+
+    private Connection connection;
+
+    public EmployeeRepository() {
+        this.connection = this.sqlConnection();
+    }
+
+    private Connection sqlConnection(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            return conn;
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public String insert(Employee employee) throws IOException {
         Statement statement = null;
@@ -34,7 +62,7 @@ public class EmployeeRepository {
 
 //                rs = statement.executeQuery(sql);
 
-            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, employee.getEmployeeId());
             st.setString(2, employee.getPassword());
@@ -101,7 +129,6 @@ public class EmployeeRepository {
             st.setInt(1, employeeId);
             int result = st.executeUpdate();
             st.close();
-//            conn.close();
         }catch(SQLException e){
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -113,8 +140,8 @@ public class EmployeeRepository {
     public Employee login(String employeeId, String password) {
         ResultSet rs = null;
         try {
-            String sql = "SELECT * from employee where employeeId = ? and password = ?";
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            String sql = "SELECT * from Employee where employeeId = ? and password = ?";
+            PreparedStatement st = this.connection.prepareStatement(sql);
 
             st.setString(1, employeeId);
             st.setString(2, password);
@@ -138,21 +165,105 @@ public class EmployeeRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        new NoEmployeeException();
         return null;
     }
 
-    private Connection sqlConnection(){
+    public ArrayList<CustomerConsultResponse> customerConsult(Employee employee) {
+        ResultSet rs = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            return conn;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            String sql = "Select Emp_Cus.emp_CusId, Customer.customerId, Customer.name, Customer.phoneNumber, Customer.kindOfInsurance, Customer.kindOfJob" +
+                    " from Emp_Cus, Customer " +
+                    "where Customer.customerId = Emp_Cus.customerId and Emp_Cus.satisfaction is null;";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+
+            rs = st.executeQuery();
+
+            ArrayList<CustomerConsultResponse> customerList = new ArrayList<>();
+            while (rs.next()){
+                CustomerConsultResponse customerConsultResponse = new CustomerConsultResponse();
+                customerConsultResponse.setEmpCusId(rs.getString("emp_CusId"));
+                customerConsultResponse.setCustomerId(rs.getString("customerId"));
+                customerConsultResponse.setName(rs.getString("name"));
+                customerConsultResponse.setPhoneNumber(rs.getString("phoneNumber"));
+                customerConsultResponse.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getInt("kindOfInsurance")));
+                customerConsultResponse.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
+                customerList.add(customerConsultResponse);
+            }
+
+                return customerList;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return null;
+    }
+
+    public boolean insertLecture(Lecture lecturer) {
+//        String lectureId, String lectureName, String lecturePdfName, String lecturerId
+        Statement statement = null;
+        ResultSet rs = null;
+        try{
+            String sql = "insert into Lecture (" +
+                    "lectureId," +
+                    "lectureName," +
+                    "lecturePdfName," +
+                    "lecturerId)" +
+                    "values (?,?,?,?);";
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+//                rs = statement.executeQuery(sql);
+
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, lecturer.getLectureId());
+            st.setString(2, lecturer.getLectureName());
+            st.setString(3, lecturer.getLecturePdfName());
+            st.setString(4, lecturer.getLecturerId());
+
+            int result = st.executeUpdate();
+
+            st.close();
+        }catch(SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public ArrayList<Lecture> selectLectureList() {
+        ArrayList<Lecture> lectureList = new ArrayList<>();
+        String sql = "select * from Lecture;";
+        try {
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Lecture lecture = new Lecture();
+                lecture.setLectureId(rs.getString("lectureId"));
+                lecture.setLectureName(rs.getString("lectureName"));
+                lecture.setLecturePdfName(rs.getString("lecturePdfName"));
+                lecture.setLecturerId(rs.getString("lecturerId"));
+                lectureList.add(lecture);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return lectureList;
+    }
+
+    public void consultExcute(Employee employee, CustomerConsultResponse customerConsultResponse) {
+        ResultSet rs = null;
+        try {
+            String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, employee.getEmployeeId());
+            st.setString(2, customerConsultResponse.getEmpCusId());
+            st.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
