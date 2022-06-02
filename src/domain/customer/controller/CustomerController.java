@@ -138,6 +138,32 @@ public class CustomerController {
 
     private void connectSalesEmployee(Customer customer) {
         //상담사연결받아오기
+        /*
+        id, name, kindOfInsurance, phonenumber, job
+         */
+
+        String customerId = choice.getId();
+        String password = choice.getPassword();
+        String name = choice.getName();
+        String phoneNumber = choice.getPhoneNumber();
+        int kindOfJob = choice.getKindOfJob();
+        int kindOfInsuranceId = choice.getKindOfInsuranceId();
+
+        Customer interestCustomer = new Customer(
+                customerId,
+                password,
+                name,
+                null,
+                null,
+                null,
+                null,
+                phoneNumber,
+                kindOfJob,
+                kindOfInsuranceId
+        );
+
+        customerService.connectSalesEmployee(interestCustomer);
+
         System.out.println(customer.getName()+"님 상담 요청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.");
     }
 
