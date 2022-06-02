@@ -1,11 +1,11 @@
 package domain.employee.repository;
 
-import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.insurance.entity.enumeration.KindOfInsurance;
+import global.dao.Lecture;
 import global.util.Constants;
 
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class EmployeeRepository {
 
 //                rs = statement.executeQuery(sql);
 
-            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, employee.getEmployeeId());
             st.setString(2, employee.getPassword());
@@ -199,6 +199,60 @@ public class EmployeeRepository {
         return null;
     }
 
+    public boolean insertLecture(Lecture lecturer) {
+//        String lectureId, String lectureName, String lecturePdfName, String lecturerId
+        Statement statement = null;
+        ResultSet rs = null;
+        try{
+            String sql = "insert into Lecture (" +
+                    "lectureId," +
+                    "lectureName," +
+                    "lecturePdfName," +
+                    "lecturerId)" +
+                    "values (?,?,?,?);";
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+//                rs = statement.executeQuery(sql);
+
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, lecturer.getLectureId());
+            st.setString(2, lecturer.getLectureName());
+            st.setString(3, lecturer.getLecturePdfName());
+            st.setString(4, lecturer.getLecturerId());
+
+            int result = st.executeUpdate();
+
+            st.close();
+        }catch(SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public ArrayList<Lecture> selectLectureList() {
+        ArrayList<Lecture> lectureList = new ArrayList<>();
+        String sql = "select * from Lecture;";
+        try {
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Lecture lecture = new Lecture();
+                lecture.setLectureId(rs.getString("lectureId"));
+                lecture.setLectureName(rs.getString("lectureName"));
+                lecture.setLecturePdfName(rs.getString("lecturePdfName"));
+                lecture.setLecturerId(rs.getString("lecturerId"));
+                lectureList.add(lecture);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return lectureList;
+    }
+
     public void consultExcute(Employee employee, CustomerConsultResponse customerConsultResponse) {
         ResultSet rs = null;
         try {
@@ -207,10 +261,6 @@ public class EmployeeRepository {
             st.setString(1, employee.getEmployeeId());
             st.setString(2, customerConsultResponse.getEmpCusId());
             st.executeUpdate();
-
-
-
-
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
