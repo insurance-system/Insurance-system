@@ -109,4 +109,8 @@ public class EmployeeRepository {
         }
         return null;
     }
+
+    public void login(String employeeId, String password) {
+
+    }
 }
