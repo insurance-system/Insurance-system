@@ -202,24 +202,16 @@ public class EmployeeRepository {
     public void consultExcute(Employee employee, CustomerConsultResponse customerConsultResponse) {
         ResultSet rs = null;
         try {
-            String sql = "Select Emp_Cus.emp_CusId, Customer.customerId, Customer.name, Customer.phoneNumber, Customer.kindOfInsurance, Customer.kindOfJob" +
-                    " from Emp_Cus, Customer " +
-                    "where Customer.customerId = Emp_Cus.customerId and Emp_Cus.satisfaction is null;";
+            String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
             PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, employee.getEmployeeId());
+            st.setString(2, customerConsultResponse.getEmpCusId());
+            st.executeUpdate();
 
-            rs = st.executeQuery();
 
-            ArrayList<CustomerConsultResponse> customerList = new ArrayList<>();
-            while (rs.next()){
-                CustomerConsultResponse customerConsultResponse1 = new CustomerConsultResponse();
-                customerConsultResponse1.setEmpCusId(rs.getString("emp_CusId"));
-                customerConsultResponse1.setCustomerId(rs.getString("customerId"));
-                customerConsultResponse1.setName(rs.getString("name"));
-                customerConsultResponse1.setPhoneNumber(rs.getString("phoneNumber"));
-                customerConsultResponse1.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getInt("kindOfInsurance")));
-                customerConsultResponse1.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
-                customerList.add(customerConsultResponse1);
-            }
+
+
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
