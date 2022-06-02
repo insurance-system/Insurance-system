@@ -30,7 +30,7 @@ public class CustomerController {
                 join();
                 break;
             case 3:
-                connect();
+                connectSalesEmployee();
                 break;
             default:
                 System.out.println("메뉴 1,2,3 중 하나만 입력해주세요.");
@@ -46,7 +46,7 @@ public class CustomerController {
             Customer customer = customerService.login(customerLoginRequest);
             if(customer != null){
                 System.out.println("로그인 성공");
-                if(pw.equals("0")) {
+                if(customer.getAddress() == null) {
                     enterInterest(customer);
                 } else
                     enter(customer);
@@ -62,7 +62,7 @@ public class CustomerController {
         System.out.println(customer.getName() + "님 안녕하세요!");
         switch (choice.afterLoginInterest()){
             case 1: //1. 상담사 연결하기
-                connectSalesEmployee(customer);
+                connectSalesEmployee();
                 break;
             case 2: //2. 상담사 평가하기
                 evaluateSatisfaction(customer);
@@ -83,7 +83,7 @@ public class CustomerController {
         System.out.println(customer.getName() + "님 안녕하세요!");
         switch (choice.afterLogin()){
             case 1: //1. 상담사 연결하기
-                connectSalesEmployee(customer);
+                connectSalesEmployee();
                 break;
             case 2: //2. 가입된 보험 조회하기
                 Insurance insurance = findJoinedInsurances(customer.getCustomerId());
@@ -136,7 +136,7 @@ public class CustomerController {
         return customerService.findJoinedInsurances(id);
     }
 
-    private void connectSalesEmployee(Customer customer) {
+    private void connectSalesEmployee() {
         //상담사연결받아오기
         /*
         id, name, kindOfInsurance, phonenumber, job
@@ -164,7 +164,7 @@ public class CustomerController {
 
         customerService.connectSalesEmployee(interestCustomer);
 
-        System.out.println(customer.getName()+"님 상담 요청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.");
+        System.out.println(interestCustomer.getName()+"님 상담 요청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.");
     }
 
     public void join() {
