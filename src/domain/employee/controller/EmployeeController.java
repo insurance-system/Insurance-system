@@ -50,6 +50,7 @@ public class EmployeeController {
                             System.out.println("상담 진행");
                             employeeService.consultExcute(employee,
                                     arrayList.get(employeeComment.customerConsultList(arrayList)));
+                            System.out.println("상담 완료");
                         }
                     }else{
                         new NoAuthorityDPException();
