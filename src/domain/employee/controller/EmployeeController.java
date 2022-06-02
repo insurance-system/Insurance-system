@@ -30,7 +30,10 @@ public class EmployeeController {
     }
 
     private void login() {
-        System.out.println("직원 로그인");
+        employeeService.login(choice.getId(),choice.getPassword());
+
+
+
     }
 
     //TODO

@@ -35,10 +35,10 @@ public class CustomerController {
 
     public void login() {
         CustomerLoginRequest customerLoginRequest
-                = new CustomerLoginRequest(choice.getCustomerId(), choice.getPassword());
+                = new CustomerLoginRequest(choice.getId(), choice.getPassword());
         Customer customer = customerService.login(customerLoginRequest);
         if(customer != null){
-            System.out.println("로그인 성공!");
+            System.out.println("로그인 성공");
             enter(customer);
         }
         else System.out.println("아이디 혹은 비번이 틀렸음");
@@ -86,7 +86,7 @@ public class CustomerController {
     }
 
     public void join() {
-        String customerId = choice.getCustomerId();
+        String customerId = choice.getId();
         String password = choice.getPassword();
         String name = choice.getName();
         String address = choice.getAddress();
