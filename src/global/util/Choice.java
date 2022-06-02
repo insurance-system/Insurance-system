@@ -91,9 +91,6 @@ public class Choice {
     }
 
     public int employeeInitial() {
-        System.out.println("안녕하세요. 회원가입을 하셨다면 로그인을 해주세요.");
-        System.out.println("1.로그인\n2.회원가입\n3.상담사 연결");
-        System.out.print("번호 입력:");
         return scanner.nextInt();
     }
 
