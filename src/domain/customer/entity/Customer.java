@@ -31,7 +31,7 @@ public class Customer{
                     String email,
                     String phoneNumber,
                     int kindOfJobId,
-                    int kindOfInsuranceId) {
+                    int kindOfInsuranceId){
         this.customerId = customerId;
         this.password = password;
         this.name = name;
@@ -54,7 +54,7 @@ public class Customer{
                     String email,
                     String phoneNumber,
                     KindOfJob kindOfJobId,
-                    KindOfInsurance kindOfInsuranceId) {
+                    KindOfInsurance kindOfInsuranceId){
         this.customerId = customerId;
         this.password = password;
         this.name = name;

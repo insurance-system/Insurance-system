@@ -33,32 +33,55 @@ public class CustomerController {
         }
     }
 
-    public boolean login() {
+    public void login() {
         CustomerLoginRequest customerLoginRequest
                 = new CustomerLoginRequest(choice.getCustomerId(), choice.getPassword());
         Customer customer = customerService.login(customerLoginRequest);
         if(customer != null){
             System.out.println("로그인 성공!");
             enter(customer);
-            return false;
         }
-        else{
-            System.out.println("아이디 혹은 비번이 틀렸음");
-            return true;
-        }
+        else System.out.println("아이디 혹은 비번이 틀렸음");
     }
 
     public void enter(Customer customer){
         System.out.println(customer.getName() + "님 안녕하세요!");
-
         switch (choice.afterLogin()){
             case 1:
+                connectSalesEmployee();
                 break;
             case 2:
+                findJoinedInsurances();
                 break;
             case 3:
+                findPaymentHistory();
+                break;
+            case 4:
+                writeQnA();
+                break;
+            case 5:
+                break;
+            case 6:
+                registerInsurance();
+                break;
+            default:
                 break;
         }
+    }
+
+    private void registerInsurance() {
+    }
+
+    private void writeQnA() {
+    }
+
+    private void findPaymentHistory() {
+    }
+
+    private void findJoinedInsurances() {
+    }
+
+    private void connectSalesEmployee() {
 
     }
 
@@ -97,4 +120,6 @@ public class CustomerController {
     public void connect() {
         choice.afterLogin();
     }
+
+//     public
 }
