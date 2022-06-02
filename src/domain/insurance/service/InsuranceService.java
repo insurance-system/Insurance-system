@@ -13,6 +13,7 @@ public class InsuranceService {
 
     public Insurance getInsuranceById(String insuranceId) {
         String insuranceStr = insuranceRepository.findById(insuranceId);
-        return Insurance.makeObject(insuranceStr);
+//        return Insurance.makeObject(insuranceStr);
+        return null;
     }
 }

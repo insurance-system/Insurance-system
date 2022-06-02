@@ -1,4 +1,4 @@
-package core.insurance.entity;
+package domain.insurance.entity;
 
 import global.entity.KindOfDisease;
 

@@ -1,4 +1,4 @@
-package core.insurance.entity.enumeration;
+package domain.insurance.entity.enumeration;
 
 public enum KindOfInsurance {
     LIFE(1, "LIFE"), NON_LIFE(2, "NON_LIFE");

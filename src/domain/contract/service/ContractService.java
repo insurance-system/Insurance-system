@@ -1,4 +1,4 @@
-package core.contract.service;
+package domain.contract.service;
 
 public class ContractService {
 
