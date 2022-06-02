@@ -80,7 +80,7 @@ public class CustomerController {
     }
     //보험금 납부 내역
     private void findPaymentHistory() {
-        customerService.findPayment();
+        customerService.findPayment(choice.getId());
     }
 
     private Insurance findJoinedInsurances() {
