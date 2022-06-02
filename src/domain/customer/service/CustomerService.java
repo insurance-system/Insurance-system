@@ -43,4 +43,8 @@ public class CustomerService {
     public void evaluateSatisfaction(String satisfaction, String id) {
         customerRepository.evaluateSatisfaction(satisfaction, id);
     }
+
+    public void connectSalesEmployee(Customer interestCustomer) {
+        customerRepository.connectSalesEmployee(interestCustomer);
+    }
 }
