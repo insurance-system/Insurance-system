@@ -1,5 +1,7 @@
 package domain.employee.repository;
 
+import domain.contract.entity.Contract;
+import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
@@ -10,6 +12,8 @@ import global.util.Constants;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /*
@@ -253,6 +257,30 @@ public class EmployeeRepository {
         return lectureList;
     }
 
+    public ArrayList<Contract> selectContractList() {
+        ArrayList<Contract> contractList = new ArrayList<>();
+        String sql = "select * from Contract;";
+        try {
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Contract contract = new Contract();
+                contract.setContractId(rs.getInt("contractId"));
+                contract.setCustomerId(rs.getString("customerId"));
+                contract.setInsuranceId(rs.getInt("insuranceId"));
+                contract.setExpiredDate(LocalDate.parse(rs.getString("expiredDate"), DateTimeFormatter.ISO_DATE));
+                contract.setPaymentDate(LocalDate.parse(rs.getString("paymentDate"), DateTimeFormatter.ISO_DATE));
+                contract.setContractStatus(rs.getString("contractStatus"));
+                contractList.add(contract);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return contractList;
+    }
+
     public void consultExcute(Employee employee, CustomerConsultResponse customerConsultResponse) {
         ResultSet rs = null;
         try {
@@ -265,5 +293,34 @@ public class EmployeeRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public ArrayList<Customer> selectEmployeeByIds(ArrayList<String> nearExpiredContractsCustomerIds) {
+        ArrayList<Customer> customerList = new ArrayList<>();
+        String args = "";
+        for (String nearExpiredContractsCustomerId : nearExpiredContractsCustomerIds) {
+            args += "'"+nearExpiredContractsCustomerId+"',";
+        }
+        args = args.substring(0, args.length()-1);
+
+        String sql = "select * from Customer where customerId in ("+args +");";
+        System.out.println("sql = " + sql);
+        try {
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getString("customerId"));
+                customer.setName(rs.getString("name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setPhoneNumber(rs.getString("phoneNumber"));
+                customerList.add(customer);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return customerList;
     }
 }

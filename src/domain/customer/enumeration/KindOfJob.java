@@ -30,5 +30,4 @@ public enum KindOfJob {
         else if(Objects.equals(name, "house_maker")) return KindOfJob.HOUSE_MAKER;
         else return KindOfJob.NOT_EMPLOYED;
     }
-
 }
