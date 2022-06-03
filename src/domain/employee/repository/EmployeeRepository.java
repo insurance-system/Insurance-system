@@ -6,6 +6,7 @@ import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
+import domain.insurance.entity.Insurance;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 import global.dao.Lecture;
 import global.util.Constants;
@@ -322,5 +323,63 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
         return customerList;
+    }
+
+    public ArrayList<Customer> selectCustomerByIds(ArrayList<String> customerIds) {
+        ArrayList<Customer> customerList = new ArrayList<>();
+        String args = "";
+        for (String customerId : customerIds) {
+            args += "'"+customerId+"',";
+        }
+        args = args.substring(0, args.length()-1);
+
+        String sql = "select * from Customer where customerId in ("+args +");";
+        System.out.println("sql = " + sql);
+        try {
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getString("customerId"));
+                customer.setName(rs.getString("name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setPhoneNumber(rs.getString("phoneNumber"));
+                customerList.add(customer);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return customerList;
+    }
+
+
+    public ArrayList<Insurance> selectInsuranceByIds(ArrayList<Integer> insuranceIds) {
+        ArrayList<Insurance> insuranceList = new ArrayList<>();
+        String args = "";
+        for (Integer insuranceId : insuranceIds) {
+            args += "'"+insuranceId+"',";
+        }
+        args = args.substring(0, args.length()-1);
+
+        String sql = "select * from Insurance where insuranceId in ("+args +");";
+        System.out.println("sql = " + sql);
+        try {
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = st.executeQuery();
+
+            while (rs.next()){
+                Insurance insurance = new Insurance();
+                insurance.setInsuranceId(rs.getInt("insuranceId"));
+                insurance.setInsuranceName(rs.getString("insuranceName"));
+                insurance.setFee(rs.getInt("fee"));
+                insuranceList.add(insurance);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return insuranceList;
     }
 }
