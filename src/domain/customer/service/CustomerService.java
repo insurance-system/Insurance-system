@@ -4,7 +4,6 @@ import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
-import domain.customer.exception.excution.NoCustomerException;
 import domain.customer.repository.CustomerRepository;
 import domain.insurance.entity.Insurance;
 
@@ -43,10 +42,16 @@ public class CustomerService {
     }
 
     public void evaluateSatisfaction(String satisfaction, String id) {
-        customerRepository.evaluateSatisfaction(satisfaction, id);
+        if(customerRepository.checkSatisfaction(id) == null)
+            customerRepository.evaluateSatisfaction(satisfaction, id);
     }
 
     public void connectSalesEmployee(Customer interestCustomer) {
+        customerRepository.joinInterestCustomer(interestCustomer);
         customerRepository.connectSalesEmployee(interestCustomer);
+    }
+
+    public String checkSatisfaction(String customerId) {
+        return customerRepository.checkSatisfaction(customerId);
     }
 }
