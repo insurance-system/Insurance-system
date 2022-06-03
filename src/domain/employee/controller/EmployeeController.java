@@ -163,6 +163,7 @@ public class EmployeeController {
                 getNearExpireContractList();
                 break;
             case 2:
+                getNearPaymentContractList();
                 break;
         }
 
@@ -185,6 +186,15 @@ public class EmployeeController {
         if(employeeComment.yesOrNo() == 1) employeeService.sendEmailNearExpireContract(nearExpireContractList);
     }
 
+    private void getNearPaymentContractList() {
+        ArrayList<Contract> nearPaymentContractList = employeeService.getNearPaymentContractList();
+        System.out.println("-----납부일 만료 임박 고객 리스트-----");
+        for (Contract contract : nearPaymentContractList) System.out.println(contract);
+        System.out.println("----------------------------------");
+        System.out.println("해당 고객들에게 계약 기간 만료 임박 이메일을 보내시겠습니까?");
+        if(employeeComment.yesOrNo() == 1) employeeService.sendNearPaymentContract(nearPaymentContractList);
+    }
+
 
     private void findLectureList() {
         ArrayList<Lecture> lectureList = employeeService.findLectureList();
@@ -202,6 +212,7 @@ public class EmployeeController {
         else System.out.println("강의 등록에 실패했습니다.");
     }
 
+    //TODO
     public void findLectureRegistrationList(){
 
     }
