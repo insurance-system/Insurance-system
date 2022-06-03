@@ -1,7 +1,7 @@
 package domain.employee.controller;
 
 import domain.customer.entity.Payer;
-import domain.employee.dto.CustomerConsultResponse;
+import domain.employee.dto.Customer;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
@@ -46,7 +46,7 @@ public class EmployeeController {
                 case 11:
                     //상담 대기 신규 고객 명단 조회
                     if (employee.getDepartmentId().equals("DP1")){
-                        ArrayList<CustomerConsultResponse> arrayList = employeeService.customerConsult(employee);
+                        ArrayList<Customer> arrayList = employeeService.customerConsult(employee);
                         if (!arrayList.isEmpty()){
                             System.out.println("상담 진행");
                             employeeService.consultExcute(employee,
@@ -99,9 +99,10 @@ public class EmployeeController {
                         new NoAuthorityDPException();
                     }
                 case 41:
-                    //보험 계약 관리
+                    //보험 만기 고객 조회
+                    //건강정보 테이블에 고객 ID들어가야함
                     if (employee.getDepartmentId().equals("DP6")) {
-
+                        employeeComment.contractExpriation(this.employeeService.selectContractExpiration());
                     }else{
                         new NoAuthorityDPException();
                     }
@@ -109,7 +110,7 @@ public class EmployeeController {
                 case 42:
                     //미납 고객 조회
                     if (employee.getDepartmentId().equals("DP6")) {
-
+                        employeeComment.contractDefault(this.employeeService.selectDefaultCustomer());
                     }else{
                         new NoAuthorityDPException();
                     }
