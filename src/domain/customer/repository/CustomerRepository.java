@@ -3,6 +3,7 @@ package domain.customer.repository;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.NoCustomerException;
+import domain.customer.exception.excution.NoEvaluateSatisfactionException;
 import domain.customer.exception.excution.NoJoinedInsuranceException;
 import domain.customer.exception.excution.NoPaymentHistoryException;
 import domain.employee.entity.Employee;
@@ -18,22 +19,22 @@ public class CustomerRepository {
 
     private Connection connection;
 
-    public Customer insert(Customer customer){
+    public Customer insert(Customer customer) {
         ResultSet rs = null;
-        try{
+        try {
             String sql =
                     "insert into Customer (" +
-                    "customerId," +
-                    "password," +
-                    "name," +
-                    "email," +
-                    "phoneNumber," +
-                    "address," +
-                    "detailAddress," +
-                    "zipcode,"+
-                    "kindOfInsurance,"+
-                    "kindOfJob)" +
-                    "values (?,?,?,?,?,?,?,?,?,?);";
+                            "customerId," +
+                            "password," +
+                            "name," +
+                            "email," +
+                            "phoneNumber," +
+                            "address," +
+                            "detailAddress," +
+                            "zipcode," +
+                            "kindOfInsurance," +
+                            "kindOfJob)" +
+                            "values (?,?,?,?,?,?,?,?,?,?);";
 
             PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
 
@@ -58,14 +59,14 @@ public class CustomerRepository {
 
     public Customer login(String customerId, String password) {
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select * from Customer where customerId = ? and password = ?;";
             PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, customerId);
-            st.setString(2,password);
+            st.setString(2, password);
             rs = st.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Customer customer = new Customer();
                 customer.setCustomerId(rs.getString("customerId"));
                 customer.setName(rs.getString("name"));
@@ -88,7 +89,7 @@ public class CustomerRepository {
         return null;
     }
 
-    private Connection sqlConnection(){
+    private Connection sqlConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = null;
@@ -114,7 +115,7 @@ public class CustomerRepository {
 
             st.setString(1, id);
             rs = st.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 Insurance insurance = new Insurance(
                         rs.getString("insuranceName"),
                         rs.getInt("fee")
@@ -132,7 +133,7 @@ public class CustomerRepository {
 
     public FindPayment findPayment(String id) {
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select I.insuranceName, I.fee, Ph.PayDate " +
                     "from Customer C, Contract Ct, Payer P, PayHistory Ph, Insurance I " +
                     "where C.customerId = Ct.customerId and Ct.contractId = Ph.contractId and P.payerId = Ph.payerId " +
@@ -142,7 +143,7 @@ public class CustomerRepository {
 
             st.setString(1, id);
             rs = st.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 FindPayment findPayment = new FindPayment(
                         rs.getString("insuranceName"),
                         rs.getInt("fee"),
@@ -153,7 +154,7 @@ public class CustomerRepository {
             }
             ;
 //            conn.close();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         new NoPaymentHistoryException();
@@ -163,7 +164,7 @@ public class CustomerRepository {
     public void evaluateSatisfaction(String satisfaction, String id) {
         Statement statement = null;
         ResultSet rs = null;
-        try{
+        try {
             String sql = "update Emp_Cus set satisfaction = ? where customerId = ?;";
 
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -179,16 +180,16 @@ public class CustomerRepository {
             int result = st.executeUpdate();
             st.close();
 //            conn.close();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void connectSalesEmployee(Customer interestCustomer) {
+    public void joinInterestCustomer(Customer interestCustomer) {
         ResultSet rs = null;
-        try{
+        try {
             String sql =
                     "insert into Customer (" +
                             "customerId," +
@@ -198,8 +199,8 @@ public class CustomerRepository {
                             "phoneNumber," +
                             "address," +
                             "detailAddress," +
-                            "zipcode,"+
-                            "kindOfInsurance,"+
+                            "zipcode," +
+                            "kindOfInsurance," +
                             "kindOfJob)" +
                             "values (?,?,?,?,?,?,?,?,?,?);";
 
@@ -223,4 +224,43 @@ public class CustomerRepository {
         }
     }
 
+    public void connectSalesEmployee(Customer Customer) {
+        ResultSet rs = null;
+        try {
+            String sql =
+                    "insert into Emp_Cus (emp_CusId,employeeId,customerId,satisfaction) values (?,?,?,?);";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, "EC" + Customer.getCustomerId());
+            st.setString(2, null);
+            st.setString(3, Customer.getCustomerId());
+            st.setString(4, null);
+            int result = st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String checkSatisfaction(String id) {
+        ResultSet rs = null;
+        try {
+            String sql = "select satisfaction from Emp_Cus where customerId=?;";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, id);
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String checkSatisfaction = rs.getString("satisfaction");
+                if(checkSatisfaction==null) return checkSatisfaction;
+                else new NoEvaluateSatisfactionException();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
 }

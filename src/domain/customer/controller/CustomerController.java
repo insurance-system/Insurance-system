@@ -5,7 +5,6 @@ import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.CheckMenuNumberException;
-import domain.customer.exception.excution.NoCustomerException;
 import domain.customer.service.CustomerService;
 import domain.insurance.entity.Insurance;
 import global.util.Choice;
@@ -22,17 +21,20 @@ public class CustomerController {
         this.choice = choice;
         this.customerComment = new CustomerComment();
     }
-
+    //시작화면
     public void initial() {
         switch(choice.customerInitial()){
-            case 1:
+            case 1: //1.로그인
                 login();
                 break;
-            case 2:
+            case 2: //2.회원가입
                 join();
                 break;
-            case 3:
+            case 3: //3.상담사 연결
                 connectSalesEmployee();
+                break;
+            case 4: //4.종료
+                System.exit(0);
                 break;
             default:
                 new CheckMenuNumberException();
@@ -40,31 +42,18 @@ public class CustomerController {
                 break;
         }
     }
-
-    public void login() {
-        String id = choice.getId();
-        String pw = choice.getPassword();
-
-        CustomerLoginRequest customerLoginRequest
-                = new CustomerLoginRequest(id, pw);
-            Customer customer = customerService.login(customerLoginRequest);
-            if(customer != null){
-                System.out.println("로그인 성공");
-                if(customer.getAddress() == null) {
-                    enterInterest(customer);
-                } else enter(customer);
-            } else login();
-    }
-
+    //로그인 후 관심자화면
     private void enterInterest(Customer customer) {
         System.out.println(customer.getName() + "님 안녕하세요!");
         switch (choice.afterLoginInterest()){
             case 1: //1. 상담사 연결하기
-                connectSalesEmployee();
+                connectSalesEmployee(customer);
                 break;
             case 2: //2. 상담사 평가하기
                 evaluateSatisfaction(customer);
-                choice.employeeInitial();
+                break;
+            case 3:
+                initial();
                 break;
             default:
                 new CheckMenuNumberException();
@@ -73,12 +62,7 @@ public class CustomerController {
         enterInterest(customer);
     }
 
-    private void evaluateSatisfaction(Customer customer) {
-        String satisfaction = choice.getSatisfaction();
-        customerService.evaluateSatisfaction(satisfaction,customer.getCustomerId());
-        System.out.println(customer.getName()+"님 만족도 평가에 참여해주셔서 감사합니다");
-    }
-
+    //로그인 후 고객화면
     public void enter(Customer customer){
         System.out.println(customer.getName() + "님 안녕하세요!");
         switch (choice.afterLogin()){
@@ -91,17 +75,13 @@ public class CustomerController {
                     customerComment.insuranceInformation(insurance);
                     afterfindJoinedInsurances(customer);}
                 break;
-            case 3: //성식 3. 보험급 납부내역
+            case 3: //3. 보험급 납부내역
                 FindPayment findPayment = findPaymentHistory(customer.getCustomerId());
                 if(findPayment!=null) customerComment.findPaymentHistory(findPayment);
                 break;
-            case 4:
-                writeQnA();
+            case 4: //4. 사고 처리 접수
                 break;
-            case 5:
-                break;
-            case 6:
-                registerInsurance();
+            case 5: //5. 보험 가입하기
                 break;
             default:
                 new CheckMenuNumberException();
@@ -110,13 +90,12 @@ public class CustomerController {
         enter(customer);
     }
 
-
+    //보험 목록 확인 후 화면
     private void afterfindJoinedInsurances(Customer customer) {
         switch(choice.afterfindJoinedInsurances()) {
-            case 1:
-                //보험해지하고싶어요~
+            case 1: //1.보험 해지하기
                 break;
-            case 2:
+            case 2: //2. 돌아가기
                 enter(customer);
                 break;
             default:
@@ -125,10 +104,29 @@ public class CustomerController {
         }
     }
 
-    private void registerInsurance() {
+    //로그인
+    public void login() {
+        String id = choice.getId();
+        String pw = choice.getPassword();
+
+        CustomerLoginRequest customerLoginRequest
+                = new CustomerLoginRequest(id, pw);
+            Customer customer = customerService.login(customerLoginRequest);
+            if(customer != null){
+                //관심자
+                if(customer.getAddress() == null) {
+                    enterInterest(customer);
+                } else enter(customer);
+            } else login();
     }
 
-    private void writeQnA() {
+    //상담사 만족도 평가
+    private void evaluateSatisfaction(Customer customer) {
+        if(customerService.checkSatisfaction(customer.getCustomerId()) != null) {
+            String satisfaction = choice.getSatisfaction();
+            customerService.evaluateSatisfaction(satisfaction, customer.getCustomerId());
+            System.out.println(customer.getName() + "님 만족도 평가에 참여해주셔서 감사합니다");
+        }
     }
 
     //보험금 납부 내역
@@ -136,16 +134,13 @@ public class CustomerController {
         return customerService.findPayment(id);
     }
 
+    //가입 보험 내역
     private Insurance findJoinedInsurances(String id) {
         return customerService.findJoinedInsurances(id);
     }
 
+    //관심자 상담사 연결
     private void connectSalesEmployee() {
-        //상담사연결받아오기
-        /*
-        id, name, kindOfInsurance, phonenumber, job
-         */
-
         String customerId = choice.getId();
         String password = choice.getPassword();
         String name = choice.getName();
@@ -167,10 +162,16 @@ public class CustomerController {
         );
 
         customerService.connectSalesEmployee(interestCustomer);
-
         System.out.println(interestCustomer.getName()+"님 상담 요청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.");
     }
 
+    //기존회원 상담사 연결
+    private void connectSalesEmployee(Customer customer) {
+        customerService.connectSalesEmployee(customer);
+        System.out.println(customer.getName()+"님 상담 요청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.");
+    }
+
+    //회원가입(고객)
     public void join() {
         String customerId = choice.getId();
         String password = choice.getPassword();
@@ -195,16 +196,8 @@ public class CustomerController {
                 kindOfJob,
                 kindOfInsuranceId
         );
-
-        System.out.println("customer = " + customer);
-
         customerService.join(customer);
         System.out.println("회원가입이 완료되었습니다. 로그인을 해주세요!");
         login();
     }
-
-    public void connect() {
-        choice.afterLogin();
-    }
-
 }
