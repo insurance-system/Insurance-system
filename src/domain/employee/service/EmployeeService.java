@@ -1,10 +1,15 @@
 package domain.employee.service;
 
+import domain.contract.entity.Contract;
+import domain.customer.entity.Customer;
+import domain.customer.entity.Payer;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.repository.EmployeeRepository;
 import global.dao.Lecture;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 
 public class EmployeeService {
@@ -37,5 +42,25 @@ public class EmployeeService {
 
     public ArrayList<Lecture> findLectureList(){
         return employeeRepository.selectLectureList();
+    }
+
+
+    public ArrayList<Payer> getNearExpiredPayerList() {
+        ArrayList<Contract> contracts = employeeRepository.selectContractList();
+        ArrayList<String> nearExpiredContractsCustomerIds = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        for (Contract contract : contracts){
+            Period between = Period.between(contract.getExpiredDate(), now);
+            if(between.getDays() <= 5) nearExpiredContractsCustomerIds.add(contract.getCustomerId());
+        }
+        ArrayList<Customer> customers = employeeRepository.selectEmployeeByIds(nearExpiredContractsCustomerIds);
+        for (Customer customer : customers) {
+            System.out.println("customer = " + customer);
+        }
+        return null;
+    }
+
+    public ArrayList<Payer> getNearPaymentDayPayerList() {
+        return null;
     }
 }
