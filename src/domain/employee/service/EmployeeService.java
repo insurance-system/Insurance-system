@@ -1,9 +1,10 @@
 package domain.employee.service;
 
 import domain.contract.entity.Contract;
-import domain.customer.entity.Customer;
 import domain.customer.entity.Payer;
-import domain.employee.dto.CustomerConsultResponse;
+import domain.employee.dto.Customer;
+import domain.employee.dto.DefaultResponse;
+import domain.employee.dto.ExpirationResponse;
 import domain.employee.entity.Employee;
 import domain.employee.repository.EmployeeRepository;
 import global.dao.Lecture;
@@ -25,11 +26,11 @@ public class EmployeeService {
         return this.employeeRepository.login(employeeId,password);
     }
 
-    public ArrayList<CustomerConsultResponse> customerConsult(Employee employee) {
+    public ArrayList<Customer> customerConsult(Employee employee) {
         return this.employeeRepository.customerConsult(employee);
     }
 
-    public void consultExcute(Employee employee, CustomerConsultResponse customerConsultResponse) {
+    public void consultExcute(Employee employee, Customer customerConsultResponse) {
         this.employeeRepository.consultExcute(employee, customerConsultResponse);
     }
     public void findLectureRegistrationList() {
@@ -53,8 +54,8 @@ public class EmployeeService {
             Period between = Period.between(contract.getExpiredDate(), now);
             if(between.getDays() <= 5) nearExpiredContractsCustomerIds.add(contract.getCustomerId());
         }
-        ArrayList<Customer> customers = employeeRepository.selectEmployeeByIds(nearExpiredContractsCustomerIds);
-        for (Customer customer : customers) {
+        ArrayList<domain.customer.entity.Customer> customers = employeeRepository.selectEmployeeByIds(nearExpiredContractsCustomerIds);
+        for (domain.customer.entity.Customer customer : customers) {
             System.out.println("customer = " + customer);
         }
         return null;
@@ -64,5 +65,13 @@ public class EmployeeService {
     public ArrayList<Payer> getNearPaymentDayPayerList() {
         // TODO InsurancePaymentAlarm 객체로 바꿔서 이메일 보내기
         return null;
+    }
+
+    public ArrayList<ExpirationResponse> selectContractExpiration() {
+        return this.employeeRepository.contractManage();
+    }
+
+    public ArrayList<DefaultResponse> selectDefaultCustomer() {
+        return this.employeeRepository.selectDefaultCustomer();
     }
 }

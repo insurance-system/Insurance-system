@@ -1,9 +1,10 @@
 package domain.employee.repository;
 
 import domain.contract.entity.Contract;
-import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
-import domain.employee.dto.CustomerConsultResponse;
+import domain.employee.dto.Customer;
+import domain.employee.dto.DefaultResponse;
+import domain.employee.dto.ExpirationResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.insurance.entity.enumeration.KindOfInsurance;
@@ -173,7 +174,7 @@ public class EmployeeRepository {
         return null;
     }
 
-    public ArrayList<CustomerConsultResponse> customerConsult(Employee employee) {
+    public ArrayList<Customer> customerConsult(Employee employee) {
         ResultSet rs = null;
         try {
             String sql = "Select Emp_Cus.emp_CusId, Customer.customerId, Customer.name, Customer.phoneNumber, Customer.kindOfInsurance, Customer.kindOfJob" +
@@ -183,9 +184,9 @@ public class EmployeeRepository {
 
             rs = st.executeQuery();
 
-            ArrayList<CustomerConsultResponse> customerList = new ArrayList<>();
+            ArrayList<Customer> customerList = new ArrayList<>();
             while (rs.next()){
-                CustomerConsultResponse customerConsultResponse = new CustomerConsultResponse();
+                Customer customerConsultResponse = new Customer();
                 customerConsultResponse.setEmpCusId(rs.getString("emp_CusId"));
                 customerConsultResponse.setCustomerId(rs.getString("customerId"));
                 customerConsultResponse.setName(rs.getString("name"));
@@ -281,7 +282,7 @@ public class EmployeeRepository {
         return contractList;
     }
 
-    public void consultExcute(Employee employee, CustomerConsultResponse customerConsultResponse) {
+    public void consultExcute(Employee employee, Customer customerConsultResponse) {
         ResultSet rs = null;
         try {
             String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
@@ -295,8 +296,8 @@ public class EmployeeRepository {
         }
     }
 
-    public ArrayList<Customer> selectEmployeeByIds(ArrayList<String> nearExpiredContractsCustomerIds) {
-        ArrayList<Customer> customerList = new ArrayList<>();
+    public ArrayList<domain.customer.entity.Customer> selectEmployeeByIds(ArrayList<String> nearExpiredContractsCustomerIds) {
+        ArrayList<domain.customer.entity.Customer> customerList = new ArrayList<>();
         String args = "";
         for (String nearExpiredContractsCustomerId : nearExpiredContractsCustomerIds) {
             args += "'"+nearExpiredContractsCustomerId+"',";
@@ -311,7 +312,7 @@ public class EmployeeRepository {
             rs = st.executeQuery();
 
             while (rs.next()) {
-                Customer customer = new Customer();
+                domain.customer.entity.Customer customer = new domain.customer.entity.Customer();
                 customer.setCustomerId(rs.getString("customerId"));
                 customer.setName(rs.getString("name"));
                 customer.setEmail(rs.getString("email"));
@@ -322,5 +323,75 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
         return customerList;
+    }
+
+    public ArrayList<ExpirationResponse> contractManage() {
+        ResultSet rs = null;
+        try {
+            String sql = "select c.customerId, c.name, c.phoneNumber, c.email, c.kindOfJob, c.kindOfInsurance, i.insuranceName, i.insuranceStatus, contractStatus " +
+                    " From Customer c, Contract, Insurance i " +
+                    "where c.customerId = Contract.customerId" +
+                    "  and Contract.insuranceId = i.insuranceId" +
+                    "  and contractStatus = 'expiration' ";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+
+            rs = st.executeQuery();
+
+            ArrayList<ExpirationResponse> expirationResponses = new ArrayList<>();
+            while (rs.next()){
+                ExpirationResponse expirationResponse = new ExpirationResponse(
+                        rs.getString("customerId"),
+                        rs.getString("name"),
+                        rs.getString("phoneNumber"),
+                        rs.getString("email"),
+                        KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")),
+                        KindOfInsurance.getKindOfInsuranceBy(rs.getInt("kindOfInsurance")),
+                        rs.getString("insuranceName"),
+                        rs.getString("insuranceStatus"),
+                        "만기"
+                );
+                expirationResponses.add(expirationResponse);
+            }
+
+            return expirationResponses;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<DefaultResponse> selectDefaultCustomer() {
+        ResultSet rs = null;
+        try {
+            String sql = "select c.customerId, c.name, c.phoneNumber, address, detailAddress, zipCode, insuranceName, contractStatus " +
+                    " FROM Customer c, Contract, Insurance " +
+                    " WHERE c.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId " +
+                    "  and contractStatus = 'default'";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+
+            rs = st.executeQuery();
+
+            ArrayList<DefaultResponse> defaultResponses = new ArrayList<>();
+            while (rs.next()){
+                DefaultResponse defaultResponse = new DefaultResponse(
+                        rs.getString("customerId"),
+                        rs.getString("name"),
+                        rs.getString("phoneNumber"),
+                        rs.getString("address"),
+                        rs.getString("detailAddress"),
+                        rs.getString("zipCode"),
+                        rs.getString("insuranceName"),
+                        "미납"
+                );
+                defaultResponses.add(defaultResponse);
+            }
+
+            return defaultResponses;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 }
