@@ -58,9 +58,11 @@ public class EmployeeService {
             System.out.println("customer = " + customer);
         }
         return null;
+        //TODO InsuranceNearExpireAlarm 객체로 바꿔서 이메일 보내기
     }
 
     public ArrayList<Payer> getNearPaymentDayPayerList() {
+        // TODO InsurancePaymentAlarm 객체로 바꿔서 이메일 보내기
         return null;
     }
 }
