@@ -1,6 +1,6 @@
 package domain.employee.controller;
 
-import domain.customer.entity.Payer;
+import domain.contract.entity.Contract;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
@@ -93,7 +93,7 @@ public class EmployeeController {
                     /*
                     * 보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
                     */
-                    if (employee.getDepartmentId().equals("DP6")) {
+                    if (employee.getDepartmentId().equals("DP6")){
                         notifyContractStatus();
                     }else{
                         new NoAuthorityDPException();
@@ -158,16 +158,33 @@ public class EmployeeController {
     }
 
     private void notifyContractStatus() {
-        ArrayList<Payer> nearExpiredPayerList = employeeService.getNearExpiredPayerList();
-        ArrayList<Payer> nearPaydayPayerList = employeeService.getNearPaymentDayPayerList();
-        if(nearExpiredPayerList.size() <= 0 || nearPaydayPayerList.size() <= 0)
-            System.out.println("계약기간 혹은 만료일이 임박한 Contract를 가진 Payer가 아직 존재하지 않습니다.");
-        else{
-            for (Payer payer : nearExpiredPayerList) System.out.println(payer + " 에게 계약 기간만료 임박 이메일을 전송했습니다.");
-            for (Payer payer : nearPaydayPayerList) System.out.println(payer + " 에게 납부 날짜 임박 이메일을 전송했습니다.");
+        switch(employeeComment.notifyMenu()){
+            case 1:
+                getNearExpireContractList();
+                break;
+            case 2:
+                break;
         }
+
+
+
+//        if(nearExpiredPayerList.size() <= 0 || nearPaydayPayerList.size() <= 0)
+//            System.out.println("계약기간 혹은 만료일이 임박한 Contract를 가진 Payer가 아직 존재하지 않습니다.");
+//        else{
+//            for (Payer payer : nearExpiredPayerList) System.out.println(payer + " 에게 계약 기간만료 임박 이메일을 전송했습니다.");
+//            for (Payer payer : nearPaydayPayerList) System.out.println(payer + " 에게 납부 날짜 임박 이메일을 전송했습니다.");
+//        }
     }
-    
+
+    private void getNearExpireContractList() {
+        ArrayList<Contract> nearExpireContractList = employeeService.getNearExpireContractList();
+        System.out.println("-----계약 기간 만료 임박 고객 리스트-----");
+        for (Contract contract : nearExpireContractList) System.out.println(contract);
+        System.out.println("----------------------------------");
+        System.out.println("해당 고객들에게 계약 기간 만료 임박 이메일을 보내시겠습니까?");
+        if(employeeComment.yesOrNo() == 1) employeeService.sendEmailNearExpireContract(nearExpireContractList);
+    }
+
 
     private void findLectureList() {
         ArrayList<Lecture> lectureList = employeeService.findLectureList();

@@ -1,6 +1,5 @@
 package global.util;
 
-import domain.customer.entity.Customer;
 import domain.employee.dto.CustomerConsultResponse;
 
 import java.util.ArrayList;
@@ -55,6 +54,18 @@ public class EmployeeComment {
         }
         System.out.println("");
         System.out.print("상담을 진행하려는 고객의 번호를 입력해주세요. \n번호 입력: ");
+        return scanner.nextInt();
+    }
+
+    public int notifyMenu() {
+        System.out.println("1. 계약기간 만료 임박 고객 리스트 출력하기");
+        System.out.println("2. 보험 납부 기간 만료 임박 고객 리스트 출력하기");
+        return scanner.nextInt();
+    }
+
+    public int yesOrNo() {
+        System.out.println("1. 예");
+        System.out.println("2. 아니요");
         return scanner.nextInt();
     }
 }
