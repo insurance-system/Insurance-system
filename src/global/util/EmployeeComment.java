@@ -1,7 +1,6 @@
 package global.util;
 
-import domain.employee.dto.CustomerConsultResponse;
-import domain.employee.dto.Customer;
+import domain.employee.dto.EmpCustomer;
 import domain.employee.dto.DefaultResponse;
 import domain.employee.dto.ExpirationResponse;
 
@@ -47,7 +46,7 @@ public class EmployeeComment {
         return scanner.nextInt();
     }
 
-    public int customerConsultList(ArrayList<CustomerConsultResponse> arrayList) {
+    public int customerConsultList(ArrayList<EmpCustomer> arrayList) {
         System.out.println("");
         System.out.println("미 상담 고객 목록");
         for(int i=0; arrayList.size() > i; i++){

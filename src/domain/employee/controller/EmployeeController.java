@@ -1,15 +1,13 @@
 package domain.employee.controller;
 
-import domain.customer.entity.Payer;
-import domain.employee.dto.Customer;
+import domain.employee.dto.EmpCustomer;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
-import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
 import domain.employee.exception.excution.NoEmployeeException;
-import domain.employee.service.EmployeeService;
+import domain.employee.service.*;
 import global.dao.Lecture;
 import global.util.Choice;
 import global.util.EmployeeComment;
@@ -19,6 +17,12 @@ import java.util.ArrayList;
 public class EmployeeController {
 
     private EmployeeService employeeService;
+    private SalesEmployeeService salesEmployeeService;
+    private SalesEduEmployeeService salesEduEmployeeService;
+    private ContractGuideEmployeeService contractGuideEmployeeService;
+    private AcceptanceReviewEmployeeService acceptanceReviewEmployeeService;
+    private ContractManageEmployeeService contractManageEmployeeService;
+
     private Choice choice;
     private EmployeeComment employeeComment;
 
@@ -27,6 +31,11 @@ public class EmployeeController {
         this.choice = choice;
         this.employeeComment = new EmployeeComment();
         this.employeeService = new EmployeeService();
+        this.salesEmployeeService = new SalesEmployeeService();
+        this.salesEduEmployeeService = new SalesEduEmployeeService();
+        this.contractGuideEmployeeService = new ContractGuideEmployeeService();
+        this.acceptanceReviewEmployeeService = new AcceptanceReviewEmployeeService();
+        this.contractManageEmployeeService = new ContractManageEmployeeService();
     }
 
     public void initial() {
@@ -50,10 +59,10 @@ public class EmployeeController {
                 case 11:
                     //상담 대기 신규 고객 명단 조회
                     if (employee.getDepartmentId().equals("DP1")){
-                        ArrayList<Customer> arrayList = employeeService.customerConsult(employee);
+                        ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
                         if (!arrayList.isEmpty()){
                             System.out.println("상담 진행");
-                            employeeService.consultExcute(employee,
+                            salesEmployeeService.consultExecute(employee,
                                     arrayList.get(employeeComment.customerConsultList(arrayList)));
                             System.out.println("상담 완료");
                         }
@@ -93,7 +102,7 @@ public class EmployeeController {
                     }
                     break;
                 case 31:
-                    //보험 정보 안내 고객 명단 조회
+                    //계약 보험 상태 안내 고객 명단 조회
                     /*
                     * 보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
                     */
@@ -106,7 +115,7 @@ public class EmployeeController {
                     //보험 만기 고객 조회
                     //건강정보 테이블에 고객 ID들어가야함
                     if (employee.getDepartmentId().equals("DP6")) {
-                        employeeComment.contractExpriation(this.employeeService.selectContractExpiration());
+                        employeeComment.contractExpriation(this.contractManageEmployeeService.selectContractExpiration());
                     }else{
                         new NoAuthorityDPException();
                     }
@@ -114,7 +123,7 @@ public class EmployeeController {
                 case 42:
                     //미납 고객 조회
                     if (employee.getDepartmentId().equals("DP6")) {
-                        employeeComment.contractDefault(this.employeeService.selectDefaultCustomer());
+                        employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
                     }else{
                         new NoAuthorityDPException();
                     }
@@ -174,7 +183,7 @@ public class EmployeeController {
     }
 
     private void getAcceptanceReviewCustomerList() {
-        ArrayList<AcceptanceReviewRequest> AcceptanceReviewRequests = employeeService.getAcceptanceReviewCustomerList();
+        ArrayList<AcceptanceReviewRequest> AcceptanceReviewRequests = acceptanceReviewEmployeeService.getAcceptanceReviewCustomerList();
         for (AcceptanceReviewRequest acceptanceReviewCustomer : AcceptanceReviewRequests)
             System.out.println(acceptanceReviewCustomer);
         String customerId = employeeComment.getCustomerId();
@@ -184,7 +193,7 @@ public class EmployeeController {
                         .findFirst()
                         .orElseThrow(NoEmployeeException::new);
 
-        employeeService.getAcceptanceReviewDetail(acceptanceReviewRequest);
+        acceptanceReviewEmployeeService.getAcceptanceReviewDetail(acceptanceReviewRequest);
     }
 
     private void notifyContractStatus() {
@@ -199,26 +208,26 @@ public class EmployeeController {
     }
 
     private void getNearExpireContractList() {
-        ArrayList<Contract> nearExpireContractList = employeeService.getNearExpireContractList();
+        ArrayList<Contract> nearExpireContractList = contractGuideEmployeeService.getNearExpireContractList();
         System.out.println("-----계약 기간 만료 임박 고객 리스트-----");
         for (Contract contract : nearExpireContractList) System.out.println(contract);
         System.out.println("----------------------------------");
         System.out.println("해당 고객들에게 계약 기간 만료 임박 이메일을 보내시겠습니까?");
-        if(employeeComment.yesOrNo() == 1) employeeService.sendEmailNearExpireContract(nearExpireContractList);
+        if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendEmailNearExpireContract(nearExpireContractList);
     }
 
     private void getNearPaymentContractList() {
-        ArrayList<Contract> nearPaymentContractList = employeeService.getNearPaymentContractList();
+        ArrayList<Contract> nearPaymentContractList = contractGuideEmployeeService.getNearPaymentContractList();
         System.out.println("-----납부일 만료 임박 고객 리스트-----");
         for (Contract contract : nearPaymentContractList) System.out.println(contract);
         System.out.println("----------------------------------");
         System.out.println("해당 고객들에게 계약 기간 만료 임박 이메일을 보내시겠습니까?");
-        if(employeeComment.yesOrNo() == 1) employeeService.sendNearPaymentContract(nearPaymentContractList);
+        if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendNearPaymentContract(nearPaymentContractList);
     }
 
 
     private void findLectureList() {
-        ArrayList<Lecture> lectureList = employeeService.findLectureList();
+        ArrayList<Lecture> lectureList = salesEduEmployeeService.findLectureList();
         for (Lecture lecture : lectureList) {
             System.out.println(lecture);
         }
@@ -229,7 +238,7 @@ public class EmployeeController {
         String lecturePdfName = choice.getText("강의 자료를 이름을 입력하세요.");
         String lectureId = lectureName.length() + lecturer.getEmployeeId();
         Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, lecturer.getEmployeeId());
-        if(employeeService.uploadEducationLecture(lecture)) System.out.println("강의 등록에 성공했습니다.");
+        if(salesEduEmployeeService.uploadEducationLecture(lecture)) System.out.println("강의 등록에 성공했습니다.");
         else System.out.println("강의 등록에 실패했습니다.");
     }
 
