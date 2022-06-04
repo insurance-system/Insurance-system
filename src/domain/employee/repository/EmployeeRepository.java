@@ -4,9 +4,7 @@ import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewCustomer;
 import domain.customer.dto.AcceptanceReviewRequest;
 import domain.customer.enumeration.KindOfJob;
-import domain.employee.dto.DefaultResponse;
-import domain.employee.dto.EmpCustomer;
-import domain.employee.dto.ExpirationResponse;
+import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.insurance.dto.AcceptanceReviewInsurance;
@@ -285,7 +283,6 @@ public class EmployeeRepository {
     }
 
     public void consultExecute(Employee employee, EmpCustomer customerConsultResponse) {
-        ResultSet rs = null;
         try {
             String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
             PreparedStatement st = this.connection.prepareStatement(sql);
@@ -545,5 +542,118 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
         return acceptanceReviewInsurance;
+    }
+
+    public ArrayList<CustomerAnalysisInformation> provideCustomerInformation() {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT i.insuranceName, i.kindOfInsurance, avg(i.fee), count(*) " +
+                    "FROM Insurance i " +
+                    "group by i.kindOfInsurance";
+
+            PreparedStatement st = this.connection.prepareStatement(sql);
+
+            rs = st.executeQuery();
+
+            ArrayList<CustomerAnalysisInformation> defaultResponses = new ArrayList<>();
+            while (rs.next()){
+                CustomerAnalysisInformation defaultResponse = new CustomerAnalysisInformation(
+                        rs.getString("insuranceName"),
+                        KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")),
+                        rs.getString("avg(i.fee)"),
+                        rs.getString("count(*)")
+                );
+                defaultResponses.add(defaultResponse);
+            }
+            return defaultResponses;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<IncidentResponse> IncidentAccept(Employee employee) {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT incidentId, incidentName, incidentPhoneNum, incidentDate, incidentSite " +
+                    "FROM Incident_handling " +
+                    "WHERE employeeId IS null";
+
+            PreparedStatement st = this.connection.prepareStatement(sql);
+
+            rs = st.executeQuery();
+
+            ArrayList<IncidentResponse> responseArrayList = new ArrayList<>();
+            while (rs.next()){
+                IncidentResponse incidentResponse = new IncidentResponse(
+                        rs.getString("incidentId"),
+                        rs.getString("incidentName"),
+                        rs.getString("incidentPhoneNum"),
+                        rs.getString("incidentDate"),
+                        rs.getString("incidentSite")
+                );
+                responseArrayList.add(incidentResponse);
+            }
+            return responseArrayList;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public void incidentAssign(Employee employee, IncidentResponse incidentChoice) {
+        try {
+            String sql = "UPDATE Incident_handling SET employeeId = ? WHERE incidentId=?";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, employee.getEmployeeId());
+            st.setString(2, incidentChoice.getIncidentId());
+            st.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public ArrayList<RewardEvaluteResponse> rewardEvaluate() {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT insuranceClaimId,customerId, claimContent, claimCost " +
+                    "FROM InsuranceClaim " +
+                    "WHERE claimStatus is null;";
+
+            PreparedStatement st = this.connection.prepareStatement(sql);
+
+            rs = st.executeQuery();
+
+            ArrayList<RewardEvaluteResponse> responseArrayList = new ArrayList<>();
+            while (rs.next()){
+                RewardEvaluteResponse rewardEvaluteResponse = new RewardEvaluteResponse(
+                        rs.getString("insuranceClaimId"),
+                        rs.getString("customerId"),
+                        rs.getString("claimContent"),
+                        rs.getString("claimCost")
+                );
+                responseArrayList.add(rewardEvaluteResponse);
+            }
+            return responseArrayList;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public void rewardAssign(RewardEvaluteResponse rewardChoice) {
+        try {
+            String sql = "UPDATE InsuranceClaim SET claimStatus = ? WHERE insuranceClaimId=?;";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, rewardChoice.getClaimStatus());
+            st.setString(2, rewardChoice.getInsuranceClaimId());
+            st.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
