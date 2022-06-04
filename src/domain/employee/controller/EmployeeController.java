@@ -3,6 +3,7 @@ package domain.employee.controller;
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
+import domain.customer.entity.Customer;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
@@ -10,6 +11,7 @@ import domain.employee.exception.excution.NoAuthorityDPException;
 import domain.employee.exception.excution.NoConsultCustomer;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.employee.service.*;
+import domain.insurance.entity.Insurance;
 import domain.insurance.entity.InsuranceCondition;
 import global.dao.Lecture;
 import global.util.Choice;
@@ -86,7 +88,7 @@ public class EmployeeController {
                 case 12:
                     //영업 교육 수강
                     if (employee.getDepartmentId().equals("DP1")) {
-
+                        doInsuranceContract(new Contract());
                     }else{
                         new NoAuthorityDPException();
                     }
@@ -318,5 +320,13 @@ public class EmployeeController {
 
     public MarketInsuranceInformationResponse provideMarketInformation(){
         return new MarketInsuranceInformationResponse();
+    }
+
+    public void doInsuranceContract(Contract contract){
+        this.salesEmployeeService.doInsuranceContract(contract);
+    }
+
+    public void doContractExpiration(){
+
     }
 }
