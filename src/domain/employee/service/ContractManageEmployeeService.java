@@ -15,5 +15,4 @@ public class ContractManageEmployeeService extends EmployeeService{
     public ArrayList<DefaultResponse> selectDefaultCustomer() {
         return this.employeeRepository.selectDefaultCustomer();
     }
-
 }
