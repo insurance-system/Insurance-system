@@ -85,7 +85,7 @@ public class CustomerController {
                 }
                 break;
             case 4: //4. 보험급 납부내역
-                FindPayment findPayment = findPaymentHistory(customer.getCustomerId());
+                ArrayList<FindPayment> findPayment = findPaymentHistory(customer.getCustomerId());
                 if(findPayment!=null) customerComment.findPaymentHistory(findPayment);
                 break;
             case 5: //5. 사고 처리 접수
@@ -165,7 +165,7 @@ public class CustomerController {
     }
 
     //보험금 납부 내역
-    private FindPayment findPaymentHistory(String id) {
+    private ArrayList<FindPayment> findPaymentHistory(String id) {
         return customerService.findPayment(id);
     }
 

@@ -134,7 +134,7 @@ public class CustomerRepository {
     }
 
 
-    public FindPayment findPayment(String id) {
+    public ArrayList<FindPayment> findPayment(String id) {
         ResultSet rs = null;
         try {
             String sql = "select I.insuranceName, I.fee, Ph.PayDate " +
@@ -146,16 +146,17 @@ public class CustomerRepository {
 
             st.setString(1, id);
             rs = st.executeQuery();
-            if (rs.next()) {
-                FindPayment findPayment = new FindPayment(
-                        rs.getString("insuranceName"),
-                        rs.getInt("fee"),
-                        rs.getString("payDate")
-                );
-                System.out.println(findPayment.getFee());
-                return findPayment;
+            ArrayList<FindPayment> findPaymentArrayList = new ArrayList<>();
+            while (rs.next()) {
+                FindPayment findPayment = new FindPayment();
+                findPayment.setInsuranceName(rs.getString("insuranceName"));
+                findPayment.setFee(rs.getInt("fee"));
+                findPayment.setPayDate(rs.getString("payDate"));
+                findPaymentArrayList.add(findPayment);
+
             }
-            ;
+            return findPaymentArrayList;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -32,7 +32,7 @@ public class CustomerService {
     }
 
     //Customer, Payer, Contract, Insurance, PayHistory
-    public FindPayment findPayment(String id) {
+    public ArrayList<FindPayment> findPayment(String id) {
         if(customerRepository.findPayment(id)==null) new NoPaymentHistoryException();
         return customerRepository.findPayment(id);
     }
