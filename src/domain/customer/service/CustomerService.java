@@ -103,4 +103,8 @@ public class CustomerService {
         if(customerRepository.checkConnection(customer) == null) new NoConnectionWithEmployeeException();
             return customerRepository.checkConnection(customer);
     }
+
+    public String getContractId() {
+        return customerRepository.findLastContractId();
+    }
 }

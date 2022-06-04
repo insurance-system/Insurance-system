@@ -11,6 +11,23 @@ public class Contract {
     private LocalDate paymentDate;
     private String contractStatus;
 
+    public Contract(
+            String contractId,
+            String customerId,
+            String chargeOfEmployeeId,
+            String insuranceId,
+            LocalDate expiredDate,
+            LocalDate paymentDate,
+            String contractStatus) {
+        this.contractId = contractId;
+        this.customerId = customerId;
+        this.chargeOfEmployeeId = chargeOfEmployeeId;
+        this.insuranceId = insuranceId;
+        this.expiredDate = expiredDate;
+        this.paymentDate = paymentDate;
+        this.contractStatus = contractStatus;
+    }
+
     public String getContractId() {
         return contractId;
     }
