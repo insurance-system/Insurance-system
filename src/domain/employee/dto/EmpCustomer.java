@@ -3,7 +3,7 @@ package domain.employee.dto;
 import domain.customer.enumeration.KindOfJob;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 
-public class CustomerConsultResponse {
+public class EmpCustomer {
 
     private String empCusId;
 
