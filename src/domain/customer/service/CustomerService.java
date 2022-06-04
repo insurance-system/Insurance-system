@@ -1,5 +1,6 @@
 package domain.customer.service;
 
+import domain.customer.dto.request.CustomerHandleIncidentRequest;
 import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
@@ -71,5 +72,14 @@ public class CustomerService {
     public void joinBeneficiary(String beneficiaryId, String account, Customer customer) {
         if(customerRepository.checkBeneficiary(customer) == null) customerRepository.joinBeneficiary(beneficiaryId, account, customer);
         else new ExistBeneficiaryException();
+    }
+
+    public String checkJoinNonlifeInsurance(Customer customer) {
+        if(customerRepository.checkJoinNonlifeInsurance(customer) == null) new NoJoinNonlifeInsuranceException();
+        return customerRepository.checkJoinNonlifeInsurance(customer);
+    }
+
+    public void handleIncident(CustomerHandleIncidentRequest incidentHandling) {
+        customerRepository.handleIncident(incidentHandling);
     }
 }

@@ -1,5 +1,6 @@
 package domain.customer.repository;
 
+import domain.customer.dto.request.CustomerHandleIncidentRequest;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.*;
@@ -7,6 +8,7 @@ import domain.insurance.entity.Insurance;
 import global.util.Constants;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
@@ -362,5 +364,52 @@ public class CustomerRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String checkJoinNonlifeInsurance(Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql = "select Ih.incidentId\n" +
+                    " from Customer C, Contract Ct, Insurance I, Incident_handling Ih\n" +
+                    " where C.customerId = Ct.customerId and Ct.customerId = Ih.customerId and Ct.insuranceId = I.insuranceId\n" +
+                    " and C.customerId = ? and I.kindOfInsurance = 'LIFE';";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, customer.getCustomerId());
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String checkJoinNonlifeInsurance = rs.getString("incidentId");
+                return checkJoinNonlifeInsurance;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public void handleIncident(CustomerHandleIncidentRequest incidentHandling) {
+        ResultSet rs = null;
+        try {
+            String sql =
+                    "insert into Incident_handling (incidentId, customerId, incidentDate, incidentName, incidentPhoneNum, errorRate, carNumber, incidentSite) values (?,?,?,?,?,?,?,?);";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, incidentHandling.getIncidentId());
+            st.setString(2, incidentHandling.getCustomerId());
+            st.setDate(3, incidentHandling.getIncidentDate());
+            st.setString(4, null);
+            st.setString(5, null);
+            st.setString(6, null);
+            st.setString(7, incidentHandling.getCarNumber());
+            st.setString(8, incidentHandling.getCarNumber());
+            int result = st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

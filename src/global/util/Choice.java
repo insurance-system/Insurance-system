@@ -1,5 +1,11 @@
 package global.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.sql.Date;
 import java.util.Scanner;
 
 public class Choice {
@@ -88,5 +94,31 @@ public class Choice {
     public String getAccount() {
         System.out.print("계좌번호:");
         return scanner.next();
+    }
+
+//    public Date getIncidentDate() throws ParseException {
+//        System.out.println("사고일자 (ex. 2022-01-01 ):");
+//        String incidentDate = scanner.next();
+//        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        Date date = transFormat.parse(incidentDate);
+//        return date;
+//    }
+
+
+    public String getCarNumber() {
+        System.out.println("차량번호:");
+        return scanner.next();
+    }
+
+    public String getIncidentSite() {
+        System.out.println("사고장소:");
+        return scanner.next();
+    }
+
+    public Date getIncidentDate() {
+        System.out.println("사고일자 (ex. 2022-01-01 ):");
+        String incidentDate = scanner.next();
+        java.sql.Date date = java.sql.Date.valueOf(incidentDate);
+        return date;
     }
 }
