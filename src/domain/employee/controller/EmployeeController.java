@@ -320,7 +320,7 @@ public class EmployeeController {
         return new MarketInsuranceInformationResponse();
     }
 
-    public void doInsuranceContract(Contract contract){
+    public static void doInsuranceContract(Contract contract){
         this.salesEmployeeService.doInsuranceContract(contract);
     }
 

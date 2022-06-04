@@ -1,10 +1,12 @@
 package domain.customer.controller;
 
+import domain.contract.entity.Contract;
 import domain.customer.dto.request.*;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.CheckMenuNumberException;
 import domain.customer.service.CustomerService;
+import domain.employee.controller.EmployeeController;
 import domain.insurance.entity.Insurance;
 import global.util.Choice;
 import global.util.CustomerComment;
@@ -229,7 +231,7 @@ public class CustomerController {
         ArrayList<Insurance> interestInsuranceArrayList = customerService.findInterestInsurance(customer);
         String joinInsuranceId = customerComment.interestInsurances(interestInsuranceArrayList);
         if(customer.getAddress()==null) addCustomerInformation(customer);
-
+        //추가정보받아오기
         /*
         PolicyholderJoinRequest policyholderJoinRequest = new PolicyholderJoinRequest(
                 policyholderId, customerId, contractId, healthInformationId, creditInformationId
@@ -238,10 +240,18 @@ public class CustomerController {
                healthInformationId, cancer, smoke, alchohol
         )
         */
-
         this.joinPayer(customer);
         this.joinBeneficiary(customer);
-        //가입시켜주세요~
+        Contract contract = new Contract(
+                customerService.getContractId(),
+                customer.getCustomerId(),
+                null,
+                joinInsuranceId,
+                null,
+                null,
+                null
+        );
+        EmployeeController.doInsuranceContract(contract);
     }
 
     private void addCustomerInformation(Customer interestCustomer) {
