@@ -1,8 +1,8 @@
 package domain.employee.service;
 
+import domain.contract.entity.Contract;
 import domain.employee.dto.EmpCustomer;
 import domain.employee.entity.Employee;
-import domain.employee.repository.EmployeeRepository;
 
 import java.util.ArrayList;
 
@@ -14,5 +14,9 @@ public class SalesEmployeeService extends EmployeeService{
 
     public void consultExecute(Employee employee, EmpCustomer customerConsultResponse) {
         this.employeeRepository.consultExecute(employee, customerConsultResponse);
+    }
+
+    public void doInsuranceContract(Contract contract) {
+        this.employeeRepository.doInsuranceContract(contract.toEntity(contract));
     }
 }

@@ -3,15 +3,15 @@ package domain.contract.entity;
 import java.time.LocalDate;
 
 public class Contract {
-    private int contractId;
+    private String contractId;
     private String customerId;
-    private int chargeOfEmployeeId;
+    private String chargeOfEmployeeId;
     private String insuranceId;
     private LocalDate expiredDate;
     private LocalDate paymentDate;
     private String contractStatus;
 
-    public int getContractId() {
+    public String getContractId() {
         return contractId;
     }
 
@@ -19,7 +19,7 @@ public class Contract {
         return customerId;
     }
 
-    public int getChargeOfEmployeeId() {
+    public String getChargeOfEmployeeId() {
         return chargeOfEmployeeId;
     }
 
@@ -35,7 +35,7 @@ public class Contract {
         return paymentDate;
     }
 
-    public void setContractId(int contractId) {
+    public void setContractId(String contractId) {
         this.contractId = contractId;
     }
 
@@ -43,7 +43,7 @@ public class Contract {
         this.customerId = customerId;
     }
 
-    public void setChargeOfEmployeeId(int chargeOfEmployeeId) {
+    public void setChargeOfEmployeeId(String chargeOfEmployeeId) {
         this.chargeOfEmployeeId = chargeOfEmployeeId;
     }
 
@@ -78,5 +78,13 @@ public class Contract {
                 ", 보험료 납부일 :" + paymentDate +
                 ", 계약 상태 :" + contractStatus +
                 ']';
+    }
+
+    public Contract toEntity(Contract contract){
+        contract.setContractStatus("Active");
+        contract.setExpiredDate(LocalDate.now().plusYears(2));
+        contract.setPaymentDate(LocalDate.now());
+        contract.setChargeOfEmployeeId("E0100");
+        return contract;
     }
 }
