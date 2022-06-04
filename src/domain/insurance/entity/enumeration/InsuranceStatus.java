@@ -1,9 +1,9 @@
 package domain.insurance.entity.enumeration;
 
 public enum InsuranceStatus {
-    ALLOWANCE(1, "허가"),
-    DISALLOWANCE(2,"불허"),
-    UNDERREVIEW(3,"심사중");
+    UNDER_EXAMINATION(1, "UNDER_EXAMINATION"),
+    PERMISSION(2,"PERMISSION"),
+    NOT_ALLOWED(3, "NOT_ALLOWED");
 
     private int number;
     private String name;
@@ -13,10 +13,23 @@ public enum InsuranceStatus {
         this.name = name;
     }
 
-    public static InsuranceStatus setInsuranceStatusBy(String name) {
-        if(name.equals(InsuranceStatus.ALLOWANCE.name)) return ALLOWANCE;
-        else if (name.equals(InsuranceStatus.DISALLOWANCE.name)) return DISALLOWANCE;
-        else return UNDERREVIEW;
+    public static InsuranceStatus getInsuranceStatus(int number){
+        if(number == 1) return InsuranceStatus.UNDER_EXAMINATION;
+        else if(number == 2)return InsuranceStatus.PERMISSION;
+        else return InsuranceStatus.NOT_ALLOWED;
     }
 
+    public static InsuranceStatus getInsuranceStatus(String name){
+        if(name.equals("UNDER_EXAMINATION")) return InsuranceStatus.UNDER_EXAMINATION;
+        else if(name.equals("PERMISSION"))return InsuranceStatus.PERMISSION;
+        else return InsuranceStatus.NOT_ALLOWED;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
