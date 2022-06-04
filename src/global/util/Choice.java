@@ -17,37 +17,6 @@ public class Choice {
         return scanner.nextInt();
     }
 
-    public int customerInitial(){
-        System.out.println("고객님 안녕하세요. 회원가입을 하셨다면 로그인을, 아직 회원이 아니라면 회원가입을 진행해주세요.\n상담사 연결은 3번을 눌러주세요!");
-        System.out.println("1.로그인\n2.회원가입\n3.상담사 연결\n4.종료");
-        System.out.print("번호 입력:");
-        return scanner.nextInt();
-    }
-
-    public int afterLogin() {
-        System.out.println("1. 상담사 연결하기");
-        System.out.println("2. 가입된 보험 조회하기");
-        System.out.println("3. 보험급 납부내역");
-        System.out.println("4. 사고 처리 접수");
-        System.out.println("5. 보험 가입하기");
-        System.out.println("위 중 해당 번호 입력");
-        return scanner.nextInt();
-    }
-
-    public int afterfindJoinedInsurances() {
-        System.out.println("1. 보험 해지하기");
-        System.out.println("2. 돌아가기");
-        System.out.print("번호 입력:");
-        return scanner.nextInt();
-    }
-
-    public int afterLoginInterest() {
-        System.out.println("1. 상담사 연결하기");
-        System.out.println("2. 상담사 평가하기");
-        System.out.println("3. 로그아웃");
-        return scanner.nextInt();
-    }
-
     public String getPassword() {
         System.out.print("Password 입력:");
         return scanner.next();
@@ -102,8 +71,8 @@ public class Choice {
         System.out.println("1. 직장인");
         System.out.println("2. 학생");
         System.out.println("3. 주부");
-        System.out.println("4. 위 중 해당사함 없음");
-        System.out.print("위 중 해당 번호 입력:");
+        System.out.println("4. 위 중 해당사항 없음");
+        System.out.print("번호 입력:");
         return scanner.nextInt();
     }
 
@@ -116,4 +85,8 @@ public class Choice {
         return scanner.next();
     }
 
+    public String getAccount() {
+        System.out.print("계좌번호:");
+        return scanner.next();
+    }
 }
