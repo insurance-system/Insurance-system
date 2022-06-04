@@ -69,14 +69,14 @@ public class Contract {
 
     @Override
     public String toString() {
-        return "Contract{" +
-                "contractId=" + contractId +
-                ", customerId='" + customerId + '\'' +
-                ", chargeOfEmployeeId=" + chargeOfEmployeeId +
-                ", insuranceId=" + insuranceId +
-                ", expiredDate=" + expiredDate +
-                ", paymentDate=" + paymentDate +
-                ", contractStatus='" + contractStatus + '\'' +
-                '}';
+        return "[" +
+                "계약 ID :" + contractId +
+                ", 고객 ID :" + customerId +
+                ", 계약 완료 직원 ID :" + chargeOfEmployeeId +
+                ", 보험 ID :" + insuranceId +
+                ", 계약 만료일 :" + expiredDate +
+                ", 보험료 납부일 :" + paymentDate +
+                ", 계약 상태 :" + contractStatus +
+                ']';
     }
 }

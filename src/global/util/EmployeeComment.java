@@ -58,8 +58,8 @@ public class EmployeeComment {
     }
 
     public int notifyMenu() {
-        System.out.println("1. 계약기간 만료 임박 고객 리스트 출력하기");
-        System.out.println("2. 보험 납부 기간 만료 임박 고객 리스트 출력하기");
+        System.out.println("1. 계약기간 만료 임박 계약 리스트 출력하기");
+        System.out.println("2. 보험 납부 기간 만료 임박 계약 리스트 출력하기");
         return scanner.nextInt();
     }
 
@@ -67,5 +67,11 @@ public class EmployeeComment {
         System.out.println("1. 예");
         System.out.println("2. 아니요");
         return scanner.nextInt();
+    }
+
+    public String getCustomerId() {
+        System.out.println("인수심사를 진행할 고객 아이디를 입력하세요.");
+        System.out.print("고객 ID:");
+        return scanner.next();
     }
 }
