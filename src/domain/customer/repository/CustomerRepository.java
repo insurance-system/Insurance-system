@@ -576,4 +576,22 @@ public class CustomerRepository {
         }
         return null;
     }
+
+
+    public String findLastContractId() {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT contractId FROM Contract ORDER BY contractId DESC LIMIT 1";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String lastId = rs.getString("contractId");
+                return lastId;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
 }
