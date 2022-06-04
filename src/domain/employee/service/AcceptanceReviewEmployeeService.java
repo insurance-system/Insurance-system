@@ -2,9 +2,7 @@ package domain.employee.service;
 
 import domain.customer.dto.AcceptanceReviewCustomer;
 import domain.customer.dto.AcceptanceReviewRequest;
-import domain.employee.repository.EmployeeRepository;
 import domain.insurance.dto.AcceptanceReviewInsurance;
-import global.dao.Lecture;
 
 import java.util.ArrayList;
 

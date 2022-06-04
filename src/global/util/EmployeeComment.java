@@ -1,8 +1,6 @@
 package global.util;
 
-import domain.employee.dto.EmpCustomer;
-import domain.employee.dto.DefaultResponse;
-import domain.employee.dto.ExpirationResponse;
+import domain.employee.dto.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -16,7 +14,7 @@ public class EmployeeComment {
     }
 
     public int home(){
-        System.out.println("----------------Home----------------");
+        System.out.println("\n\n----------------Home----------------");
         System.out.println("1. 영업 활동 팀");
         System.out.println("11. 상담 대기 신규 고객 명단 조회 \n12. 영업 교육 수강");
         System.out.println("------------------------------------");
@@ -40,6 +38,12 @@ public class EmployeeComment {
         System.out.println("------------------------------------");
         System.out.println("8. 시장 분석 팀");
         System.out.println("81. 보험 시장 데이터를 제공");
+        System.out.println("------------------------------------");
+        System.out.println("9. 손해 접수 팀");
+        System.out.println("91. 사고 발생 접수");
+        System.out.println("------------------------------------");
+        System.out.println("10. 보상 평가 팀");
+        System.out.println("101. 보상금 심사");
         System.out.println("------------------------------------");
         System.out.println("0. 로그아웃");
 
@@ -98,6 +102,103 @@ public class EmployeeComment {
     public String getCustomerId() {
         System.out.println("인수심사를 진행할 고객 아이디를 입력하세요.");
         System.out.print("고객 ID:");
+        return scanner.next();
+    }
+
+    public int incidentChoice(ArrayList<IncidentResponse> incidentAccept) {
+        System.out.println("");
+        System.out.println("담당자 미배정 사건 목록");
+        for(int i=0; incidentAccept.size() > i; i++) {
+            System.out.println("| 번호: "+i);
+            System.out.println("  이름: "+incidentAccept.get(i).getName()+"  전화번호: "+incidentAccept.get(i).getPhoneNum());
+            System.out.println("  주소: "+incidentAccept.get(i).getAddress());
+            System.out.println("  일시: "+incidentAccept.get(i).getDate());
+        }
+        System.out.println("");
+        System.out.print("담당하려는 사건의 번호를 입력해주세요. \n번호 입력: ");
+        return scanner.nextInt();
+    }
+
+    public RewardEvaluteResponse rewardChoice(ArrayList<RewardEvaluteResponse> rewardEvaluteResponses) {
+        System.out.println("");
+        System.out.println("담당자 미배정 사건 목록");
+        for(int i=0; rewardEvaluteResponses.size() > i; i++) {
+            System.out.println("| 번호: "+i);
+            System.out.println("  사용자: "+rewardEvaluteResponses.get(i).getCustomerId());
+            System.out.println("  청구 내용: "+rewardEvaluteResponses.get(i).getClaimContent());
+            System.out.println("  청구 금액: "+rewardEvaluteResponses.get(i).getClaimCost());
+        }
+        System.out.println("");
+        System.out.print("담당하려는 사건의 번호를 입력해주세요. \n번호 입력: ");
+        int choice = scanner.nextInt();
+        System.out.println("  사용자: "+rewardEvaluteResponses.get(choice).getCustomerId());
+        System.out.println("  청구 내용: "+rewardEvaluteResponses.get(choice).getClaimContent());
+        System.out.println("  청구 금액: "+rewardEvaluteResponses.get(choice).getClaimCost());
+
+        System.out.println("청구에 대한 결과를 입력해주세요. \n");
+        System.out.print("1.승인   2.거부   3.보류  \n");
+        int resultChoice = scanner.nextInt();
+        if(resultChoice==1){
+            rewardEvaluteResponses.get(choice).setClaimStatus("승인");
+        }else if(resultChoice==2){
+            rewardEvaluteResponses.get(choice).setClaimStatus("거부");
+        }else{
+            rewardEvaluteResponses.get(choice).setClaimStatus("보류");
+        }
+
+        return rewardEvaluteResponses.get(choice);
+    }
+
+    public void developInsurance() {
+        System.out.println("--------------보험 설계하기--------------");
+        System.out.print("보험 이름:");
+        System.out.println("1.생명보험  2.손해보험");
+    }
+
+    public String getInsuranceName() {
+        System.out.print("보험 이름:");
+        return scanner.next();
+    }
+
+    public int getKindOfInsurance() {
+        System.out.println("1.생명보험  2.손해보험");
+        System.out.print("번호 선택:");
+        return scanner.nextInt();
+    }
+
+    public int getInsuranceFee() {
+        System.out.print("월 청구비:");
+        return scanner.nextInt();
+    }
+
+
+    public int getMaxAge() {
+        System.out.print("가입 최대 나이:");
+        return scanner.nextInt();
+    }
+
+    public int getMinAge() {
+        System.out.print("가입 최소 나이:");
+        return scanner.nextInt();
+    }
+
+    public String getSmoke() {
+        System.out.println("하루 기준 담배 3개비는        A");
+        System.out.println("하루 기준 담배 10개비는 이하는  B");
+        System.out.println("하루 기준 담배 20개비 이상은   C");
+        return scanner.next();
+    }
+
+    public String getAlcohol() {
+        System.out.println("일주일 기준 담배 3개비는        A");
+        System.out.println("일주일 기준 담배 10개비는 이하는  B");
+        System.out.println("일주일 기준 소주 2병 이상은      C");
+        return scanner.next();
+    }
+
+    public String getCancer() {
+        System.out.println("현재 암과 관련된 질병이 없다면   A");
+        System.out.println("현재 암과 투병중인 상태        C");
         return scanner.next();
     }
 }

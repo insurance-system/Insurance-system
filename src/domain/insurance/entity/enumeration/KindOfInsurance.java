@@ -20,4 +20,6 @@ public enum KindOfInsurance {
         if(name.equals("LIFE")) return KindOfInsurance.LIFE;
         else return KindOfInsurance.NON_LIFE;
     }
+    public int getNumber() {return number;}
+    public String getName() {return name;}
 }
