@@ -3,15 +3,10 @@ package domain.employee.controller;
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
-import domain.customer.entity.Customer;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
-import domain.employee.exception.excution.CheckMenuNumberException;
-import domain.employee.exception.excution.NoAuthorityDPException;
-import domain.employee.exception.excution.NoConsultCustomer;
-import domain.employee.exception.excution.NoEmployeeException;
+import domain.employee.exception.excution.*;
 import domain.employee.service.*;
-import domain.insurance.entity.Insurance;
 import domain.insurance.entity.InsuranceCondition;
 import global.dao.Lecture;
 import global.util.Choice;
@@ -79,7 +74,7 @@ public class EmployeeController {
                                     arrayList.get(employeeComment.customerConsultList(arrayList)));
                             System.out.println("상담 완료");
                         }else{
-                            new NoConsultCustomer();
+                            new NoConsultCustomerException();
                         }
                     }else{
                         new NoAuthorityDPException();
@@ -88,7 +83,7 @@ public class EmployeeController {
                 case 12:
                     //영업 교육 수강
                     if (employee.getDepartmentId().equals("DP1")) {
-                        doInsuranceContract(new Contract());
+
                     }else{
                         new NoAuthorityDPException();
                     }
@@ -180,6 +175,8 @@ public class EmployeeController {
                             this.incidentManageService.incidentAssign(employee,
                                     incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses)));
                             System.out.println("담당자 설정이 완료되었습니다.");
+                        }else{
+                            new NoIncidentException();
                         }
 
                     }else{
@@ -193,8 +190,9 @@ public class EmployeeController {
                         ArrayList<RewardEvaluteResponse> rewardEvaluteResponses = this.rewardManageService.rewardEvaluate();
                         if(!rewardEvaluteResponses.isEmpty()){
                             this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluteResponses));
+                        }else{
+                            new NoRewardException();
                         }
-
 
                     }else{
                         new NoAuthorityDPException();
