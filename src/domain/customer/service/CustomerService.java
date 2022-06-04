@@ -6,7 +6,7 @@ import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.*;
 import domain.customer.repository.CustomerRepository;
 import domain.insurance.entity.Insurance;
-import domain.insurance.entity.enumeration.KindOfInsurance;
+
 
 import java.util.ArrayList;
 

@@ -274,7 +274,7 @@ public class EmployeeRepository {
                 Contract contract = new Contract();
                 contract.setContractId(rs.getInt("contractId"));
                 contract.setCustomerId(rs.getString("customerId"));
-                contract.setInsuranceId(rs.getInt("insuranceId"));
+                contract.setInsuranceId(rs.getString("insuranceId"));
                 contract.setExpiredDate(LocalDate.parse(rs.getString("expiredDate"), DateTimeFormatter.ISO_DATE));
                 contract.setPaymentDate(LocalDate.parse(rs.getString("paymentDate"), DateTimeFormatter.ISO_DATE));
                 contract.setContractStatus(rs.getString("contractStatus"));
@@ -426,10 +426,10 @@ public class EmployeeRepository {
         return customerList;
     }
 
-    public ArrayList<Insurance> selectInsuranceByIds(ArrayList<Integer> insuranceIds) {
+    public ArrayList<Insurance> selectInsuranceByIds(ArrayList<String> insuranceIds) {
         ArrayList<Insurance> insuranceList = new ArrayList<>();
         String args = "";
-        for (Integer insuranceId : insuranceIds) {
+        for (String insuranceId : insuranceIds) {
             args += "'"+insuranceId+"',";
         }
         args = args.substring(0, args.length()-1);
@@ -443,7 +443,7 @@ public class EmployeeRepository {
 
             while (rs.next()){
                 Insurance insurance = new Insurance();
-                insurance.setInsuranceId(rs.getInt("insuranceId"));
+                insurance.setInsuranceId(rs.getString("insuranceId"));
                 insurance.setInsuranceName(rs.getString("insuranceName"));
                 insurance.setFee(rs.getInt("fee"));
                 insuranceList.add(insurance);
@@ -532,7 +532,7 @@ public class EmployeeRepository {
 
             st.setInt(1, requestInsuranceId);
             rs = st.executeQuery();
-            acceptanceReviewInsurance.setInsuranceId(rs.getInt("insuranceId"));
+            acceptanceReviewInsurance.setInsuranceId(rs.getString("insuranceId"));
             acceptanceReviewInsurance.setInsuranceName(rs.getString("insuranceName"));
             acceptanceReviewInsurance.setFee(rs.getInt("fee"));
             acceptanceReviewInsurance.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));

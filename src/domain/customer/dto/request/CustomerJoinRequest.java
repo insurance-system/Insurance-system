@@ -11,7 +11,7 @@ public class CustomerJoinRequest {
 
     private String customerId;
     private String password;
-    private int interestInsuranceId;
+    private String interestInsuranceId;
     private String name;
     private KindOfInsurance kindOfInsurance;
     private String address;
@@ -73,7 +73,7 @@ public class CustomerJoinRequest {
         return password;
     }
 
-    public int getInterestInsuranceId() {
+    public String getInterestInsuranceId() {
         return interestInsuranceId;
     }
 
