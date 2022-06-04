@@ -96,15 +96,6 @@ public class Choice {
         return scanner.next();
     }
 
-//    public Date getIncidentDate() throws ParseException {
-//        System.out.println("사고일자 (ex. 2022-01-01 ):");
-//        String incidentDate = scanner.next();
-//        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        Date date = transFormat.parse(incidentDate);
-//        return date;
-//    }
-
-
     public String getCarNumber() {
         System.out.println("차량번호:");
         return scanner.next();
@@ -120,5 +111,15 @@ public class Choice {
         String incidentDate = scanner.next();
         java.sql.Date date = java.sql.Date.valueOf(incidentDate);
         return date;
+    }
+
+    public String getclaimContent() {
+        System.out.println("청구 내용:");
+        return scanner.next();
+    }
+
+    public int getclaimCost() {
+        System.out.println("청구 금액:");
+        return scanner.nextInt();
     }
 }
