@@ -1,24 +1,20 @@
 package domain.employee.controller;
 
-import domain.customer.entity.Customer;
-import domain.employee.dto.*;
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
-import domain.employee.dto.CustomerAnalysisInformation;
-import domain.employee.dto.EmpCustomer;
-import domain.employee.dto.MarketInsuranceInformationResponse;
+import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
 import domain.employee.exception.excution.NoConsultCustomer;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.employee.service.*;
+import domain.insurance.entity.InsuranceCondition;
 import global.dao.Lecture;
 import global.util.Choice;
 import global.util.EmployeeComment;
 
-import javax.swing.undo.CannotUndoException;
 import java.util.ArrayList;
 
 public class EmployeeController {
@@ -30,6 +26,9 @@ public class EmployeeController {
     private AcceptanceReviewEmployeeService acceptanceReviewEmployeeService;
     private ContractManageEmployeeService contractManageEmployeeService;
     private InsuranceDevelopmentEmployeeService insuranceDevelopmentEmployeeService;
+    private CustomerInformationManageService customerInformationManageService;
+    private IncidentManageService incidentManageService;
+    private RewardManageService rewardManageService;
 
     private Choice choice;
     private EmployeeComment employeeComment;

@@ -4,6 +4,7 @@ import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewCustomer;
 import domain.customer.dto.AcceptanceReviewRequest;
+import domain.customer.entity.Grade;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
@@ -517,7 +518,7 @@ public class EmployeeRepository {
         ResultSet rs = null;
         AcceptanceReviewInsurance acceptanceReviewInsurance = new AcceptanceReviewInsurance();
         try{
-            String sql = "select I.insuranceId, I.insuranceName, I.fee, C.maxAge, C.minAge, C.smoke, C.alchohol, C.cancer, " +//TODO cancer 추가해야함 테이블에
+            String sql = "select I.insuranceId, I.insuranceName, I.fee, C.maxAge, C.minAge, C.smoke, C.alchohol, C.cancer, " +
                     " from Insurance I, Insurance_Condition C, " +
                     " where I.insuranceId = ? and I.insurnaceConditionId = C.insurnace_ConditionId;";
 
@@ -537,9 +538,9 @@ public class EmployeeRepository {
             acceptanceReviewInsurance.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
             acceptanceReviewInsurance.setMaxAge(rs.getInt("maxAge"));
             acceptanceReviewInsurance.setMinAge(rs.getInt("minAge"));
-//            acceptanceReviewInsurance.setSmoke(rs.getString("smoke"));//TODO
-//            acceptanceReviewInsurance.setCancer(rs.getString("cancer"));//TODO
-//            acceptanceReviewInsurance.setAlcohol(rs.getString("alchohol"));//TODO
+            acceptanceReviewInsurance.setSmoke(Grade.getGrade(rs.getString("smoke")));
+            acceptanceReviewInsurance.setCancer(Grade.getGrade(rs.getString("cancer")));
+            acceptanceReviewInsurance.setAlcohol(Grade.getGrade(rs.getString("alcohol")));
             st.close();
         }catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
