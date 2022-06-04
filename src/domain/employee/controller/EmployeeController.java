@@ -1,8 +1,11 @@
 package domain.employee.controller;
 
+import domain.customer.entity.Customer;
+import domain.employee.dto.CustomerAnalysisInformation;
 import domain.employee.dto.EmpCustomer;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
+import domain.employee.dto.MarketInsuranceInformationResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
@@ -12,6 +15,7 @@ import global.dao.Lecture;
 import global.util.Choice;
 import global.util.EmployeeComment;
 
+import javax.swing.undo.CannotUndoException;
 import java.util.ArrayList;
 
 public class EmployeeController {
@@ -22,6 +26,7 @@ public class EmployeeController {
     private ContractGuideEmployeeService contractGuideEmployeeService;
     private AcceptanceReviewEmployeeService acceptanceReviewEmployeeService;
     private ContractManageEmployeeService contractManageEmployeeService;
+    private InsuranceDevelopmentEmployeeService insuranceDevelopmentEmployeeService;
 
     private Choice choice;
     private EmployeeComment employeeComment;
@@ -36,6 +41,7 @@ public class EmployeeController {
         this.contractGuideEmployeeService = new ContractGuideEmployeeService();
         this.acceptanceReviewEmployeeService = new AcceptanceReviewEmployeeService();
         this.contractManageEmployeeService = new ContractManageEmployeeService();
+        this.insuranceDevelopmentEmployeeService = new InsuranceDevelopmentEmployeeService();
     }
 
     public void initial() {
@@ -138,6 +144,14 @@ public class EmployeeController {
                     break;
                 case 61://TODO KEEP
                     //보험 설계 시작
+                    //생명보험, 화재보험
+                    //설계를 위한 데이터 요청 메서드 두개
+                    /**
+                     * 1개는 고객정보
+                     * 1개는 시장 보험 정보
+                     *
+                     */
+                    //
                     if (employee.getDepartmentId().equals("DP3")) {
 
                     }else{
@@ -146,6 +160,7 @@ public class EmployeeController {
                     break;
                 case 71:
                     //고객 정보를 제공
+                    //삭제 예정
                     if (employee.getDepartmentId().equals("DP7")) {
 
                     }else{
@@ -154,6 +169,7 @@ public class EmployeeController {
                     break;
                 case 81:
                     //보험 시장 데이터 제공
+                    //삭제 예정
                     if (employee.getDepartmentId().equals("DP8")) {
 
                     }else{
@@ -245,5 +261,15 @@ public class EmployeeController {
     //TODO
     public void findLectureRegistrationList(){
 
+    }
+
+    public ArrayList<CustomerAnalysisInformation> provideCustomerInformation(){
+
+        return null;
+    }
+
+    public MarketInsuranceInformationResponse provideMarketInformation(){
+
+        return null;
     }
 }
