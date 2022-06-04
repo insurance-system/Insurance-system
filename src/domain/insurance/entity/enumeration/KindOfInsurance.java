@@ -15,4 +15,9 @@ public enum KindOfInsurance {
         if(number == 1) return KindOfInsurance.LIFE;
         else return KindOfInsurance.NON_LIFE;
     }
+
+    public static KindOfInsurance getKindOfInsuranceNByName(String name) {
+        if(name.equals(KindOfInsurance.LIFE.name)) return LIFE;
+        else return NON_LIFE;
+    }
 }

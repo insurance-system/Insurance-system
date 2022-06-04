@@ -2,18 +2,15 @@ package domain.customer.repository;
 
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
-import domain.customer.exception.excution.NoCustomerException;
-import domain.customer.exception.excution.NoEvaluateSatisfactionException;
-import domain.customer.exception.excution.NoJoinedInsuranceException;
-import domain.customer.exception.excution.NoPaymentHistoryException;
-import domain.employee.entity.Employee;
+import domain.customer.exception.excution.*;
 import domain.insurance.entity.Insurance;
 import global.util.Constants;
 
-import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
+import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceNByName;
 
 public class CustomerRepository {
 
@@ -69,14 +66,15 @@ public class CustomerRepository {
             if (rs.next()) {
                 Customer customer = new Customer();
                 customer.setCustomerId(rs.getString("customerId"));
+                customer.setPassword(rs.getString("password"));
                 customer.setName(rs.getString("name"));
+                customer.setKindOfInsurance(getKindOfInsuranceNByName(rs.getString("kindOfInsurance")));
                 customer.setAddress(rs.getString("email"));
                 customer.setPhoneNumber(rs.getString("phoneNumber"));
                 customer.setAddress(rs.getString("address"));
                 customer.setDetailAddress(rs.getString("detailAddress"));
                 customer.setZipcode(rs.getString("zipCode"));
                 customer.setKindOfJob(getKindOfJobBy(rs.getString("kindOfJob")));
-                customer.setPassword(rs.getString("password"));
 
                 System.out.println(customer.getCustomerId());
                 return customer;
@@ -104,29 +102,32 @@ public class CustomerRepository {
         return null;
     }
 
-    public Insurance findJoinedInsurances(String id) {
+    public ArrayList<Insurance> findJoinedInsurances(String id) {
         ResultSet rs = null;
         try {
-            String sql = "select insuranceName, fee " +
+            String sql = "select Insurance.insuranceId, Insurance.insuranceConditionId, Insurance.kindOfInsurance, insuranceName, fee, insuranceStatus " +
                     "from Insurance, Customer, Contract " +
                     "where Customer.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId and Customer.customerId = ?";
             PreparedStatement st = sqlConnection().prepareStatement(sql);
 
-
             st.setString(1, id);
             rs = st.executeQuery();
-            if (rs.next()) {
-                Insurance insurance = new Insurance(
-                        rs.getString("insuranceName"),
-                        rs.getInt("fee")
-                );
-                return insurance;
+            ArrayList<Insurance> insuranceArrayList = new ArrayList<>();
+            while (rs.next()) {
+                Insurance insurance = new Insurance();
+                insurance.setInsuranceId(rs.getString("insuranceId"));
+                insurance.setInsuranceConditionId(rs.getString("insuranceConditionId"));
+                insurance.setKindOfInsurance(rs.getString("kindOfInsurance"));
+                insurance.setInsuranceName(rs.getString("insuranceName"));
+                insurance.setFee(rs.getInt("fee"));
+                insurance.setInsuranceStatus(rs.getString("insuranceStatus"));
+                insuranceArrayList.add(insurance);
             }
+                return insuranceArrayList;
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        new NoJoinedInsuranceException();
         return null;
     }
 
@@ -153,11 +154,9 @@ public class CustomerRepository {
                 return findPayment;
             }
             ;
-//            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        new NoPaymentHistoryException();
         return null;
     }
 
@@ -173,7 +172,7 @@ public class CustomerRepository {
                     Constants.URL,
                     Constants.USER,
                     Constants.PW);
-            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = conn.prepareStatement(sql);
 
             st.setString(1, satisfaction);
             st.setString(2, id);
@@ -204,7 +203,7 @@ public class CustomerRepository {
                             "kindOfJob)" +
                             "values (?,?,?,?,?,?,?,?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
 
             st.setString(1, interestCustomer.getCustomerId());
             st.setString(2, interestCustomer.getPassword());
@@ -230,7 +229,7 @@ public class CustomerRepository {
             String sql =
                     "insert into Emp_Cus (emp_CusId,employeeId,customerId,satisfaction) values (?,?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
 
             st.setString(1, "EC" + Customer.getCustomerId());
             st.setString(2, null);
@@ -255,12 +254,113 @@ public class CustomerRepository {
             rs = st.executeQuery();
             while(rs.next()) {
                 String checkSatisfaction = rs.getString("satisfaction");
-                if(checkSatisfaction==null) return checkSatisfaction;
-                else new NoEvaluateSatisfactionException();
+                return checkSatisfaction;
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return null;
+    }
+
+    public ArrayList<Insurance> findInterestInsurance(Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql = "select * from Insurance where kindOfInsurance=?";
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, customer.getKindOfInsurance().name());
+            rs = st.executeQuery();
+            ArrayList<Insurance> interestInsuranceArrayList = new ArrayList<>();
+            while (rs.next()) {
+                Insurance insurance = new Insurance();
+                insurance.setInsuranceId(rs.getString("insuranceId"));
+                insurance.setInsuranceConditionId(rs.getString("insuranceConditionId"));
+                insurance.setKindOfInsurance(rs.getString("kindOfInsurance"));
+                insurance.setInsuranceName(rs.getString("insuranceName"));
+                insurance.setFee(rs.getInt("fee"));
+                insurance.setInsuranceStatus(rs.getString("insuranceStatus"));
+                interestInsuranceArrayList.add(insurance);
+            }
+            return interestInsuranceArrayList;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+
+    }
+
+    public void joinPayer(String payerId, String account, Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql =
+                    "insert into Payer (payerId, customerId, account) values (?,?,?);";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, payerId);
+            st.setString(2, customer.getCustomerId());
+            st.setString(3, account);
+            int result = st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String checkPayer(Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql = "select payerId from Payer where customerId=?;";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, customer.getCustomerId());
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String checkPayer = rs.getString("payerId");
+                return checkPayer;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public String checkBeneficiary(Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql = "select beneficiaryId from Beneficiary where customerId=?;";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, customer.getCustomerId());
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String checkBeneficiary = rs.getString("beneficiaryId");
+                return checkBeneficiary;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public void joinBeneficiary(String beneficiaryId, String account, Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql =
+                    "insert into Beneficiary (beneficiaryId, customerId, account) values (?,?,?);";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, beneficiaryId);
+            st.setString(2, customer.getCustomerId());
+            st.setString(3, account);
+            int result = st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

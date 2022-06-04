@@ -10,6 +10,8 @@ import domain.insurance.entity.Insurance;
 import global.util.Choice;
 import global.util.CustomerComment;
 
+import java.util.ArrayList;
+
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -23,7 +25,7 @@ public class CustomerController {
     }
     //시작화면
     public void initial() {
-        switch(choice.customerInitial()){
+        switch(customerComment.customerInitial()){
             case 1: //1.로그인
                 login();
                 break;
@@ -45,7 +47,7 @@ public class CustomerController {
     //로그인 후 관심자화면
     private void enterInterest(Customer customer) {
         System.out.println(customer.getName() + "님 안녕하세요!");
-        switch (choice.afterLoginInterest()){
+        switch (customerComment.afterLoginInterest()){
             case 1: //1. 상담사 연결하기
                 connectSalesEmployee(customer);
                 break;
@@ -65,23 +67,31 @@ public class CustomerController {
     //로그인 후 고객화면
     public void enter(Customer customer){
         System.out.println(customer.getName() + "님 안녕하세요!");
-        switch (choice.afterLogin()){
+        switch (customerComment.afterLogin()){
             case 1: //1. 상담사 연결하기
                 connectSalesEmployee();
                 break;
-            case 2: //2. 가입된 보험 조회하기
-                Insurance insurance = findJoinedInsurances(customer.getCustomerId());
-                if(insurance!=null) {
-                    customerComment.insuranceInformation(insurance);
-                    afterfindJoinedInsurances(customer);}
+            case 2: //2. 상담사 평가하기
+                evaluateSatisfaction(customer);
                 break;
-            case 3: //3. 보험급 납부내역
+            case 3: //3. 가입된 보험 조회하기
+                ArrayList<Insurance> insuranceArrayList = findJoinedInsurances(customer.getCustomerId());
+                if(insuranceArrayList.isEmpty()==false) {
+                    customerComment.joinedInsurances(insuranceArrayList);
+                    afterfindJoinedInsurances(customer);
+                }
+                break;
+            case 4: //4. 보험급 납부내역
                 FindPayment findPayment = findPaymentHistory(customer.getCustomerId());
                 if(findPayment!=null) customerComment.findPaymentHistory(findPayment);
                 break;
-            case 4: //4. 사고 처리 접수
+            case 5: //5. 사고 처리 접수
                 break;
-            case 5: //5. 보험 가입하기
+            case 6: //6. 보험 가입하기
+                joinInsurance(customer);
+                break;
+            case 7:
+                initial();
                 break;
             default:
                 new CheckMenuNumberException();
@@ -92,8 +102,10 @@ public class CustomerController {
 
     //보험 목록 확인 후 화면
     private void afterfindJoinedInsurances(Customer customer) {
-        switch(choice.afterfindJoinedInsurances()) {
+        switch(customerComment.afterfindJoinedInsurances()) {
             case 1: //1.보험 해지하기
+                String cancelInsuranceId = choice.getId();
+                //보험 해지 진행
                 break;
             case 2: //2. 돌아가기
                 enter(customer);
@@ -135,7 +147,7 @@ public class CustomerController {
     }
 
     //가입 보험 내역
-    private Insurance findJoinedInsurances(String id) {
+    private ArrayList<Insurance> findJoinedInsurances(String id) {
         return customerService.findJoinedInsurances(id);
     }
 
@@ -160,12 +172,10 @@ public class CustomerController {
                 kindOfJob,
                 kindOfInsuranceId
         );
-
-        customerService.connectSalesEmployee(interestCustomer);
-        System.out.println(interestCustomer.getName()+"님 상담 요청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.");
+        connectSalesEmployee(interestCustomer);
     }
 
-    //기존회원 상담사 연결
+    // 상담사 연결
     private void connectSalesEmployee(Customer customer) {
         customerService.connectSalesEmployee(customer);
         System.out.println(customer.getName()+"님 상담 요청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.");
@@ -197,7 +207,43 @@ public class CustomerController {
                 kindOfInsuranceId
         );
         customerService.join(customer);
-        System.out.println("회원가입이 완료되었습니다. 로그인을 해주세요!");
-        login();
+        System.out.println("회원가입이 완료되었습니다.");
+        initial();
+    }
+
+    //보험 가입
+    private void joinInsurance(Customer customer) {
+        ArrayList<Insurance> interestInsuranceArrayList = customerService.findInterestInsurance(customer);
+        String joinInsuranceId = customerComment.interestInsurances(interestInsuranceArrayList);
+        //가입자추가정보받기 (update)
+        /*
+        PolicyholderJoinRequest policyholderJoinRequest = new PolicyholderJoinRequest(
+                policyholderId, customerId, contractId, healthInformationId, creditInformationId
+        )
+        HealthInformationRequest healthInformationRequest = new HealthInformationRequest(
+               healthInformationId, cancer, smoke, alchohol
+        )
+        */
+        this.joinPayer(customer);
+        this.joinBeneficiary(customer);
+        //가입시켜주세요~
+    }
+
+    //Payer 설정
+    private void joinPayer(Customer customer) {
+        String payerId;
+        if(customerComment.checkPayer()==1) payerId = choice.getId();
+        else payerId = customer.getCustomerId();
+        String account = choice.getAccount();
+        customerService.joinPayer(payerId, account, customer);
+    }
+
+    //Beneficiary 설정
+    private void joinBeneficiary(Customer customer) {
+        String beneficiaryId;
+        if(customerComment.checkBeneficiary()==1) beneficiaryId = choice.getId();
+        else beneficiaryId = customer.getCustomerId();
+        String account = choice.getAccount();
+        customerService.joinBeneficiary(beneficiaryId, account, customer);
     }
 }
