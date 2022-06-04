@@ -1,5 +1,6 @@
 package global.util;
 
+import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.dto.Customer;
 import domain.employee.dto.DefaultResponse;
 import domain.employee.dto.ExpirationResponse;
@@ -27,7 +28,7 @@ public class EmployeeComment {
         System.out.println("31. 보험 정보 안내 해당 고객 명단 조회");
         System.out.println("------------------------------------");
         System.out.println("4. 계약 관리 팀");
-        System.out.println("41. 보험 만기 고객 조회 \n42. 미납 고객 조회");
+        System.out.println("41. 보험 계약 관리  \n42. 미납 고객 조회");
         System.out.println("------------------------------------");
         System.out.println("5. U/W 팀");
         System.out.println("51. 인수심사 수행");
@@ -46,7 +47,7 @@ public class EmployeeComment {
         return scanner.nextInt();
     }
 
-    public int customerConsultList(ArrayList<Customer> arrayList) {
+    public int customerConsultList(ArrayList<CustomerConsultResponse> arrayList) {
         System.out.println("");
         System.out.println("미 상담 고객 목록");
         for(int i=0; arrayList.size() > i; i++){
@@ -81,5 +82,23 @@ public class EmployeeComment {
             System.out.println("  가입한 보험 이름: "+arrayList.get(i).getInsuranceName());
             System.out.println("  현재 보험 상태: "+arrayList.get(i).getContractStatus() +"\n");
         }
+    }
+
+    public int notifyMenu() {
+        System.out.println("1. 계약기간 만료 임박 계약 리스트 출력하기");
+        System.out.println("2. 보험 납부 기간 만료 임박 계약 리스트 출력하기");
+        return scanner.nextInt();
+    }
+
+    public int yesOrNo() {
+        System.out.println("1. 예");
+        System.out.println("2. 아니요");
+        return scanner.nextInt();
+    }
+
+    public String getCustomerId() {
+        System.out.println("인수심사를 진행할 고객 아이디를 입력하세요.");
+        System.out.print("고객 ID:");
+        return scanner.next();
     }
 }
