@@ -123,7 +123,7 @@ public class CustomerRepository {
                 insurance.setKindOfInsurance(rs.getString("kindOfInsurance"));
                 insurance.setInsuranceName(rs.getString("insuranceName"));
                 insurance.setFee(rs.getInt("fee"));
-                insurance.setInsuranceStatus(rs.getString("insuranceStatus"));
+                insurance.setInsuranceStatus((rs.getString("insuranceStatus")));
                 insuranceArrayList.add(insurance);
             }
                 return insuranceArrayList;

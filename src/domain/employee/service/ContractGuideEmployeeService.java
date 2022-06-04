@@ -39,14 +39,14 @@ public class ContractGuideEmployeeService extends EmployeeService{
 
 
     public void sendNearPaymentContract(ArrayList<Contract> nearExpireContractList) {
-        ArrayList<Integer> insuranceIds = new ArrayList<>();
+        ArrayList<String> insuranceIds = new ArrayList<>();
         ArrayList<String> customerIds = new ArrayList<>();
         for (Contract contract : nearExpireContractList){
             insuranceIds.add(contract.getInsuranceId());
             customerIds.add(contract.getCustomerId());
         }
         ArrayList<Insurance> insurances = employeeRepository.selectInsuranceByIds(insuranceIds);
-        HashMap<Integer, Insurance> insuranceHash = new HashMap<>();
+        HashMap<String, Insurance> insuranceHash = new HashMap<>();
         for (Insurance insurance : insurances) insuranceHash.put(insurance.getInsuranceId(), insurance);
 
         ArrayList<domain.customer.entity.Customer> customers = employeeRepository.selectCustomerByIds(customerIds);
@@ -71,14 +71,14 @@ public class ContractGuideEmployeeService extends EmployeeService{
     }
 
     public void sendEmailNearExpireContract(ArrayList<Contract> nearExpireContractList) {
-        ArrayList<Integer> insuranceIds = new ArrayList<>();
+        ArrayList<String> insuranceIds = new ArrayList<>();
         ArrayList<String> customerIds = new ArrayList<>();
         for (Contract contract : nearExpireContractList){
             insuranceIds.add(contract.getInsuranceId());
             customerIds.add(contract.getCustomerId());
         }
         ArrayList<Insurance> insurances = employeeRepository.selectInsuranceByIds(insuranceIds);
-        HashMap<Integer, Insurance> insuranceHash = new HashMap<>();
+        HashMap<String, Insurance> insuranceHash = new HashMap<>();
         for (Insurance insurance : insurances) insuranceHash.put(insurance.getInsuranceId(), insurance);
 
         ArrayList<domain.customer.entity.Customer> customers = employeeRepository.selectCustomerByIds(customerIds);

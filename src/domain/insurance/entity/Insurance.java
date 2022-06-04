@@ -56,8 +56,8 @@ public class Insurance {
         return kindOfInsurance;
     }
 
-    public void setKindOfInsurance(KindOfInsurance kindOfInsurance) {
-        this.kindOfInsurance = kindOfInsurance;
+    public void setKindOfInsurance(String kindOfInsurance) {
+        this.kindOfInsurance = getKindOfInsuranceBy(kindOfInsurance);
     }
 
     public String getInsuranceName() {
@@ -77,12 +77,12 @@ public class Insurance {
     }
 
 
-    public InsuranceStatus getInsuranceStatus() {
-        return insuranceStatus;
+    public InsuranceStatus getInsuranceStatus(String insuranceStatus) {
+        return this.insuranceStatus;
     }
 
     public void setInsuranceStatus(String insuranceStatus) {
-        this.insuranceStatus = setInsuranceStatusBy(insuranceStatus);
+        this.insuranceStatus = getInsuranceStatus(insuranceStatus);
     }
 }
 
