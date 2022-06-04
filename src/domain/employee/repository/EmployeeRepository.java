@@ -1,5 +1,6 @@
 package domain.employee.repository;
 
+import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewCustomer;
 import domain.customer.dto.AcceptanceReviewRequest;
@@ -11,6 +12,8 @@ import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.insurance.dto.AcceptanceReviewInsurance;
 import domain.insurance.entity.Insurance;
+import domain.insurance.entity.InsuranceCondition;
+import domain.insurance.entity.enumeration.InsuranceStatus;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 import global.dao.Lecture;
 import global.util.Constants;
@@ -207,7 +210,6 @@ public class EmployeeRepository {
     }
 
     public boolean insertLecture(Lecture lecturer) {
-//        String lectureId, String lectureName, String lecturePdfName, String lecturerId
         Statement statement = null;
         ResultSet rs = null;
         try{
@@ -286,15 +288,14 @@ public class EmployeeRepository {
 
     public void consultExecute(Employee employee, EmpCustomer customerConsultResponse) {
         ResultSet rs = null;
-        try {
+        try{
             String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
             PreparedStatement st = this.connection.prepareStatement(sql);
             st.setString(1, employee.getEmployeeId());
             st.setString(2, customerConsultResponse.getEmpCusId());
             st.executeUpdate();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        }catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -330,7 +331,8 @@ public class EmployeeRepository {
     public ArrayList<ExpirationResponse> contractManage() {
         ResultSet rs = null;
         try {
-            String sql = "select c.customerId, c.name, c.phoneNumber, c.email, c.kindOfJob, c.kindOfInsurance, i.insuranceName, i.insuranceStatus, contractStatus " +
+            String sql =
+                    "select c.customerId, c.name, c.phoneNumber, c.email, c.kindOfJob, c.kindOfInsurance, i.insuranceName, i.insuranceStatus, contractStatus " +
                     " From Customer c, Contract, Insurance i " +
                     "where c.customerId = Contract.customerId" +
                     "  and Contract.insuranceId = i.insuranceId" +
@@ -545,5 +547,98 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
         return acceptanceReviewInsurance;
+    }
+
+    public void insertNewInsurance(NewInsurance newInsurance){
+        int insuranceConditionId = insertInsuranceCondition(newInsurance.getInsuranceCondition());
+        int insuranceId = getLastInsuranceId();
+        insuranceId+=1;
+
+        try{
+            String sql = "insert into Insurance (" +
+                    "insuranceId," +
+                    "insuranceConditionId," +
+                    "insuranceName," +
+                    "fee," +
+                    "kindOfInsurance," +
+                    "insuranceStatus)" +
+                    "values (?,?,?,?,?,?);";
+
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setInt(1, insuranceId);
+            st.setInt(2, insuranceConditionId);
+            st.setString(3, newInsurance.getInsuranceName());
+            st.setInt(4, newInsurance.getFee());
+            st.setString(5, newInsurance.getKindOfInsurance().getName());
+            st.setString(6, InsuranceStatus.UNDER_EXAMINATION.getName());
+
+            int result = st.executeUpdate();
+
+            st.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public int insertInsuranceCondition(InsuranceCondition insuranceCondition){
+        int insuranceConditionId = getLastInsuranceConditionId();
+        insuranceConditionId += 1;
+        try{
+            String sql = "insert into Insurance_Condition (" +
+                    "insuranceConditionId," +
+                    "maxAge," +
+                    "minAge," +
+                    "smoke," +
+                    "alcohol," +
+                    "cancer)" +
+                    "values (?,?,?,?,?,?);";
+
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setInt(1, insuranceConditionId);
+            st.setInt(2, insuranceCondition.getMaxAge());
+            st.setInt(3, insuranceCondition.getMinAge());
+            st.setString(4, insuranceCondition.getSmoke());
+            st.setString(5, insuranceCondition.getAlcohol());
+            st.setString(6, insuranceCondition.getCancer());
+            int result = st.executeUpdate();
+            st.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return insuranceConditionId;
+    }
+
+    public int getLastInsuranceId() {
+        ResultSet rs = null;
+        int insuranceId = 0;
+        try{
+            String sql = "SELECT insuranceId FROM Insurance ORDER BY insuranceId DESC LIMIT 1;";
+
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+            rs = st.executeQuery();
+            if(rs.next()) insuranceId = rs.getInt("insuranceId");
+            st.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return insuranceId;
+    }
+
+    public int getLastInsuranceConditionId() {
+        ResultSet rs = null;
+        int insuranceConditionId = 0;
+        try{
+            String sql = "SELECT insuranceConditionId FROM Insurance_Condition ORDER BY insuranceConditionId DESC LIMIT 1;";
+
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+            rs = st.executeQuery();
+            if(rs.next()) insuranceConditionId = rs.getInt("insuranceConditionId");
+            st.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return insuranceConditionId;
     }
 }

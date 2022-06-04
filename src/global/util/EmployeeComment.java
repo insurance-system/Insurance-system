@@ -100,4 +100,57 @@ public class EmployeeComment {
         System.out.print("고객 ID:");
         return scanner.next();
     }
+
+    public void developInsurance() {
+        System.out.println("--------------보험 설계하기--------------");
+        System.out.print("보험 이름:");
+        System.out.println("1.생명보험  2.손해보험");
+    }
+
+    public String getInsuranceName() {
+        System.out.print("보험 이름:");
+        return scanner.next();
+    }
+
+    public int getKindOfInsurance() {
+        System.out.println("1.생명보험  2.손해보험");
+        System.out.print("번호 선택:");
+        return scanner.nextInt();
+    }
+
+    public int getInsuranceFee() {
+        System.out.print("월 청구비:");
+        return scanner.nextInt();
+    }
+
+
+    public int getMaxAge() {
+        System.out.print("가입 최대 나이:");
+        return scanner.nextInt();
+    }
+
+    public int getMinAge() {
+        System.out.print("가입 최소 나이:");
+        return scanner.nextInt();
+    }
+
+    public String getSmoke() {
+        System.out.println("하루 기준 담배 3개비는        A");
+        System.out.println("하루 기준 담배 10개비는 이하는  B");
+        System.out.println("하루 기준 담배 20개비 이상은   C");
+        return scanner.next();
+    }
+
+    public String getAlcohol() {
+        System.out.println("일주일 기준 담배 3개비는        A");
+        System.out.println("일주일 기준 담배 10개비는 이하는  B");
+        System.out.println("일주일 기준 소주 2병 이상은      C");
+        return scanner.next();
+    }
+
+    public String getCancer() {
+        System.out.println("현재 암과 관련된 질병이 없다면   A");
+        System.out.println("현재 암과 투병중인 상태        C");
+        return scanner.next();
+    }
 }

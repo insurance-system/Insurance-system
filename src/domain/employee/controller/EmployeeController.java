@@ -1,5 +1,6 @@
 package domain.employee.controller;
 
+import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
 import domain.employee.dto.CustomerAnalysisInformation;
@@ -10,6 +11,7 @@ import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.employee.service.*;
+import domain.insurance.entity.InsuranceCondition;
 import global.dao.Lecture;
 import global.util.Choice;
 import global.util.EmployeeComment;
@@ -140,21 +142,9 @@ public class EmployeeController {
                         new NoAuthorityDPException();
                     }
                     break;
-                case 61://TODO KEEP
-                    //보험 설계 시작
-                    //생명보험, 화재보험
-                    //설계를 위한 데이터 요청 메서드 두개
-                    /**
-                     * 1개는 고객정보
-                     * 1개는 시장 보험 정보
-                     *
-                     */
-                    //
-                    if (employee.getDepartmentId().equals("DP3")) {
-
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                case 61:
+                    if (employee.getDepartmentId().equals("DP3")) developInsurance();
+                    else new NoAuthorityDPException();
                     break;
                 case 71:
                     //고객 정보를 제공
@@ -184,6 +174,8 @@ public class EmployeeController {
             }
         }
     }
+
+
 
     private void startAcceptanceReview() {
         System.out.println("인수 심사 대상 고객 명단을 불러오시겠습니까?");
@@ -248,7 +240,7 @@ public class EmployeeController {
     }
 
     public void uploadEducationLecture(Employee lecturer){
-        String lectureName = choice.getText("강의 이름을 입력하세요:");
+        String lectureName = choice.getText("강의 이름을 입력하세요:");//TODO choice comment로 옮기기
         String lecturePdfName = choice.getText("강의 자료를 이름을 입력하세요.");
         String lectureId = lectureName.length() + lecturer.getEmployeeId();
         Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, lecturer.getEmployeeId());
@@ -258,6 +250,32 @@ public class EmployeeController {
 
     //TODO
     public void findLectureRegistrationList(){
+    }
+
+    private void developInsurance() {
+        ArrayList<CustomerAnalysisInformation> customerAnalysisInformations = provideCustomerInformation();
+        MarketInsuranceInformationResponse marketInsuranceInformationResponse = provideMarketInformation();
+        System.out.println("-------------고객 분석 데이터--------------");
+        for (CustomerAnalysisInformation customerAnalysisInformation : customerAnalysisInformations)
+            System.out.println(customerAnalysisInformation);
+        System.out.println("---------------------------------------");
+        System.out.println("-------------시장 분석 데이터--------------");
+        System.out.println(marketInsuranceInformationResponse);
+        System.out.println("---------------------------------------");
+        String insuranceName = employeeComment.getInsuranceName();
+        int kindOfInsurance = employeeComment.getKindOfInsurance();
+        int insuranceFee = employeeComment.getInsuranceFee();
+        int maxAge = employeeComment.getMaxAge();
+        int minAge = employeeComment.getMinAge();
+        System.out.println("---보험 가입 조건 설정하기(입력하신 Grade 이상이 되어야 보험이 가능합니다.)---");
+        String smoke = employeeComment.getSmoke();
+        String alcohol = employeeComment.getAlcohol();
+        String cancer = employeeComment.getCancer();
+        InsuranceCondition insuranceCondition = new InsuranceCondition(maxAge,minAge,smoke,alcohol,cancer);
+        NewInsurance newInsurance = new NewInsurance(insuranceName, kindOfInsurance, insuranceFee, insuranceCondition);
+        if(insuranceDevelopmentEmployeeService.developInsurance(newInsurance))
+            System.out.println("보험 등록이 성공적으로 완료되었습니다.");
+
 
     }
 
