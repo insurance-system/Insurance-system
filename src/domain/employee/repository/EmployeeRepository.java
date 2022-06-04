@@ -272,7 +272,7 @@ public class EmployeeRepository {
 
             while (rs.next()) {
                 Contract contract = new Contract();
-                contract.setContractId(rs.getInt("contractId"));
+                contract.setContractId(rs.getString("contractId"));
                 contract.setCustomerId(rs.getString("customerId"));
                 contract.setInsuranceId(rs.getString("insuranceId"));
                 contract.setExpiredDate(LocalDate.parse(rs.getString("expiredDate"), DateTimeFormatter.ISO_DATE));
@@ -753,4 +753,24 @@ public class EmployeeRepository {
             throwables.printStackTrace();
         }
     }
+
+    public void doInsuranceContract(Contract contract) {
+        try {
+            String sql = "INSERT INTO Contract (contractId, customerId, chargeOfEmployeeId, insuranceId, expiredDate, contractStatus, paymentDate)" +
+                    "        VALUE (?,?,?,?,?,?,?)";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, contract.getContractId());
+            st.setString(2, contract.getCustomerId());
+            st.setString(3,contract.getChargeOfEmployeeId());
+            st.setString(4,contract.getInsuranceId());
+            st.setString(5,contract.getExpiredDate().toString());
+            st.setString(6,contract.getContractStatus());
+            st.setString(7,contract.getPaymentDate().toString());
+            st.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
 }
