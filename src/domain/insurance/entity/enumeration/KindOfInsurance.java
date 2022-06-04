@@ -22,4 +22,9 @@ public enum KindOfInsurance {
     }
     public int getNumber() {return number;}
     public String getName() {return name;}
+
+    public static KindOfInsurance getKindOfInsuranceNByName(String name) {
+        if(name.equals(KindOfInsurance.LIFE.name)) return LIFE;
+        else return NON_LIFE;
+    }
 }

@@ -14,6 +14,9 @@ public class FindPayment {
 
     private String payDate;
 
+    public FindPayment() {
+
+    }
 
 
     public String getInsuranceName() {

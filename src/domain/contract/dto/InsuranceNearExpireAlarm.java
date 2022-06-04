@@ -8,7 +8,7 @@ public class InsuranceNearExpireAlarm{
     private String customerName;
     private String phoneNumber;
 
-    private int InsuranceId;
+    private String insuranceId;
     private String insuranceName;
     private int fee;
     private LocalDate expiredDate;
@@ -17,7 +17,7 @@ public class InsuranceNearExpireAlarm{
                                     String email,
                                     String customerName,
                                     String phoneNumber,
-                                    int insuranceId,
+                                    String insuranceId,
                                     String insuranceName,
                                     int fee,
                                     LocalDate expiredDate) {
@@ -25,7 +25,7 @@ public class InsuranceNearExpireAlarm{
         this.email = email;
         this.customerName = customerName;
         this.phoneNumber = phoneNumber;
-        InsuranceId = insuranceId;
+        this.insuranceId = insuranceId;
         this.insuranceName = insuranceName;
         this.fee = fee;
         this.expiredDate = expiredDate;
@@ -47,8 +47,8 @@ public class InsuranceNearExpireAlarm{
         return phoneNumber;
     }
 
-    public int getInsuranceId() {
-        return InsuranceId;
+    public String getInsuranceId() {
+        return insuranceId;
     }
 
     public String getInsuranceName() {

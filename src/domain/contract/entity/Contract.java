@@ -6,7 +6,7 @@ public class Contract {
     private int contractId;
     private String customerId;
     private int chargeOfEmployeeId;
-    private int insuranceId;
+    private String insuranceId;
     private LocalDate expiredDate;
     private LocalDate paymentDate;
     private String contractStatus;
@@ -23,7 +23,7 @@ public class Contract {
         return chargeOfEmployeeId;
     }
 
-    public int getInsuranceId() {
+    public String getInsuranceId() {
         return insuranceId;
     }
 
@@ -47,7 +47,7 @@ public class Contract {
         this.chargeOfEmployeeId = chargeOfEmployeeId;
     }
 
-    public void setInsuranceId(int insuranceId) {
+    public void setInsuranceId(String insuranceId) {
         this.insuranceId = insuranceId;
     }
 

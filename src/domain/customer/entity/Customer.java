@@ -58,7 +58,6 @@ public class Customer{
         this.password = password;
         this.name = name;
         this.kindOfInsurance = kindOfInsuranceId;
-
         this.address = address;
         this.detailAddress = detailAddress;
         this.zipcode = zipcode;
@@ -91,8 +90,7 @@ public class Customer{
         this.name = name;
     }
 
-    public KindOfInsurance getKindOfInsurance() {
-        return kindOfInsurance;
+    public KindOfInsurance getKindOfInsurance() {return kindOfInsurance;
     }
 
     public void setKindOfInsurance(KindOfInsurance kindOfInsurance) {
