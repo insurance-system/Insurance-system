@@ -1,21 +1,20 @@
 package domain.employee.controller;
 
-import domain.customer.entity.Customer;
-import domain.employee.dto.CustomerAnalysisInformation;
-import domain.employee.dto.EmpCustomer;
+import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
-import domain.employee.dto.MarketInsuranceInformationResponse;
+import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
+import domain.employee.exception.excution.NoConsultCustomer;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.employee.service.*;
+import domain.insurance.entity.InsuranceCondition;
 import global.dao.Lecture;
 import global.util.Choice;
 import global.util.EmployeeComment;
 
-import javax.swing.undo.CannotUndoException;
 import java.util.ArrayList;
 
 public class EmployeeController {
@@ -27,6 +26,9 @@ public class EmployeeController {
     private AcceptanceReviewEmployeeService acceptanceReviewEmployeeService;
     private ContractManageEmployeeService contractManageEmployeeService;
     private InsuranceDevelopmentEmployeeService insuranceDevelopmentEmployeeService;
+    private CustomerInformationManageService customerInformationManageService;
+    private IncidentManageService incidentManageService;
+    private RewardManageService rewardManageService;
 
     private Choice choice;
     private EmployeeComment employeeComment;
@@ -42,6 +44,9 @@ public class EmployeeController {
         this.acceptanceReviewEmployeeService = new AcceptanceReviewEmployeeService();
         this.contractManageEmployeeService = new ContractManageEmployeeService();
         this.insuranceDevelopmentEmployeeService = new InsuranceDevelopmentEmployeeService();
+        this.customerInformationManageService = new CustomerInformationManageService();
+        this.incidentManageService = new IncidentManageService();
+        this.rewardManageService = new RewardManageService();
     }
 
     public void initial() {
@@ -71,6 +76,8 @@ public class EmployeeController {
                             salesEmployeeService.consultExecute(employee,
                                     arrayList.get(employeeComment.customerConsultList(arrayList)));
                             System.out.println("상담 완료");
+                        }else{
+                            new NoConsultCustomer();
                         }
                     }else{
                         new NoAuthorityDPException();
@@ -142,35 +149,50 @@ public class EmployeeController {
                         new NoAuthorityDPException();
                     }
                     break;
-                case 61://TODO KEEP
-                    //보험 설계 시작
-                    //생명보험, 화재보험
-                    //설계를 위한 데이터 요청 메서드 두개
-                    /**
-                     * 1개는 고객정보
-                     * 1개는 시장 보험 정보
-                     *
-                     */
-                    //
-                    if (employee.getDepartmentId().equals("DP3")) {
-
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                case 61:
+                    if (employee.getDepartmentId().equals("DP3")) developInsurance();
+                    else new NoAuthorityDPException();
                     break;
                 case 71:
                     //고객 정보를 제공
-                    //삭제 예정
                     if (employee.getDepartmentId().equals("DP7")) {
-
+                        this.provideCustomerInformation();
                     }else{
                         new NoAuthorityDPException();
                     }
                     break;
                 case 81:
                     //보험 시장 데이터 제공
-                    //삭제 예정
                     if (employee.getDepartmentId().equals("DP8")) {
+                        this.provideMarketInformation();
+                    }else{
+                        new NoAuthorityDPException();
+                    }
+                    break;
+                case 91:
+                    //손해접수팀
+                    //사고 발생 신고를 접수받는다.
+                    if (employee.getDepartmentId().equals("DP9")) {
+                        ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
+                        if(!incidentResponses.isEmpty()){
+                            this.incidentManageService.incidentAssign(employee,
+                                    incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses)));
+                            System.out.println("담당자 설정이 완료되었습니다.");
+                        }
+
+                    }else{
+                        new NoAuthorityDPException();
+                    }
+                    break;
+                case 101:
+                    //보상평가팀
+                    //보상금을 심사하다.
+                    if (employee.getDepartmentId().equals("DP10")) {
+                        ArrayList<RewardEvaluteResponse> rewardEvaluteResponses = this.rewardManageService.rewardEvaluate();
+                        if(!rewardEvaluteResponses.isEmpty()){
+                            this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluteResponses));
+                        }
+
 
                     }else{
                         new NoAuthorityDPException();
@@ -181,11 +203,12 @@ public class EmployeeController {
                     return null;
                 default:
                     new CheckMenuNumberException();
-//                    break;
                     break;
             }
         }
     }
+
+
 
     private void startAcceptanceReview() {
         System.out.println("인수 심사 대상 고객 명단을 불러오시겠습니까?");
@@ -250,7 +273,7 @@ public class EmployeeController {
     }
 
     public void uploadEducationLecture(Employee lecturer){
-        String lectureName = choice.getText("강의 이름을 입력하세요:");
+        String lectureName = choice.getText("강의 이름을 입력하세요:");//TODO choice comment로 옮기기
         String lecturePdfName = choice.getText("강의 자료를 이름을 입력하세요.");
         String lectureId = lectureName.length() + lecturer.getEmployeeId();
         Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, lecturer.getEmployeeId());
@@ -260,16 +283,40 @@ public class EmployeeController {
 
     //TODO
     public void findLectureRegistrationList(){
+    }
+
+    private void developInsurance() {
+        ArrayList<CustomerAnalysisInformation> customerAnalysisInformations = provideCustomerInformation();
+        MarketInsuranceInformationResponse marketInsuranceInformationResponse = provideMarketInformation();
+        System.out.println("-------------고객 분석 데이터--------------");
+        for (CustomerAnalysisInformation customerAnalysisInformation : customerAnalysisInformations)
+            System.out.println(customerAnalysisInformation);
+        System.out.println("---------------------------------------");
+        System.out.println("-------------시장 분석 데이터--------------");
+        System.out.println(marketInsuranceInformationResponse);
+        System.out.println("---------------------------------------");
+        String insuranceName = employeeComment.getInsuranceName();
+        int kindOfInsurance = employeeComment.getKindOfInsurance();
+        int insuranceFee = employeeComment.getInsuranceFee();
+        int maxAge = employeeComment.getMaxAge();
+        int minAge = employeeComment.getMinAge();
+        System.out.println("---보험 가입 조건 설정하기(입력하신 Grade 이상이 되어야 보험이 가능합니다.)---");
+        String smoke = employeeComment.getSmoke();
+        String alcohol = employeeComment.getAlcohol();
+        String cancer = employeeComment.getCancer();
+        InsuranceCondition insuranceCondition = new InsuranceCondition(maxAge,minAge,smoke,alcohol,cancer);
+        NewInsurance newInsurance = new NewInsurance(insuranceName, kindOfInsurance, insuranceFee, insuranceCondition);
+        if(insuranceDevelopmentEmployeeService.developInsurance(newInsurance))
+            System.out.println("보험 등록이 성공적으로 완료되었습니다.");
+
 
     }
 
     public ArrayList<CustomerAnalysisInformation> provideCustomerInformation(){
-
-        return null;
+        return customerInformationManageService.provideCustomerInformation();
     }
 
     public MarketInsuranceInformationResponse provideMarketInformation(){
-
-        return null;
+        return new MarketInsuranceInformationResponse();
     }
 }

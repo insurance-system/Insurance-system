@@ -1,11 +1,22 @@
 package domain.employee.dto;
 
+import domain.insurance.entity.enumeration.KindOfInsurance;
+
 import java.util.ArrayList;
 
 public class CustomerAnalysisInformation {
 
     private String InsuranceName;
-    private String Cnt;
+    private KindOfInsurance kindOfInsurance;
+    private String avg;
+    private String cnt;
+
+    public CustomerAnalysisInformation(String insuranceName, KindOfInsurance kindOfInsurance, String avg, String cnt) {
+        InsuranceName = insuranceName;
+        this.kindOfInsurance = kindOfInsurance;
+        this.avg = avg;
+        this.cnt = cnt;
+    }
 
     public String getInsuranceName() {
         return InsuranceName;
@@ -16,10 +27,10 @@ public class CustomerAnalysisInformation {
     }
 
     public String getCnt() {
-        return Cnt;
+        return cnt;
     }
 
     public void setCnt(String cnt) {
-        Cnt = cnt;
+        cnt = cnt;
     }
 }

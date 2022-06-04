@@ -2,9 +2,7 @@ package domain.employee.service;
 
 import domain.contract.dto.InsuranceNearExpireAlarm;
 import domain.contract.entity.Contract;
-import domain.employee.repository.EmployeeRepository;
 import domain.insurance.entity.Insurance;
-import global.dao.Lecture;
 
 import java.time.LocalDate;
 import java.time.Period;
