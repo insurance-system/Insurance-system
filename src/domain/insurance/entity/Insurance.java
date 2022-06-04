@@ -1,33 +1,30 @@
 package domain.insurance.entity;
 
-import domain.customer.enumeration.KindOfJob;
-import domain.insurance.entity.enumeration.InsuranceStatus;
 import domain.insurance.entity.enumeration.KindOfInsurance;
-
-import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceBy;
 
 public class Insurance {
 
-    public Insurance(
-            String insuranceName,
-            int fee
-    ){
-        this.insuranceName = insuranceName;
-        this.fee = fee;
-    }
-
-    private String insuranceId;
+    private int insuranceId;
     private String insuranceConditionId;
     private KindOfInsurance kindOfInsurance;
     private String insuranceName;
     private int fee;
 //    private InsuranceStatus insuranceStatus;
 
-    public String getInsuranceId() {
+    public Insurance(String insuranceName, int fee){
+        this.insuranceName = insuranceName;
+        this.fee = fee;
+    }
+
+    public Insurance() {
+    }
+
+
+    public int getInsuranceId() {
         return insuranceId;
     }
 
-    public void setInsuranceId(String insuranceId) {
+    public void setInsuranceId(int insuranceId) {
         this.insuranceId = insuranceId;
     }
 

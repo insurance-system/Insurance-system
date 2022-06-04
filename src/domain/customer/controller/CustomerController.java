@@ -55,7 +55,6 @@ public class CustomerController {
                 System.out.println("아이디 혹은 비번이 틀렸음");
                 login();
             }
-
     }
 
     private void enterInterest(Customer customer) {
