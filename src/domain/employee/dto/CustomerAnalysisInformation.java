@@ -1,7 +1,5 @@
 package domain.employee.dto;
 
-import java.util.ArrayList;
-
 public class CustomerAnalysisInformation {
 
     private String InsuranceName;
