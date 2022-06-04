@@ -47,11 +47,13 @@ public class CustomerComment {
         return scanner.nextInt();
     }
 
-    public void findPaymentHistory(FindPayment findPayment) {
+    public void findPaymentHistory(ArrayList<FindPayment> findPayment) {
         System.out.println("-------------------보험금 납부 내역-------------------");
-        System.out.print(" 보험 이름 : "+findPayment.getInsuranceName());
-        System.out.print("  | 납부 금액 : "+findPayment.getFee());
-        System.out.println(" | 납부 일 : "+findPayment.getPayDate());
+        for(int i=0; findPayment.size()>i; i++) {
+            System.out.print(" 보험 이름 : " + findPayment.get(i).getInsuranceName());
+            System.out.print("  | 납부 금액 : " + findPayment.get(i).getFee());
+            System.out.println(" | 납부 일 : " + findPayment.get(i).getPayDate());
+        }
         System.out.println("--------------------------------------------------");
     }
 
