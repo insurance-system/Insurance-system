@@ -11,31 +11,20 @@ import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsur
 
 public class CustomerHandleIncidentRequest {
 
-    private String incidentId;
     private String customerId;
     private Date incidentDate;
     private String carNumber;
     private String incidentSite;
 
     public CustomerHandleIncidentRequest(
-                    String incidentId,
                     String customerId,
                     Date incidentDate,
                     String carNumber,
                     String incidentSite) {
         this.customerId = customerId;
-        this.incidentId = incidentId;
         this.incidentDate = incidentDate;
         this.carNumber = carNumber;
         this.incidentSite = incidentSite;
-    }
-
-    public String getIncidentId() {
-        return incidentId;
-    }
-
-    public void setIncidentId(String incidentId) {
-        this.incidentId = incidentId;
     }
 
     public String getCustomerId() {

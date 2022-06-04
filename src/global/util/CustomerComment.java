@@ -28,7 +28,8 @@ public class CustomerComment {
         System.out.println("4. 보험급 납부내역");
         System.out.println("5. 사고 처리 접수");
         System.out.println("6. 보험 가입하기");
-        System.out.println("7. 로그아웃");
+        System.out.println("7. 보험금 청구하기");
+        System.out.println("8. 로그아웃");
         System.out.println("번호 입력:");
         return scanner.nextInt();
     }
@@ -43,7 +44,8 @@ public class CustomerComment {
     public int afterLoginInterest() {
         System.out.println("1. 상담사 연결하기");
         System.out.println("2. 상담사 평가하기");
-        System.out.println("3. 로그아웃");
+        System.out.println("3. 보험 가입하기");
+        System.out.println("4. 로그아웃");
         return scanner.nextInt();
     }
 
@@ -76,7 +78,7 @@ public class CustomerComment {
             System.out.println(" | 보험금 : "+insuranceArrayList.get(i).getFee());
         }
         System.out.println("--------------------------------------------------");
-        System.out.print("가입할 보험ID 입력 :");
+        System.out.print("가입할 보험 번호 입력 :");
 
         return insuranceArrayList.get(scanner.nextInt()).getInsuranceId();
     }

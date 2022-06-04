@@ -1,6 +1,8 @@
 package domain.customer.repository;
 
+import domain.customer.dto.request.CustomerClaimInsuranceRequest;
 import domain.customer.dto.request.CustomerHandleIncidentRequest;
+import domain.customer.dto.request.InterestCustomerJoinRequest;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.*;
@@ -8,7 +10,6 @@ import domain.insurance.entity.Insurance;
 import global.util.Constants;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
@@ -17,6 +18,21 @@ import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsur
 public class CustomerRepository {
 
     private Connection connection;
+
+    private Connection sqlConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            return conn;
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public Customer insert(Customer customer) {
         ResultSet rs = null;
@@ -86,21 +102,6 @@ public class CustomerRepository {
             e.printStackTrace();
         }
         new NoCustomerException();
-        return null;
-    }
-
-    private Connection sqlConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            return conn;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
@@ -228,13 +229,14 @@ public class CustomerRepository {
 
     public void connectSalesEmployee(Customer Customer) {
         ResultSet rs = null;
+        String emp_CusId = Integer.toString(Integer.parseInt(findLastEmpCusId())+1);
         try {
             String sql =
                     "insert into Emp_Cus (emp_CusId,employeeId,customerId,satisfaction) values (?,?,?,?);";
 
             PreparedStatement st = sqlConnection().prepareStatement(sql);
 
-            st.setString(1, "EC" + Customer.getCustomerId());
+            st.setString(1, emp_CusId);
             st.setString(2, null);
             st.setString(3, Customer.getCustomerId());
             st.setString(4, null);
@@ -391,13 +393,14 @@ public class CustomerRepository {
 
     public void handleIncident(CustomerHandleIncidentRequest incidentHandling) {
         ResultSet rs = null;
+        String incidentId = Integer.toString(Integer.parseInt(findLastIncidentHandlingId())+1);
         try {
             String sql =
-                    "insert into Incident_handling (incidentId, customerId, incidentDate, incidentName, incidentPhoneNum, errorRate, carNumber, incidentSite) values (?,?,?,?,?,?,?,?);";
+                    "insert into Incident_handling (incidentId, customerId, incidentDate, incidentName, incidentPhoneNum, errorRate, carNumber, incidentSite, employeeId) values (?,?,?,?,?,?,?,?,?);";
 
             PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
 
-            st.setString(1, incidentHandling.getIncidentId());
+            st.setString(1, incidentId);
             st.setString(2, incidentHandling.getCustomerId());
             st.setDate(3, incidentHandling.getIncidentDate());
             st.setString(4, null);
@@ -405,6 +408,7 @@ public class CustomerRepository {
             st.setString(6, null);
             st.setString(7, incidentHandling.getCarNumber());
             st.setString(8, incidentHandling.getCarNumber());
+            st.setString(9, null);
             int result = st.executeUpdate();
             st.close();
         } catch (SQLException e) {
@@ -412,5 +416,164 @@ public class CustomerRepository {
         }
 
 
+    }
+
+    public String checkJoinLifeInsurance(Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql = "select Ic.insuranceClaimId\n" +
+                    " from Customer C, Contract Ct, Insurance I, InsuranceClaim Ic\n" +
+                    " where C.customerId = Ct.customerId and Ct.customerId = Ic.customerId and Ct.insuranceId = I.insuranceId\n" +
+                    " and C.customerId = ? and I.kindOfInsurance = 'NON_LIFE';";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+
+            st.setString(1, customer.getCustomerId());
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String checkJoinLifeInsurance = rs.getString("insuranceClaimId");
+                return checkJoinLifeInsurance;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public void claimInsurance(CustomerClaimInsuranceRequest claimInsurance) {
+        ResultSet rs = null;
+        String insuranceClaimId = Integer.toString(Integer.parseInt(findLastInsuranceClaimId())+1);
+        try {
+            String sql =
+                    "insert into InsuranceClaim (insuranceClaimId, customerId, claimContent, claimCost) values (?,?,?,?);";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, insuranceClaimId);
+            st.setString(2, claimInsurance.getCustomerId());
+            st.setString(3, claimInsurance.getClaimContent());
+            st.setInt(4, claimInsurance.getClaimCost());
+            int result = st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String findLastInsuranceClaimId() {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT insuranceClaimId FROM InsuranceClaim ORDER BY insuranceClaimId DESC LIMIT 1";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String lastId = rs.getString("insuranceClaimId");
+                return lastId;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public String findLastEmpCusId() {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT emp_CusId FROM Emp_Cus ORDER BY emp_CusId DESC LIMIT 1";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String lastId = rs.getString("emp_CusId");
+                return lastId;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public String findLastIncidentHandlingId() {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT incidentId FROM Incident_handling ORDER BY incidentId DESC LIMIT 1";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String lastId = rs.getString("incidentId");
+                return lastId;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public int checkIdExist(String customerId) {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT count(*) FROM Customer WHERE customerId = ?;";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            st.setString(1, customerId);
+            rs = st.executeQuery();
+            while(rs.next()) {
+                int id = rs.getInt("count(*)");
+                return id;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void addCustomerInformation(InterestCustomerJoinRequest customer, String customerId) {
+        Statement statement = null;
+        ResultSet rs = null;
+        try {
+            String sql = "update Customer set name=? address=? detailAddress=? zipcode=? email=? kindOfJobId=? where customerId = ?;";
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            PreparedStatement st = conn.prepareStatement(sql);
+
+            st.setString(1, customer.getName());
+            st.setString(2, customer.getAddress());
+            st.setString(3, customer.getDetailAddress());
+            st.setString(4, customer.getZipcode());
+            st.setString(5, customer.getEmail());
+            st.setString(6, customer.getKindOfJob().name());
+            st.setString(7, customerId);
+            int result = st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String checkConnection(Customer customer) {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT employeeId FROM Emp_Cus WHERE customerId = ?;";
+
+            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            st.setString(1, customer.getCustomerId());
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String employeeId = rs.getString("employeeId");
+                return employeeId;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 }

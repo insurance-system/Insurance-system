@@ -11,7 +11,10 @@ public enum CustomerExceptionList {
     EXISTPAYER("C0007","보험금 수익자를 이미 설정했습니다."),
     EXISTBENEFICIARY("C0008","보험금 납부자를 이미 설정했습니다."),
     NOJOINNONLIFEINSURANCE("C0009","가입된 손해보험이 없습니다."),
-    NOINTERESTINSURANCE("C00010","관심사항에 해당하는 보험이 존재하지 않습니다.");
+    NOJOINLIFEINSURANCE("C0010","가입된 생명보험이 없습니다."),
+    EXISTCUSTOMER("C0011","존재하는 아이디입니다."),
+    NOCONNECTIONWITHEMPLOYEE("C0012","상담사 연결이 필요합니다."),
+    NOINTERESTINSURANCE("C00013","관심사항에 해당하는 보험이 존재하지 않습니다.");
 
     private String ErrorCode;
     private String Message;

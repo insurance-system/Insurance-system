@@ -1,8 +1,6 @@
 package domain.customer.service;
 
-import domain.customer.dto.request.CustomerHandleIncidentRequest;
-import domain.customer.dto.request.CustomerJoinRequest;
-import domain.customer.dto.request.CustomerLoginRequest;
+import domain.customer.dto.request.*;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.*;
@@ -81,5 +79,28 @@ public class CustomerService {
 
     public void handleIncident(CustomerHandleIncidentRequest incidentHandling) {
         customerRepository.handleIncident(incidentHandling);
+    }
+
+    public void claimInsurance(CustomerClaimInsuranceRequest claimInsurance, Customer customer) {
+        customerRepository.claimInsurance(claimInsurance);
+    }
+
+    public String checkJoinLifeInsurance(Customer customer) {
+        if(customerRepository.checkJoinLifeInsurance(customer) == null) new NoJoinLifeInsuranceException();
+        return customerRepository.checkJoinLifeInsurance(customer);
+    }
+
+    public int checkIdExist(String customerId) {
+        if(customerRepository.checkIdExist(customerId)!=0) new ExistCustomerException();
+        return customerRepository.checkIdExist(customerId);
+    }
+
+    public void addCustomerInformation(InterestCustomerJoinRequest customer, String customerId) {
+        customerRepository.addCustomerInformation(customer, customerId);
+    }
+
+    public String checkConnection(Customer customer) {
+        if(customerRepository.checkConnection(customer) == null) new NoConnectionWithEmployeeException();
+            return customerRepository.checkConnection(customer);
     }
 }
