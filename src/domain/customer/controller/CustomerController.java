@@ -1,5 +1,6 @@
 package domain.customer.controller;
 
+import domain.customer.dto.request.CustomerHandleIncidentRequest;
 import domain.customer.dto.request.CustomerJoinRequest;
 import domain.customer.dto.request.CustomerLoginRequest;
 import domain.customer.entity.Customer;
@@ -10,7 +11,9 @@ import domain.insurance.entity.Insurance;
 import global.util.Choice;
 import global.util.CustomerComment;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CustomerController {
 
@@ -86,6 +89,7 @@ public class CustomerController {
                 if(findPayment!=null) customerComment.findPaymentHistory(findPayment);
                 break;
             case 5: //5. 사고 처리 접수
+                incidentHandling(customer);
                 break;
             case 6: //6. 보험 가입하기
                 joinInsurance(customer);
@@ -98,6 +102,25 @@ public class CustomerController {
                 break;
         }
         enter(customer);
+    }
+
+    private void incidentHandling(Customer customer) {
+        if(customerService.checkJoinNonlifeInsurance(customer)!=null) {
+            CustomerHandleIncidentRequest incidentHandling = null;
+            try {
+                incidentHandling = new CustomerHandleIncidentRequest(
+                        customer.getCustomerId(),
+                        customer.getCustomerId(),
+                        choice.getIncidentDate(),
+                        choice.getCarNumber(),
+                        choice.getIncidentSite()
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            customerService.handleIncident(incidentHandling);
+
+        }
     }
 
     //보험 목록 확인 후 화면
@@ -215,6 +238,7 @@ public class CustomerController {
     private void joinInsurance(Customer customer) {
         ArrayList<Insurance> interestInsuranceArrayList = customerService.findInterestInsurance(customer);
         String joinInsuranceId = customerComment.interestInsurances(interestInsuranceArrayList);
+
         //가입자추가정보받기 (update)
         /*
         PolicyholderJoinRequest policyholderJoinRequest = new PolicyholderJoinRequest(
