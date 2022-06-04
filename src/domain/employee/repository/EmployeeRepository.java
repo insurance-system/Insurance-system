@@ -3,10 +3,9 @@ package domain.employee.repository;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewCustomer;
 import domain.customer.dto.AcceptanceReviewRequest;
-import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
-import domain.employee.dto.Customer;
 import domain.employee.dto.DefaultResponse;
+import domain.employee.dto.EmpCustomer;
 import domain.employee.dto.ExpirationResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
@@ -177,7 +176,7 @@ public class EmployeeRepository {
         return null;
     }
 
-    public ArrayList<Customer> customerConsult(Employee employee) {
+    public ArrayList<EmpCustomer> customerConsult(Employee employee) {
         ResultSet rs = null;
         try {
             String sql = "Select Emp_Cus.emp_CusId, Customer.customerId, Customer.name, Customer.phoneNumber, Customer.kindOfInsurance, Customer.kindOfJob" +
@@ -187,14 +186,14 @@ public class EmployeeRepository {
 
             rs = st.executeQuery();
 
-            ArrayList<Customer> customerList = new ArrayList<>();
+            ArrayList<EmpCustomer> customerList = new ArrayList<>();
             while (rs.next()){
-                Customer customerConsultResponse = new Customer();
+                EmpCustomer customerConsultResponse = new EmpCustomer();
                 customerConsultResponse.setEmpCusId(rs.getString("emp_CusId"));
                 customerConsultResponse.setCustomerId(rs.getString("customerId"));
                 customerConsultResponse.setName(rs.getString("name"));
                 customerConsultResponse.setPhoneNumber(rs.getString("phoneNumber"));
-                customerConsultResponse.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getInt("kindOfInsurance")));
+                customerConsultResponse.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
                 customerConsultResponse.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
                 customerList.add(customerConsultResponse);
             }
@@ -285,7 +284,7 @@ public class EmployeeRepository {
         return contractList;
     }
 
-    public void consultExcute(Employee employee, Customer customerConsultResponse) {
+    public void consultExecute(Employee employee, EmpCustomer customerConsultResponse) {
         ResultSet rs = null;
         try {
             String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
@@ -348,7 +347,7 @@ public class EmployeeRepository {
                         rs.getString("phoneNumber"),
                         rs.getString("email"),
                         KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")),
-                        KindOfInsurance.getKindOfInsuranceBy(rs.getInt("kindOfInsurance")),
+                        KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")),
                         rs.getString("insuranceName"),
                         rs.getString("insuranceStatus"),
                         "만기"
@@ -397,9 +396,8 @@ public class EmployeeRepository {
         }
         return null;
     }
-
-    public ArrayList<Customer> selectCustomerByIds(ArrayList<String> customerIds) {
-        ArrayList<Customer> customerList = new ArrayList<>();
+    public ArrayList<domain.customer.entity.Customer> selectCustomerByIds(ArrayList<String> customerIds) {
+        ArrayList<domain.customer.entity.Customer> customerList = new ArrayList<>();
         String args = "";
         for (String customerId : customerIds) {
             args += "'"+customerId+"',";
@@ -414,7 +412,7 @@ public class EmployeeRepository {
             rs = st.executeQuery();
 
             while (rs.next()) {
-                Customer customer = new Customer();
+                domain.customer.entity.Customer customer = new domain.customer.entity.Customer();
                 customer.setCustomerId(rs.getString("customerId"));
                 customer.setName(rs.getString("name"));
                 customer.setEmail(rs.getString("email"));
@@ -426,7 +424,6 @@ public class EmployeeRepository {
         }
         return customerList;
     }
-
 
     public ArrayList<Insurance> selectInsuranceByIds(ArrayList<Integer> insuranceIds) {
         ArrayList<Insurance> insuranceList = new ArrayList<>();

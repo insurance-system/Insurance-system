@@ -1,7 +1,5 @@
 package domain.employee.dto;
 
-import domain.contract.entity.Contract;
-import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 
