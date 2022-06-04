@@ -4,7 +4,7 @@ import domain.customer.entity.Grade;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 
 public class AcceptanceReviewInsurance {
-    private int insuranceId;
+    private String insuranceId;
     private String insuranceName;
     private int fee;
     private int maxAge;
@@ -14,11 +14,11 @@ public class AcceptanceReviewInsurance {
     private Grade cancer;
     private KindOfInsurance kindOfInsurance;
 
-    public int getInsuranceId() {
+    public String getInsuranceId() {
         return insuranceId;
     }
 
-    public void setInsuranceId(int insuranceId) {
+    public void setInsuranceId(String insuranceId) {
         this.insuranceId = insuranceId;
     }
 

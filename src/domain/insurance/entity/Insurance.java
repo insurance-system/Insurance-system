@@ -1,30 +1,46 @@
 package domain.insurance.entity;
 
+import domain.customer.enumeration.KindOfJob;
+import domain.insurance.entity.enumeration.InsuranceStatus;
 import domain.insurance.entity.enumeration.KindOfInsurance;
+
+import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceBy;
 
 public class Insurance {
 
-    private int insuranceId;
+    public Insurance(
+            String insuranceId,
+            String insuranceConditionId,
+            KindOfInsurance kindOfInsurance,
+            String insuranceName,
+            int fee,
+            InsuranceStatus insuranceStatus
+    ){
+        this.insuranceId = insuranceId;
+        this.insuranceConditionId = insuranceConditionId;
+        this.kindOfInsurance = kindOfInsurance;
+        this.insuranceName = insuranceName;
+        this.fee = fee;
+        this.insuranceStatus = insuranceStatus;
+    }
+
+    private String insuranceId;
     private String insuranceConditionId;
     private KindOfInsurance kindOfInsurance;
     private String insuranceName;
     private int fee;
-//    private InsuranceStatus insuranceStatus;
-
-    public Insurance(String insuranceName, int fee){
-        this.insuranceName = insuranceName;
-        this.fee = fee;
-    }
+    private InsuranceStatus insuranceStatus;
 
     public Insurance() {
+
     }
+//    private InsuranceStatus insuranceStatus;
 
-
-    public int getInsuranceId() {
+    public String getInsuranceId() {
         return insuranceId;
     }
 
-    public void setInsuranceId(int insuranceId) {
+    public void setInsuranceId(String insuranceId) {
         this.insuranceId = insuranceId;
     }
 
@@ -40,8 +56,8 @@ public class Insurance {
         return kindOfInsurance;
     }
 
-    public void setKindOfInsurance(KindOfInsurance kindOfInsurance) {
-        this.kindOfInsurance = kindOfInsurance;
+    public void setKindOfInsurance(String kindOfInsurance) {
+        this.kindOfInsurance = getKindOfInsuranceBy(kindOfInsurance);
     }
 
     public String getInsuranceName() {
@@ -60,12 +76,13 @@ public class Insurance {
         this.fee = fee;
     }
 
-//    public InsuranceStatus getInsuranceStatus() {
-//        return insuranceStatus;
-//    }
-//
-//    public void setInsuranceStatus(InsuranceStatus insuranceStatus) {
-//        this.insuranceStatus = insuranceStatus;
-//    }
+
+    public InsuranceStatus getInsuranceStatus(String insuranceStatus) {
+        return this.insuranceStatus;
+    }
+
+    public void setInsuranceStatus(String insuranceStatus) {
+        this.insuranceStatus = getInsuranceStatus(insuranceStatus);
+    }
 }
 
