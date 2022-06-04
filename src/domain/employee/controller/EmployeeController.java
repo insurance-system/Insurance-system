@@ -1,5 +1,7 @@
 package domain.employee.controller;
 
+import domain.customer.entity.Customer;
+import domain.employee.dto.*;
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.AcceptanceReviewRequest;
@@ -9,13 +11,14 @@ import domain.employee.dto.MarketInsuranceInformationResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
+import domain.employee.exception.excution.NoConsultCustomer;
 import domain.employee.exception.excution.NoEmployeeException;
 import domain.employee.service.*;
-import domain.insurance.entity.InsuranceCondition;
 import global.dao.Lecture;
 import global.util.Choice;
 import global.util.EmployeeComment;
 
+import javax.swing.undo.CannotUndoException;
 import java.util.ArrayList;
 
 public class EmployeeController {
@@ -42,6 +45,9 @@ public class EmployeeController {
         this.acceptanceReviewEmployeeService = new AcceptanceReviewEmployeeService();
         this.contractManageEmployeeService = new ContractManageEmployeeService();
         this.insuranceDevelopmentEmployeeService = new InsuranceDevelopmentEmployeeService();
+        this.customerInformationManageService = new CustomerInformationManageService();
+        this.incidentManageService = new IncidentManageService();
+        this.rewardManageService = new RewardManageService();
     }
 
     public void initial() {
@@ -71,6 +77,8 @@ public class EmployeeController {
                             salesEmployeeService.consultExecute(employee,
                                     arrayList.get(employeeComment.customerConsultList(arrayList)));
                             System.out.println("상담 완료");
+                        }else{
+                            new NoConsultCustomer();
                         }
                     }else{
                         new NoAuthorityDPException();
@@ -148,17 +156,44 @@ public class EmployeeController {
                     break;
                 case 71:
                     //고객 정보를 제공
-                    //삭제 예정
                     if (employee.getDepartmentId().equals("DP7")) {
-
+                        this.provideCustomerInformation();
                     }else{
                         new NoAuthorityDPException();
                     }
                     break;
                 case 81:
                     //보험 시장 데이터 제공
-                    //삭제 예정
                     if (employee.getDepartmentId().equals("DP8")) {
+                        this.provideMarketInformation();
+                    }else{
+                        new NoAuthorityDPException();
+                    }
+                    break;
+                case 91:
+                    //손해접수팀
+                    //사고 발생 신고를 접수받는다.
+                    if (employee.getDepartmentId().equals("DP9")) {
+                        ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
+                        if(!incidentResponses.isEmpty()){
+                            this.incidentManageService.incidentAssign(employee,
+                                    incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses)));
+                            System.out.println("담당자 설정이 완료되었습니다.");
+                        }
+
+                    }else{
+                        new NoAuthorityDPException();
+                    }
+                    break;
+                case 101:
+                    //보상평가팀
+                    //보상금을 심사하다.
+                    if (employee.getDepartmentId().equals("DP10")) {
+                        ArrayList<RewardEvaluteResponse> rewardEvaluteResponses = this.rewardManageService.rewardEvaluate();
+                        if(!rewardEvaluteResponses.isEmpty()){
+                            this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluteResponses));
+                        }
+
 
                     }else{
                         new NoAuthorityDPException();
@@ -169,7 +204,6 @@ public class EmployeeController {
                     return null;
                 default:
                     new CheckMenuNumberException();
-//                    break;
                     break;
             }
         }
@@ -280,12 +314,10 @@ public class EmployeeController {
     }
 
     public ArrayList<CustomerAnalysisInformation> provideCustomerInformation(){
-
-        return null;
+        return customerInformationManageService.provideCustomerInformation();
     }
 
     public MarketInsuranceInformationResponse provideMarketInformation(){
-
-        return null;
+        return new MarketInsuranceInformationResponse();
     }
 }
