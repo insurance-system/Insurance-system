@@ -16,6 +16,13 @@ public enum KindOfInsurance {
         else return KindOfInsurance.NON_LIFE;
     }
 
+    public static KindOfInsurance getKindOfInsuranceBy(String name) {
+        if(name.equals("LIFE")) return KindOfInsurance.LIFE;
+        else return KindOfInsurance.NON_LIFE;
+    }
+    public int getNumber() {return number;}
+    public String getName() {return name;}
+
     public static KindOfInsurance getKindOfInsuranceNByName(String name) {
         if(name.equals(KindOfInsurance.LIFE.name)) return LIFE;
         else return NON_LIFE;

@@ -4,8 +4,7 @@ import domain.customer.enumeration.KindOfJob;
 import domain.insurance.entity.enumeration.InsuranceStatus;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 
-import static domain.insurance.entity.enumeration.InsuranceStatus.setInsuranceStatusBy;
-import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceNByName;
+import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceBy;
 
 public class Insurance {
 
@@ -57,8 +56,8 @@ public class Insurance {
         return kindOfInsurance;
     }
 
-    public void setKindOfInsurance(String kindOfInsurance) {
-        this.kindOfInsurance = getKindOfInsuranceNByName(kindOfInsurance);
+    public void setKindOfInsurance(KindOfInsurance kindOfInsurance) {
+        this.kindOfInsurance = kindOfInsurance;
     }
 
     public String getInsuranceName() {
