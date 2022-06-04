@@ -122,4 +122,5 @@ public class Choice {
         System.out.println("청구 금액:");
         return scanner.nextInt();
     }
+
 }
