@@ -1,6 +1,6 @@
 package global.exception;
 
-public abstract class ApplicationException {
+public abstract class ApplicationException extends RuntimeException{//TODO
 
     final String errorCode;
     final String message;

@@ -1,11 +1,14 @@
 package domain.employee.repository;
 
 import domain.contract.entity.Contract;
+import domain.customer.dto.AcceptanceReviewCustomer;
+import domain.customer.dto.AcceptanceReviewRequest;
 import domain.customer.entity.Customer;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
+import domain.insurance.dto.AcceptanceReviewInsurance;
 import domain.insurance.entity.Insurance;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 import global.dao.Lecture;
@@ -83,9 +86,7 @@ public class EmployeeRepository {
 
             st.close();
 //            conn.close();
-        }catch(SQLException e){
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
         }
         return null;
@@ -109,9 +110,7 @@ public class EmployeeRepository {
             int result = st.executeUpdate();
             st.close();
 //            conn.close();
-        }catch(SQLException e){
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
         }
         return null;
@@ -381,5 +380,99 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
         return insuranceList;
+    }
+
+    public ArrayList<AcceptanceReviewRequest> getAcceptanceReviewCustomerList() {
+        ArrayList<AcceptanceReviewRequest> AcceptanceReviewRequestLists = new ArrayList<>();
+
+        String sql = "select * from AcceptanceReviewRequest;";
+        try {
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            ResultSet rs = null;
+            rs = st.executeQuery();
+
+            while (rs.next()){
+                AcceptanceReviewRequest AcceptanceReviewRequest = new AcceptanceReviewRequest();
+                AcceptanceReviewRequest.setCustomerId(rs.getString("customerId"));
+                AcceptanceReviewRequest.setRequestInsuranceId(rs.getInt("insuranceId"));
+                AcceptanceReviewRequestLists.add(AcceptanceReviewRequest);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return AcceptanceReviewRequestLists;
+    }
+
+    public AcceptanceReviewCustomer getAcceptanceReviewCustomerById(String customerId){
+        ResultSet rs = null;
+        AcceptanceReviewCustomer acceptanceReviewCustomer = new AcceptanceReviewCustomer();
+        try{
+            String sql = "select C.customerId, C.name, C.email, C.address, C.detailAddress, C.zipcode, C.phoneNumber, C.kindOfJob, " +
+                    " H.cancer, H.smoke, H.alchohol, " +
+                    " C.creditGrade " +
+                    " from Customer C, HealthInformation H, CreditInformation C " +
+                    " where C.customerId = ? and C.healthInformationId = H.healthInformationId and C.creditInformationId = C.creditInformationId;";
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setString(1, customerId);
+            rs = st.executeQuery();
+            acceptanceReviewCustomer.setCustomerId(rs.getString(customerId));
+            acceptanceReviewCustomer.setName(rs.getString("name"));
+            acceptanceReviewCustomer.setEmail(rs.getString("email"));
+            acceptanceReviewCustomer.setAddress(rs.getString("address"));
+            acceptanceReviewCustomer.setDetailAddress(rs.getString("detailAddress"));
+            acceptanceReviewCustomer.setZipcode(rs.getString("zipcode"));
+            acceptanceReviewCustomer.setPhoneNumber(rs.getString("phoneNumber"));
+            acceptanceReviewCustomer.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
+            acceptanceReviewCustomer.setCancer(rs.getString("cancer"));
+            acceptanceReviewCustomer.setSmoke(rs.getString("smoke"));
+            acceptanceReviewCustomer.setAlcohol(rs.getString("alchohol"));
+            acceptanceReviewCustomer.setCreditGrade(rs.getString("creditGrade"));
+            st.close();
+        }catch(SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return acceptanceReviewCustomer;
+    }
+
+    public AcceptanceReviewInsurance getAcceptanceReviewInsuranceById(int requestInsuranceId) {
+        ResultSet rs = null;
+        AcceptanceReviewInsurance acceptanceReviewInsurance = new AcceptanceReviewInsurance();
+        try{
+            String sql = "select I.insuranceId, I.insuranceName, I.fee, C.maxAge, C.minAge, C.smoke, C.alchohol, C.cancer, " +//TODO cancer 추가해야함 테이블에
+                    " from Insurance I, Insurance_Condition C, " +
+                    " where I.insuranceId = ? and I.insurnaceConditionId = C.insurnace_ConditionId;";
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = null;
+            conn = DriverManager.getConnection(
+                    Constants.URL,
+                    Constants.USER,
+                    Constants.PW);
+            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
+
+            st.setInt(1, requestInsuranceId);
+            rs = st.executeQuery();
+            acceptanceReviewInsurance.setInsuranceId(rs.getInt("insuranceId"));
+            acceptanceReviewInsurance.setInsuranceName(rs.getString("insuranceName"));
+            acceptanceReviewInsurance.setFee(rs.getInt("fee"));
+            acceptanceReviewInsurance.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
+            acceptanceReviewInsurance.setMaxAge(rs.getInt("maxAge"));
+            acceptanceReviewInsurance.setMinAge(rs.getInt("minAge"));
+//            acceptanceReviewInsurance.setSmoke(rs.getString("smoke"));//TODO
+//            acceptanceReviewInsurance.setCancer(rs.getString("cancer"));//TODO
+//            acceptanceReviewInsurance.setAlcohol(rs.getString("alchohol"));//TODO
+            st.close();
+        }catch(SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return acceptanceReviewInsurance;
     }
 }

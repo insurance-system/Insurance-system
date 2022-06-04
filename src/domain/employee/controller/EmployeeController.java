@@ -1,10 +1,12 @@
 package domain.employee.controller;
 
 import domain.contract.entity.Contract;
+import domain.customer.dto.AcceptanceReviewRequest;
 import domain.employee.dto.CustomerConsultResponse;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.employee.exception.excution.NoAuthorityDPException;
+import domain.employee.exception.excution.NoEmployeeException;
 import domain.employee.service.EmployeeService;
 import global.dao.Lecture;
 import global.util.Choice;
@@ -117,7 +119,7 @@ public class EmployeeController {
                 case 51:
                     //인수심사 수행
                     if (employee.getDepartmentId().equals("DP2")) {
-
+                        startAcceptanceReview();
                     }else{
                         new NoAuthorityDPException();
                     }
@@ -157,6 +159,31 @@ public class EmployeeController {
         }
     }
 
+    private void startAcceptanceReview() {
+        System.out.println("인수 심사 대상 고객 명단을 불러오시겠습니까?");
+        switch(employeeComment.yesOrNo()){
+            case 1:
+                getAcceptanceReviewCustomerList();
+                break;
+            case 2:
+                break;
+        }
+    }
+
+    private void getAcceptanceReviewCustomerList() {
+        ArrayList<AcceptanceReviewRequest> AcceptanceReviewRequests = employeeService.getAcceptanceReviewCustomerList();
+        for (AcceptanceReviewRequest acceptanceReviewCustomer : AcceptanceReviewRequests)
+            System.out.println(acceptanceReviewCustomer);
+        String customerId = employeeComment.getCustomerId();
+        AcceptanceReviewRequest acceptanceReviewRequest =
+                AcceptanceReviewRequests.stream()
+                        .filter((aar) -> aar.getCustomerId().equals(customerId))
+                        .findFirst()
+                        .orElseThrow(NoEmployeeException::new);
+
+        employeeService.getAcceptanceReviewDetail(acceptanceReviewRequest);
+    }
+
     private void notifyContractStatus() {
         switch(employeeComment.notifyMenu()){
             case 1:
@@ -166,15 +193,6 @@ public class EmployeeController {
                 getNearPaymentContractList();
                 break;
         }
-
-
-
-//        if(nearExpiredPayerList.size() <= 0 || nearPaydayPayerList.size() <= 0)
-//            System.out.println("계약기간 혹은 만료일이 임박한 Contract를 가진 Payer가 아직 존재하지 않습니다.");
-//        else{
-//            for (Payer payer : nearExpiredPayerList) System.out.println(payer + " 에게 계약 기간만료 임박 이메일을 전송했습니다.");
-//            for (Payer payer : nearPaydayPayerList) System.out.println(payer + " 에게 납부 날짜 임박 이메일을 전송했습니다.");
-//        }
     }
 
     private void getNearExpireContractList() {
