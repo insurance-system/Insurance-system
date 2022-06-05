@@ -120,6 +120,103 @@ public class EmployeeController {
         }
     }
 
+    /* -------------------------------- sales -------------------------------- */
+
+    private void doSalesEmployeeService(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_SALES)){
+            ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
+            if (!arrayList.isEmpty()){
+                employeeComment.startConsult();
+                salesEmployeeService.consultExecute(employee, arrayList.get(employeeComment.customerConsultList(arrayList)));
+                employeeComment.completeConsult();
+            }else{
+                new NoConsultCustomerException();
+            }
+        }else{
+            new NoAuthorityDPException();
+        }
+    }
+
+    private void registerSalesEdu(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_SALES)){
+
+        }else{
+            new NoAuthorityDPException();
+        }
+        return;
+    }
+    /* ---------------------------------------------------------------------- */
+
+
+    /* -------------------------------- Edu --------------------------------- */
+    public void uploadEducationLecture(Employee lecturer){
+        if (!lecturer.getDepartmentId().equals(DEPT_EDU)){
+            new NoAuthorityDPException();
+            return;
+        }
+        String lectureName = employeeComment.getLectureName();//TODO choice comment로 옮기기
+        String lecturePdfName = employeeComment.getLecturePdfName();
+        String lectureId = lectureName.length() + lecturer.getEmployeeId();
+        Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, lecturer.getEmployeeId());
+        if(salesEduEmployeeService.uploadEducationLecture(lecture)) employeeComment.printSuccessRegistrationMessage();
+        else employeeComment.printFailRegistrationMessage();
+    }
+
+    private void findLectureList(Employee eduEmployee) {
+        if (!(eduEmployee.getDepartmentId().equals(DEPT_EDU)) || !(eduEmployee.getDepartmentId().equals(DEPT_SALES))){
+            new NoAuthorityDPException();
+            return;
+        }
+        ArrayList<Lecture> lectureList = salesEduEmployeeService.findLectureList();
+        for (Lecture lecture : lectureList) {
+            System.out.println(lecture);
+        }
+    }
+
+    private void findLectureRegistrationList(Employee employee) {
+        //수강 명단 체크
+        if (employee.getDepartmentId().equals(DEPT_EDU)){
+
+        }else{
+            new NoAuthorityDPException();
+        }
+        return;
+    }
+    /* -------------------------------------------------------------------------------- */
+
+
+    /* -------------------------------- ContractGuide --------------------------------- */
+    private void notifyContractStatus(Employee employee){
+        if (!employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)){
+            new NoAuthorityDPException();
+            return;
+        }
+        switch(employeeComment.notifyMenu()){
+            case 1:
+                getNearExpireContractList();
+                break;
+            case 2:
+                getNearPaymentContractList();
+                break;
+        }
+    }
+    /* -------------------------------------------------------------------------------- */
+
+    /* -------------------------------- ContractGuide --------------------------------- */
+
+    private void contractExpiration(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
+            employeeComment.contractExpiration(((ContractManageEmployeeService)employeeService).selectContractExpiration());
+        }else new NoAuthorityDPException();
+    }
+
+    private void contractDefault(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
+            employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
+        }else new NoAuthorityDPException();
+    }
+    /* -------------------------------------------------------------------------------- */
+
     private void evaluateReward(Employee employee) {
         if (employee.getDepartmentId().equals(DEPT_REWARD)) {
             ArrayList<RewardEvaluateResponse> rewardEvaluateResponses = this.rewardManageService.rewardEvaluate();
@@ -138,59 +235,14 @@ public class EmployeeController {
                         employee,
                         incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses))
                 );
-                System.out.println("담당자 설정이 완료되었습니다.");
+                employeeComment.printMngSettingCompleteMsg();
             }else new NoIncidentException();
         }else new NoAuthorityDPException();
         return;
     }
 
-    private void contractDefault(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
-            employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
-        }else new NoAuthorityDPException();
-    }
 
-    private void contractExpiration(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
-            employeeComment.contractExpiration(((ContractManageEmployeeService)employeeService).selectContractExpiration());
-        }else new NoAuthorityDPException();
-    }
 
-    private void findLectureRegistrationList(Employee employee) {
-        //수강 명단 체크
-        if (employee.getDepartmentId().equals(DEPT_EDU)){
-
-        }else{
-            new NoAuthorityDPException();
-        }
-        return;
-    }
-
-    private void registerSalesEdu(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_SALES)){
-
-        }else{
-            new NoAuthorityDPException();
-        }
-        return;
-    }
-
-    private void doSalesEmployeeService(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_SALES)){
-            ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
-            if (!arrayList.isEmpty()){
-                System.out.println("상담 진행");
-                salesEmployeeService.consultExecute(
-                        employee,
-                        arrayList.get(employeeComment.customerConsultList(arrayList)));
-                System.out.println("상담 완료");
-            }else{
-                new NoConsultCustomerException();
-            }
-        }else{
-            new NoAuthorityDPException();
-        }
-    }
 
 
     private void startUW(Employee employee) {
@@ -198,7 +250,7 @@ public class EmployeeController {
             new NoAuthorityDPException();
             return;
         }
-        System.out.println("인수 심사 대상 고객 명단을 불러오시겠습니까?");
+        employeeComment.getUwCustomerList();
         switch(employeeComment.yesOrNo()){
             case 1:
                 getUwCustomerList();
@@ -222,62 +274,29 @@ public class EmployeeController {
         UWEmployeeService.getUwDetail(uwRequest);
     }
 
-    private void notifyContractStatus(Employee employee) {
-        if (!employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)){
-            new NoAuthorityDPException();
-            return;
-        }
-        switch(employeeComment.notifyMenu()){
-            case 1:
-                getNearExpireContractList();
-                break;
-            case 2:
-                getNearPaymentContractList();
-                break;
-        }
-    }
+
+
 
     private void getNearExpireContractList() {
         ArrayList<Contract> nearExpireContractList = contractGuideEmployeeService.getNearExpireContractList();
-        System.out.println("-----계약 기간 만료 임박 고객 리스트-----");
-        for (Contract contract : nearExpireContractList) System.out.println(contract);
-        System.out.println("----------------------------------");
-        System.out.println("해당 고객들에게 계약 기간 만료 임박 이메일을 보내시겠습니까?");
+        employeeComment.printNearContractsListMsg();
+        for (Contract contract : nearExpireContractList)
+            System.out.println(contract);
+        employeeComment.printLine();
+        employeeComment.printSendNearExpirationMailMsg();
         if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendEmailNearExpireContract(nearExpireContractList);
     }
 
     private void getNearPaymentContractList() {
         ArrayList<Contract> nearPaymentContractList = contractGuideEmployeeService.getNearPaymentContractList();
-        System.out.println("-----납부일 만료 임박 고객 리스트-----");
+        employeeComment.printNearPayDayContractsListMsg();
         for (Contract contract : nearPaymentContractList) System.out.println(contract);
-        System.out.println("----------------------------------");
-        System.out.println("해당 고객들에게 계약 기간 만료 임박 이메일을 보내시겠습니까?");
+        employeeComment.printLine();
+        employeeComment.printSendNearExpirationMailMsg();
         if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendNearPaymentContract(nearPaymentContractList);
     }
 
-    private void findLectureList(Employee eduEmployee) {
-        if (!(eduEmployee.getDepartmentId().equals(DEPT_EDU)) || !(eduEmployee.getDepartmentId().equals(DEPT_SALES))){
-            new NoAuthorityDPException();
-            return;
-        }
-        ArrayList<Lecture> lectureList = salesEduEmployeeService.findLectureList();
-        for (Lecture lecture : lectureList) {
-            System.out.println(lecture);
-        }
-    }
 
-    public void uploadEducationLecture(Employee lecturer){
-        if (!lecturer.getDepartmentId().equals(DEPT_EDU)){
-            new NoAuthorityDPException();
-            return;
-        }
-        String lectureName = employeeComment.getText("강의 이름을 입력하세요:");//TODO choice comment로 옮기기
-        String lecturePdfName = employeeComment.getText("강의 자료를 이름을 입력하세요.");
-        String lectureId = lectureName.length() + lecturer.getEmployeeId();
-        Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, lecturer.getEmployeeId());
-        if(salesEduEmployeeService.uploadEducationLecture(lecture)) System.out.println("강의 등록에 성공했습니다.");
-        else System.out.println("강의 등록에 실패했습니다.");
-    }
 
 
     private void developInsurance(Employee employee) {
@@ -287,26 +306,37 @@ public class EmployeeController {
         }
         ArrayList<CustomerAnalysisInformation> customerAnalysisInformations = provideCustomerInformation();
         MarketInsuranceInformationResponse marketInsuranceInformationResponse = provideMarketInformation();
-        System.out.println("-------------고객 분석 데이터--------------");
+        employeeComment.printCustomerAnalysisDataMsg();
         for (CustomerAnalysisInformation customerAnalysisInformation : customerAnalysisInformations)
             System.out.println(customerAnalysisInformation);
-        System.out.println("---------------------------------------");
-        System.out.println("-------------시장 분석 데이터--------------");
+        employeeComment.printLine();
+        employeeComment.printMarketAnalysisDataMsg();
         System.out.println(marketInsuranceInformationResponse);
-        System.out.println("---------------------------------------");
+        employeeComment.printLine();
+
+        InsuranceCondition insuranceCondition = getInsuranceCondition();
+        NewInsurance newInsurance = getNewInsurance(insuranceCondition);
+
+        if(insuranceDevelopmentEmployeeService.developInsurance(newInsurance))
+            employeeComment.printSuccessInsuranceRegistrationMsg();
+    }
+
+
+
+    private NewInsurance getNewInsurance(InsuranceCondition insuranceCondition) {
         String insuranceName = employeeComment.getInsuranceName();
         int kindOfInsurance = employeeComment.getKindOfInsurance();
         int insuranceFee = employeeComment.getInsuranceFee();
+        return new NewInsurance(insuranceName, kindOfInsurance, insuranceFee, insuranceCondition);
+    }
+
+    private InsuranceCondition getInsuranceCondition() {
         int maxAge = employeeComment.getMaxAge();
         int minAge = employeeComment.getMinAge();
-        System.out.println("---보험 가입 조건 설정하기(입력하신 Grade 이상이 되어야 보험이 가능합니다.)---");
         String smoke = employeeComment.getSmoke();
         String alcohol = employeeComment.getAlcohol();
         String cancer = employeeComment.getCancer();
-        InsuranceCondition insuranceCondition = new InsuranceCondition(maxAge,minAge,smoke,alcohol,cancer);
-        NewInsurance newInsurance = new NewInsurance(insuranceName, kindOfInsurance, insuranceFee, insuranceCondition);
-        if(insuranceDevelopmentEmployeeService.developInsurance(newInsurance))
-            System.out.println("보험 등록이 성공적으로 완료되었습니다.");
+        return new InsuranceCondition(maxAge,minAge,smoke,alcohol,cancer);
     }
 
     public void printCustomerInformation(Employee employee){
