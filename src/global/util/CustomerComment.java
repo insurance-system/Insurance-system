@@ -53,7 +53,7 @@ public class CustomerComment extends CommonComment{
         return scanner.nextInt();
     }
 
-    public int afterFindJoinedInsurances() {
+    public int printJoinedInsurances() {
         System.out.println(JOINED_INSURANCE_MENU_1);
         System.out.println(JOINED_INSURANCE_MENU_2);
         System.out.print(SELECT_NUM);

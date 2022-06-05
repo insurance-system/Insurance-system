@@ -8,7 +8,6 @@ import java.util.Scanner;
 import static global.util.constants.EmployeeConstants.*;
 
 public class EmployeeComment extends CommonComment{
-
     Scanner scanner;
 
     public EmployeeComment(){
@@ -103,32 +102,32 @@ public class EmployeeComment extends CommonComment{
         return scanner.nextInt();
     }
 
-    public void contractExpiration(ArrayList<ExpirationResponse> arrayList){
+    public void contractExpiration(ArrayList<ExpirationResponse> expirationResponses){
         System.out.println(LINE_BREAK+ EXPIRED_CUSTOMER_LIST_START);
-        for(int i=0; arrayList.size() > i; i++) {
-            System.out.println(VERTICAL_BAR+NAME+arrayList.get(i).getName()+PHONE_NUMBER+arrayList.get(i).getPhoneNumber());
-            System.out.println(KIND_OF_JOB+arrayList.get(i).getKindOfJob());
-            System.out.println(KIND_OF_INSURANCE+arrayList.get(i).getKindOfInsurance().name());
-            System.out.println(JOINED_INSURANCE_NAME+arrayList.get(i).getInsuranceName());
-            System.out.println(INSURANCE_STATUS+arrayList.get(i).getContractStatus()+LINE_BREAK);
+        for (ExpirationResponse expirationResponse : expirationResponses) {
+            System.out.println(VERTICAL_BAR + NAME + expirationResponse.getName() + PHONE_NUMBER + expirationResponse.getPhoneNumber());
+            System.out.println(KIND_OF_JOB + expirationResponse.getKindOfJob());
+            System.out.println(KIND_OF_INSURANCE + expirationResponse.getKindOfInsurance().name());
+            System.out.println(JOINED_INSURANCE_NAME + expirationResponse.getInsuranceName());
+            System.out.println(INSURANCE_STATUS + expirationResponse.getContractStatus() + LINE_BREAK);
         }
     }
 
-    public void contractDefault(ArrayList<DefaultResponse> arrayList) {
+    public void contractDefault(ArrayList<DefaultResponse> DefaultResponses) {
         System.out.println(LINE_BREAK+DEFAULT_CUSTOMER_LIST_START);
-        for(int i=0; arrayList.size() > i; i++) {
-            System.out.println(VERTICAL_BAR+NAME+arrayList.get(i).getName()+PHONE_NUMBER+arrayList.get(i).getPhoneNumber());
-            System.out.println(ADDRESS+arrayList.get(i).getAddress()+DETAIL_ADDRESS+arrayList.get(i).getDetailAddress());
-            System.out.println(ZIPCODE+arrayList.get(i).getZipCode());
-            System.out.println(JOINED_INSURANCE_NAME+arrayList.get(i).getInsuranceName());
-            System.out.println(INSURANCE_STATUS+arrayList.get(i).getContractStatus()+LINE_BREAK);
+        for (DefaultResponse defaultResponse : DefaultResponses) {
+            System.out.println(VERTICAL_BAR + NAME + defaultResponse.getName() + PHONE_NUMBER + defaultResponse.getPhoneNumber());
+            System.out.println(ADDRESS + defaultResponse.getAddress() + DETAIL_ADDRESS + defaultResponse.getDetailAddress());
+            System.out.println(ZIPCODE + defaultResponse.getZipCode());
+            System.out.println(JOINED_INSURANCE_NAME + defaultResponse.getInsuranceName());
+            System.out.println(INSURANCE_STATUS + defaultResponse.getContractStatus() + LINE_BREAK);
         }
     }
 
     public int notifyMenu() {
         System.out.println(NOTIFY_MENU_1);
         System.out.println(NOTIFY_MENU_2);
-        System.out.println("0. 뒤로가기");
+        System.out.println(NOTIFY_MENU_3);
         return scanner.nextInt();
     }
 
