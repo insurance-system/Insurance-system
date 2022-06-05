@@ -12,7 +12,7 @@ public class SalesEmployeeService extends EmployeeService{
         return this.employeeRepository.customerConsult(employee);
     }
 
-    public void consultExecute(Employee employee, EmpCustomer customerConsultResponse) {
+    public void executeConsult(Employee employee, EmpCustomer customerConsultResponse) {
         this.employeeRepository.consultExecute(employee, customerConsultResponse);
     }
 

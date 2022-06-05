@@ -120,7 +120,7 @@ public class EmployeeComment extends CommonComment{
     public void contractDefault(ArrayList<DefaultResponse> arrayList) {
         System.out.println("");
         System.out.println("미납 고객 목록");
-        for(int i=0; arrayList.size() > i; i++) {
+        for(int i=0;  i < arrayList.size(); i++) {
             System.out.println("| 이름: "+arrayList.get(i).getName()+"  전화번호: "+arrayList.get(i).getPhoneNumber());
             System.out.println("  주소: "+arrayList.get(i).getAddress()+" 상세주소: "+arrayList.get(i).getDetailAddress());
             System.out.println("  우편번호: "+arrayList.get(i).getZipCode());
@@ -132,6 +132,7 @@ public class EmployeeComment extends CommonComment{
     public int notifyMenu() {
         System.out.println("1. 계약기간 만료 임박 계약 리스트 출력하기");
         System.out.println("2. 보험 납부 기간 만료 임박 계약 리스트 출력하기");
+        System.out.println("0. 뒤로가기");
         return scanner.nextInt();
     }
 
