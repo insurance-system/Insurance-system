@@ -2,6 +2,9 @@ package global.util.constants;
 
 public class CommonConstants {
     public static final String JOINING = "회원가입";
+    public static final String LOGOUT = "로그아웃";
+    public static final String LOGIN = "로그인";
+    public static final String TERMINATION = "종료";
     public static final String INSURANCE = "보험";
     public static final String SELECT_NUM = "번호 입력:";
     public static final String GO_BACK = "돌아가기";
@@ -17,7 +20,5 @@ public class CommonConstants {
     public static final String INCIDENT_DATE = "사고일자 (ex. 2022-01-01 ):";
     public static final String CLAIM_CONTENTS = "청구 내용:";
     public static final String CLAIM_MONEY = "청구 금액:";
-
-
-
+    public static final String END_LINE = "--------------------------------------------------";
 }
