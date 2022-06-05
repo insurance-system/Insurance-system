@@ -5,17 +5,18 @@ import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
 import domain.customer.exception.excution.*;
 import domain.customer.repository.CustomerRepository;
+import domain.employee.service.ContractManageEmployeeService;
 import domain.insurance.entity.Insurance;
-
 
 import java.util.ArrayList;
 
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-
+    private final ContractManageEmployeeService contractManageEmployeeService;
     public CustomerService() {
         this.customerRepository = new CustomerRepository();
+        this.contractManageEmployeeService = new ContractManageEmployeeService();
     }
 
     public boolean join(CustomerJoinRequest joinReq){
@@ -72,7 +73,7 @@ public class CustomerService {
         else new ExistBeneficiaryException();
     }
 
-    public String checkJoinNonlifeInsurance(Customer customer) {
+    public String checkJoinNonLifeInsurance(Customer customer) {
         if(customerRepository.checkJoinNonlifeInsurance(customer) == null) new NoJoinNonlifeInsuranceException();
         return customerRepository.checkJoinNonlifeInsurance(customer);
     }
@@ -106,5 +107,13 @@ public class CustomerService {
 
     public String getContractId() {
         return customerRepository.findLastContractId();
+    }
+
+    public ArrayList<Insurance> getJoinedInsurances() {
+        return null;
+    }
+
+    public void cancelInsurance(String insuranceId, String customerId) {
+        contractManageEmployeeService.cancelInsurance(insuranceId, customerId);
     }
 }

@@ -13,10 +13,10 @@ public class SalesEmployeeService extends EmployeeService{
     }
 
     public void executeConsult(Employee employee, EmpCustomer customerConsultResponse) {
-        this.employeeRepository.consultExecute(employee, customerConsultResponse);
+        this.employeeRepository.executeConsult(employee, customerConsultResponse);
     }
 
-    public void doInsuranceContract(Contract contract) {
-        this.employeeRepository.doInsuranceContract(contract.toEntity(contract));
+    public void makeInsuranceContract(Contract contract) {
+        this.employeeRepository.makeInsuranceContract(contract.toEntity(contract));
     }
 }

@@ -57,7 +57,7 @@ public class EmployeeConstants extends CommonConstants{
 
     public static final String NOTIFY_MENU_1 = "1. 계약기간 만료 임박 계약 리스트 출력하기";
     public static final String NOTIFY_MENU_2 = "2. 보험 납부 기간 만료 임박 계약 리스트 출력하기";
-
+    public static final String NOTIFY_MENU_3 = "0."+GO_BACK;
     public static final String YES_OR_NO_1 = "1. 예";
     public static final String YES_OR_NO_2 = "2. 아니요";
 

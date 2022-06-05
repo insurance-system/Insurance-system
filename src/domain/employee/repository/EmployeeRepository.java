@@ -286,7 +286,7 @@ public class EmployeeRepository {
         return contractList;
     }
 
-    public void consultExecute(Employee employee, EmpCustomer customerConsultResponse) {
+    public void executeConsult(Employee employee, EmpCustomer customerConsultResponse){
         try {
             String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
             PreparedStatement st = this.connection.prepareStatement(sql);
@@ -298,7 +298,7 @@ public class EmployeeRepository {
         }
     }
 
-    public ArrayList<domain.customer.entity.Customer> selectEmployeeByIds(ArrayList<String> nearExpiredContractsCustomerIds) {
+    public ArrayList<domain.customer.entity.Customer> selectEmployeeByIds(ArrayList<String> nearExpiredContractsCustomerIds){
         ArrayList<domain.customer.entity.Customer> customerList = new ArrayList<>();
         String args = "";
         for (String nearExpiredContractsCustomerId : nearExpiredContractsCustomerIds) {
@@ -665,8 +665,8 @@ public class EmployeeRepository {
             }
             return defaultResponses;
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -695,8 +695,8 @@ public class EmployeeRepository {
             }
             return responseArrayList;
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -709,8 +709,8 @@ public class EmployeeRepository {
             st.setString(2, incidentChoice.getIncidentId());
             st.executeUpdate();
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -737,8 +737,8 @@ public class EmployeeRepository {
             }
             return responseArrayList;
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -750,12 +750,12 @@ public class EmployeeRepository {
             st.setString(1, rewardChoice.getClaimStatus());
             st.setString(2, rewardChoice.getInsuranceClaimId());
             st.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public void doInsuranceContract(Contract contract) {
+    public void makeInsuranceContract(Contract contract) {
         try {
             String sql = "INSERT INTO Contract (contractId, customerId, chargeOfEmployeeId, insuranceId, expiredDate, contractStatus, paymentDate)" +
                     "        VALUE (?,?,?,?,?,?,?)";
@@ -768,10 +768,22 @@ public class EmployeeRepository {
             st.setString(6,contract.getContractStatus());
             st.setString(7,contract.getPaymentDate().toString());
             st.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
 
+    public void expireContract(String insuranceId, String customerId) {
+        try {
+            String sql = "UPDATE Contract SET contractStatus = ? WHERE insuranceId=? AND custoerId=?;";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, "expiration");
+            st.setString(2, insuranceId);
+            st.setString(3, customerId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

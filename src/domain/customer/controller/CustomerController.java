@@ -27,10 +27,17 @@ public class CustomerController {
         Exit:
         while(true){
             switch (customerComment.customerInitial()){
-                case 1 : login();
-                case 2 : join(); //2.회원가입
-                case 3 : connectSalesEmployee();//3.상담사 연결
-                case 0 : break Exit; //4.종료
+                case 1 :
+                    login();
+                    break;
+                case 2 :
+                    join(); //2.회원가입
+                    break;
+                case 3 :
+                    connectSalesEmployee();//3.상담사 연결
+                    break;
+                case 0 :
+                    break Exit; //4.종료
                 default : {
                     new CheckMenuNumberException();
                     break;
@@ -59,44 +66,73 @@ public class CustomerController {
                 new CheckMenuNumberException();
                 break;
         }
-        enterInterest(customer);
+        enterInterest(customer); // TODO 재귀 없애기
     }
 
     //로그인 후 고객화면
     public void enter(Customer customer){
         customerComment.greetToCustomer(customer.getName());
         switch (customerComment.afterLogin()) {
-            case 1 : connectSalesEmployee();//1. 상담사 연결하기
-            case 2 : evaluateSatisfaction(customer);//2. 상담사 평가하기
+            case 1 :
+                connectSalesEmployee();//1. 상담사 연결하기
+                break;
+            case 2 :
+                evaluateSatisfaction(customer);//2. 상담사 평가하기
+                break;
             case 3 : { //3. 가입된 보험 조회하기
                 ArrayList<Insurance> insuranceArrayList = findJoinedInsurances(customer.getCustomerId());
                 if (!insuranceArrayList.isEmpty()) {
                     customerComment.joinedInsurances(insuranceArrayList);
-                    afterFindJoinedInsurances(customer);
+                    printJoinedInsurances(customer);
                 }
+                break;
             }
             case 4 : { //4. 보험급 납부내역
                 ArrayList<FindPayment> findPayment = findPaymentHistory(customer.getCustomerId());
                 if (findPayment != null) customerComment.findPaymentHistory(findPayment);
+                break;
             }
-            case 5 : incidentHandling(customer);//5. 사고 처리 접수
-            case 6 : joinInsurance(customer); //6. 보험 가입하기
-            case 7 : claimInsurance(customer);//7. 보험금 청구하기
-            case 8 : initial();//8. 로그아웃
-            default : new CheckMenuNumberException();
+            case 5 :
+                incidentHandling(customer);//5. 사고 처리 접수
+                break;
+            case 6 :
+                joinInsurance(customer); //6. 보험 가입하기
+                break;
+            case 7 :
+                claimInsurance(customer);//7. 보험금 청구하기
+                break;
+            case 8 :
+                initial();//8. 로그아웃
+                break;
+            default :
+                new CheckMenuNumberException();
+                break;
         }
-        enter(customer);
+        enter(customer); // TODO 재귀 없애기
     }
 
     //보험 목록 확인 후 화면
-    private void afterFindJoinedInsurances(Customer customer) {
-        switch(customerComment.afterFindJoinedInsurances()) {
-            case 1 : {
-                String cancelInsuranceId = customerComment.getId();
-            }//1.보험 해지하기 //TODO
-            case 2 : enter(customer);//2. 돌아가기
-            default : new CheckMenuNumberException();
+    private void printJoinedInsurances(Customer customer) {
+        switch(customerComment.printJoinedInsurances()) {
+            case 1 :
+                cancelInsurance(customer);//1.보험 해지하기
+                break;
+            case 2 :
+                enter(customer);//2. 돌아가기
+                break;
+            default :
+                new CheckMenuNumberException();
+                break;
         }
+    }
+
+    //TODO
+    private void cancelInsurance(Customer customer) {
+        ArrayList<Insurance> insurances = customerService.getJoinedInsurances();//1.가입된 보험 목록 가져오기
+        //2. 고객한테 가입된 보험 목록 콘솔에 뿌려주고
+        String insuranceId = "보험ID";//3. 해지할 보험 선택하게 하고
+        customerService.cancelInsurance(insuranceId, customer.getCustomerId());//3.여기에 해당 하는 보험 아이디 넘겨주면
+        System.out.println("보험 해지 신청이 완료되었습니다.");
     }
 
     //로그인
@@ -104,12 +140,12 @@ public class CustomerController {
         String id = customerComment.getId();
         String pw = customerComment.getPassword();
         CustomerLoginRequest customerLoginRequest = new CustomerLoginRequest(id, pw);
-            Customer customer = customerService.login(customerLoginRequest);
-            if(customer != null){
-                if(customer.getAddress() == null) enterInterest(customer);
-                else enter(customer);
-            }
-            else login();
+        Customer customer = customerService.login(customerLoginRequest);
+        if(customer != null){
+            if(customer.getAddress() == null) enterInterest(customer);
+            else enter(customer);
+        }
+        else login(); // TODO 재귀 없애기
     }
 
     //상담사 만족도 평가
@@ -190,7 +226,7 @@ public class CustomerController {
             customerService.join(customer);
             customerComment.notifyCompleteJoining(name);
             initial();
-        } else join();
+        } else join(); // TODO 재귀 없애기
 
 
     }
@@ -221,7 +257,7 @@ public class CustomerController {
                 null
         );
         EmployeeController employeeController = new EmployeeController();
-        employeeController.doInsuranceContract(contract);
+        employeeController.makeInsuranceContract(contract);
     }
 
     private void addCustomerInformation(Customer interestCustomer){
@@ -279,7 +315,7 @@ public class CustomerController {
 
     //사고 처리 접수
     private void incidentHandling(Customer customer) {
-        if(customerService.checkJoinNonlifeInsurance(customer)!=null) {
+        if(customerService.checkJoinNonLifeInsurance(customer)!=null) {
             CustomerHandleIncidentRequest incidentHandling = null;
             try {
                 incidentHandling = new CustomerHandleIncidentRequest(

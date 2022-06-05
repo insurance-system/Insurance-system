@@ -350,11 +350,8 @@ public class EmployeeController {
     /*---------------------------------------------------------------------------*/
 
     /* ------------ FROM CUSTOMER CONTROLLER ----------- */
-    public void doContractExpiration(){}
-    public void doInsuranceContract(Contract contract){
-        salesEmployeeService.doInsuranceContract(contract);
+    public void makeInsuranceContract(Contract contract){
+        salesEmployeeService.makeInsuranceContract(contract);
     }
     /* -------------------------------------------------- */
-
-
 }
