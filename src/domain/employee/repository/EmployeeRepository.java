@@ -464,10 +464,11 @@ public class EmployeeRepository {
             rs = st.executeQuery();
 
             while (rs.next()){
-                UwRequest UwRequest = new UwRequest();
-                UwRequest.setCustomerId(rs.getString("customerId"));
-                UwRequest.setRequestInsuranceId(rs.getInt("insuranceId"));
-                uwRequestLists.add(UwRequest);
+                UwRequest uwRequest = new UwRequest();
+                uwRequest.setId(rs.getString("acceptanceReviewRequestId"));
+                uwRequest.setCustomerId(rs.getString("customerId"));
+                uwRequest.setRequestInsuranceId(rs.getString("insuranceId"));
+                uwRequestLists.add(uwRequest);
             }
         }catch(SQLException e){
             e.printStackTrace();
@@ -514,7 +515,7 @@ public class EmployeeRepository {
         return uwCustomer;
     }
 
-    public UwInsurance getUwInsuranceById(int requestInsuranceId) {
+    public UwInsurance getUwInsuranceById(String requestInsuranceId) {
         ResultSet rs = null;
         UwInsurance uwInsurance = new UwInsurance();
         try{
@@ -530,7 +531,7 @@ public class EmployeeRepository {
                     Constants.PW);
             PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
 
-            st.setInt(1, requestInsuranceId);
+            st.setString(1, requestInsuranceId);
             rs = st.executeQuery();
             uwInsurance.setInsuranceId(rs.getString("insuranceId"));
             uwInsurance.setInsuranceName(rs.getString("insuranceName"));
