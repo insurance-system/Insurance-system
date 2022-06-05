@@ -1,4 +1,4 @@
 package global.util.constants;
 
-public class EmployeeConstants {
+public class EmployeeConstants extends CommonConstants{
 }
