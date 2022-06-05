@@ -5,49 +5,91 @@ import domain.employee.dto.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static global.util.constants.EmployeeConstants.*;
+
 public class EmployeeComment extends CommonComment{
 
     Scanner scanner;
 
-    public EmployeeComment() {
+    public EmployeeComment(){
         this.scanner = new Scanner(System.in);
     }
 
     public int home(){
-        System.out.println("\n\n----------------Home----------------");
-        System.out.println("1. 영업 활동 팀");
-        System.out.println("11. 상담 대기 신규 고객 명단 조회 \n12. 영업 교육 수강");
-        System.out.println("------------------------------------");
-        System.out.println("2. 영업 교육 팀");
-        System.out.println("21. 영업 교육 강의 자료 업로드 \n22. 강의 자료 리스트 출력 \n23. 수강 명단 체크");
-        System.out.println("------------------------------------");
-        System.out.println("3. 사후 관리 팀");
-        System.out.println("31. 보험 정보 안내 해당 고객 명단 조회");
-        System.out.println("------------------------------------");
-        System.out.println("4. 계약 관리 팀");
-        System.out.println("41. 보험 계약 관리  \n42. 미납 고객 조회");
-        System.out.println("------------------------------------");
-        System.out.println("5. U/W 팀");
-        System.out.println("51. 인수심사 수행");
-        System.out.println("------------------------------------");
-        System.out.println("6. 상품 개발 팀");
-        System.out.println("61. 보험 설계 시작");
-        System.out.println("------------------------------------");
-        System.out.println("7. 고객 정보 팀");
-        System.out.println("71. 고객 정보를 제공");
-        System.out.println("------------------------------------");
-        System.out.println("8. 시장 분석 팀");
-        System.out.println("81. 보험 시장 데이터를 제공");
-        System.out.println("------------------------------------");
-        System.out.println("9. 손해 접수 팀");
-        System.out.println("91. 사고 발생 접수");
-        System.out.println("------------------------------------");
-        System.out.println("10. 보상 평가 팀");
-        System.out.println("101. 보상금 심사");
-        System.out.println("------------------------------------");
-        System.out.println("0. 로그아웃");
-
+        System.out.println(HOME_START);
+        printSalesEmployeeMenu();
+        printSalesEducationEmployeeMenu();
+        printContractGuideMenu();
+        printContractManagementEmployeeMenu();
+        printUWEmployeeMenu();
+        printInsuranceDevelopmentEmployeeMenu();
+        printCustomerInformationEmployeeMenu();
+        printMarketAnalysisEmployeeMenu();
+        printIncidentManagementEmployeeMenu();
+        printRewardManagementEmployeeMenu();
+        System.out.println(HOME_MENU_LAST);
+        System.out.print(SELECT_NUM);
         return scanner.nextInt();
+    }
+
+    private void printRewardManagementEmployeeMenu() {
+        System.out.println(HOME_REWARD_EMP_MENU);
+        System.out.println(HOME_REWARD_EMP_MENU_);
+        System.out.println(END_LINE);
+    }
+
+    private void printIncidentManagementEmployeeMenu() {
+        System.out.println(HOME_INCIDENT_EMP_MENU);
+        System.out.println(HOME_INCIDENT_EMP_MENU_);
+        System.out.println(END_LINE);
+    }
+
+    private void printMarketAnalysisEmployeeMenu() {
+        System.out.println(HOME_MARKET_ANALYSIS_EMP);
+        System.out.println(HOME_MARKET_ANALYSIS_EMP_);
+        System.out.println(END_LINE);
+    }
+
+    private void printCustomerInformationEmployeeMenu() {
+        System.out.println(HOME_CUS_INFORMATION_EMP);
+        System.out.println(HOME_CUS_INFORMATION_EMP_);
+        System.out.println(END_LINE);
+    }
+
+    private void printInsuranceDevelopmentEmployeeMenu() {
+        System.out.println(HOME_INSURANCE_DEV_EMP);
+        System.out.println(HOME_INSURANCE_DEV_EMP_);
+        System.out.println(END_LINE);
+    }
+
+    private void printUWEmployeeMenu() {
+        System.out.println(HOME_UW_EMP);
+        System.out.println(HOME_UW_EMP_);
+        System.out.println(END_LINE);
+    }
+
+    private void printContractManagementEmployeeMenu() {
+        System.out.println(HOME_CONTRACT_MNG_EMP);
+        System.out.println(HOME_CONTRACT_MNG_EMP_);
+        System.out.println(END_LINE);
+    }
+
+    private void printContractGuideMenu() {
+        System.out.println(HOME_CONTRACT_GUIDE_EMP);
+        System.out.println(HOME_CONTRACT_GUIDE_EMP_);
+        System.out.println(END_LINE);
+    }
+
+    private void printSalesEducationEmployeeMenu() {
+        System.out.println(HOME_SALES_EDU_EMP);
+        System.out.println(HOME_SALES_EDU_EMP_);
+        System.out.println(END_LINE);
+    }
+
+    private void printSalesEmployeeMenu() {
+        System.out.println(HOME_SALES_EMP);
+        System.out.println(HOME_SALES_EMP_);
+        System.out.println(END_LINE);
     }
 
     public int customerConsultList(ArrayList<EmpCustomer> arrayList) {
@@ -63,7 +105,7 @@ public class EmployeeComment extends CommonComment{
         return scanner.nextInt();
     }
 
-    public void contractExpriation(ArrayList<ExpirationResponse> arrayList){
+    public void contractExpiration(ArrayList<ExpirationResponse> arrayList){
         System.out.println("");
         System.out.println("보험 만기 고객 목록");
         for(int i=0; arrayList.size() > i; i++) {
@@ -119,34 +161,34 @@ public class EmployeeComment extends CommonComment{
         return scanner.nextInt();
     }
 
-    public RewardEvaluteResponse rewardChoice(ArrayList<RewardEvaluteResponse> rewardEvaluteResponses) {
+    public RewardEvaluateResponse rewardChoice(ArrayList<RewardEvaluateResponse> rewardEvaluateRespons) {
         System.out.println("");
         System.out.println("담당자 미배정 사건 목록");
-        for(int i=0; rewardEvaluteResponses.size() > i; i++) {
+        for(int i = 0; rewardEvaluateRespons.size() > i; i++) {
             System.out.println("| 번호: "+i);
-            System.out.println("  사용자: "+rewardEvaluteResponses.get(i).getCustomerId());
-            System.out.println("  청구 내용: "+rewardEvaluteResponses.get(i).getClaimContent());
-            System.out.println("  청구 금액: "+rewardEvaluteResponses.get(i).getClaimCost());
+            System.out.println("  사용자: "+ rewardEvaluateRespons.get(i).getCustomerId());
+            System.out.println("  청구 내용: "+ rewardEvaluateRespons.get(i).getClaimContent());
+            System.out.println("  청구 금액: "+ rewardEvaluateRespons.get(i).getClaimCost());
         }
         System.out.println("");
         System.out.print("담당하려는 사건의 번호를 입력해주세요. \n번호 입력: ");
         int choice = scanner.nextInt();
-        System.out.println("  사용자: "+rewardEvaluteResponses.get(choice).getCustomerId());
-        System.out.println("  청구 내용: "+rewardEvaluteResponses.get(choice).getClaimContent());
-        System.out.println("  청구 금액: "+rewardEvaluteResponses.get(choice).getClaimCost());
+        System.out.println("  사용자: "+ rewardEvaluateRespons.get(choice).getCustomerId());
+        System.out.println("  청구 내용: "+ rewardEvaluateRespons.get(choice).getClaimContent());
+        System.out.println("  청구 금액: "+ rewardEvaluateRespons.get(choice).getClaimCost());
 
         System.out.println("청구에 대한 결과를 입력해주세요. \n");
         System.out.print("1.승인   2.거부   3.보류  \n");
         int resultChoice = scanner.nextInt();
         if(resultChoice==1){
-            rewardEvaluteResponses.get(choice).setClaimStatus("승인");
+            rewardEvaluateRespons.get(choice).setClaimStatus("승인");
         }else if(resultChoice==2){
-            rewardEvaluteResponses.get(choice).setClaimStatus("거부");
+            rewardEvaluateRespons.get(choice).setClaimStatus("거부");
         }else{
-            rewardEvaluteResponses.get(choice).setClaimStatus("보류");
+            rewardEvaluateRespons.get(choice).setClaimStatus("보류");
         }
 
-        return rewardEvaluteResponses.get(choice);
+        return rewardEvaluateRespons.get(choice);
     }
 
     public void developInsurance() {

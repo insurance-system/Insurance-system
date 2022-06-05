@@ -24,18 +24,17 @@ public class CustomerController {
 
     //시작화면
     public void initial() {
-        switch (customerComment.customerInitial()) {
-            case 1 -> //1.로그인
-                    login();
-            case 2 -> //2.회원가입
-                    join();
-            case 3 -> //3.상담사 연결
-                    connectSalesEmployee();
-            case 4 -> //4.종료
-                    System.exit(0);
-            default -> {
-                new CheckMenuNumberException();
-                initial();
+        Exit:
+        while(true){
+            switch (customerComment.customerInitial()) {
+                case 1 : login();
+                case 2 : join(); //2.회원가입
+                case 3 : connectSalesEmployee();//3.상담사 연결
+                case 0 : break Exit; //4.종료
+                default : {
+                    new CheckMenuNumberException();
+                    break;
+                }
             }
         }
     }
@@ -67,24 +66,24 @@ public class CustomerController {
     public void enter(Customer customer){
         customerComment.greetToCustomer(customer.getName());
         switch (customerComment.afterLogin()) {
-            case 1 -> connectSalesEmployee();//1. 상담사 연결하기
-            case 2 -> evaluateSatisfaction(customer);//2. 상담사 평가하기
-            case 3 -> { //3. 가입된 보험 조회하기
+            case 1 : connectSalesEmployee();//1. 상담사 연결하기
+            case 2 : evaluateSatisfaction(customer);//2. 상담사 평가하기
+            case 3 : { //3. 가입된 보험 조회하기
                 ArrayList<Insurance> insuranceArrayList = findJoinedInsurances(customer.getCustomerId());
                 if (!insuranceArrayList.isEmpty()) {
                     customerComment.joinedInsurances(insuranceArrayList);
                     afterFindJoinedInsurances(customer);
                 }
             }
-            case 4 -> { //4. 보험급 납부내역
+            case 4 : { //4. 보험급 납부내역
                 ArrayList<FindPayment> findPayment = findPaymentHistory(customer.getCustomerId());
                 if (findPayment != null) customerComment.findPaymentHistory(findPayment);
             }
-            case 5 -> incidentHandling(customer);//5. 사고 처리 접수
-            case 6 -> joinInsurance(customer); //6. 보험 가입하기
-            case 7 -> claimInsurance(customer);//7. 보험금 청구하기
-            case 8 -> initial();//8. 로그아웃
-            default -> new CheckMenuNumberException();
+            case 5 : incidentHandling(customer);//5. 사고 처리 접수
+            case 6 : joinInsurance(customer); //6. 보험 가입하기
+            case 7 : claimInsurance(customer);//7. 보험금 청구하기
+            case 8 : initial();//8. 로그아웃
+            default : new CheckMenuNumberException();
         }
         enter(customer);
     }
@@ -92,11 +91,11 @@ public class CustomerController {
     //보험 목록 확인 후 화면
     private void afterFindJoinedInsurances(Customer customer) {
         switch(customerComment.afterFindJoinedInsurances()) {
-            case 1-> {
+            case 1 : {
                 String cancelInsuranceId = customerComment.getId();
             }//1.보험 해지하기 //TODO
-            case 2 -> enter(customer);//2. 돌아가기
-            default-> new CheckMenuNumberException();
+            case 2 : enter(customer);//2. 돌아가기
+            default : new CheckMenuNumberException();
         }
     }
 

@@ -1,6 +1,6 @@
 package domain.customer.dto;
 
-public class AcceptanceReviewRequest {
+public class UwRequest {
     private String customerId;
     private int requestInsuranceId;
 

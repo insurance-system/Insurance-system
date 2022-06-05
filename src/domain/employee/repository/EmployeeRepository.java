@@ -2,14 +2,14 @@ package domain.employee.repository;
 
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
-import domain.customer.dto.AcceptanceReviewCustomer;
-import domain.customer.dto.AcceptanceReviewRequest;
+import domain.customer.dto.UwCustomer;
+import domain.customer.dto.UwRequest;
 import domain.customer.entity.Grade;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
-import domain.insurance.dto.AcceptanceReviewInsurance;
+import domain.insurance.dto.UwInsurance;
 import domain.insurance.entity.Insurance;
 import domain.insurance.entity.InsuranceCondition;
 import domain.insurance.entity.enumeration.InsuranceStatus;
@@ -454,8 +454,8 @@ public class EmployeeRepository {
         return insuranceList;
     }
 
-    public ArrayList<AcceptanceReviewRequest> getAcceptanceReviewCustomerList() {
-        ArrayList<AcceptanceReviewRequest> AcceptanceReviewRequestLists = new ArrayList<>();
+    public ArrayList<UwRequest> getUwCustomerList() {
+        ArrayList<UwRequest> uwRequestLists = new ArrayList<>();
 
         String sql = "select * from AcceptanceReviewRequest;";
         try {
@@ -464,20 +464,20 @@ public class EmployeeRepository {
             rs = st.executeQuery();
 
             while (rs.next()){
-                AcceptanceReviewRequest AcceptanceReviewRequest = new AcceptanceReviewRequest();
-                AcceptanceReviewRequest.setCustomerId(rs.getString("customerId"));
-                AcceptanceReviewRequest.setRequestInsuranceId(rs.getInt("insuranceId"));
-                AcceptanceReviewRequestLists.add(AcceptanceReviewRequest);
+                UwRequest UwRequest = new UwRequest();
+                UwRequest.setCustomerId(rs.getString("customerId"));
+                UwRequest.setRequestInsuranceId(rs.getInt("insuranceId"));
+                uwRequestLists.add(UwRequest);
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return AcceptanceReviewRequestLists;
+        return uwRequestLists;
     }
 
-    public AcceptanceReviewCustomer getAcceptanceReviewCustomerById(String customerId){
+    public UwCustomer getAcceptanceReviewCustomerById(String customerId){
         ResultSet rs = null;
-        AcceptanceReviewCustomer acceptanceReviewCustomer = new AcceptanceReviewCustomer();
+        UwCustomer uwCustomer = new UwCustomer();
         try{
             String sql = "select C.customerId, C.name, C.email, C.address, C.detailAddress, C.zipcode, C.phoneNumber, C.kindOfJob, " +
                     " H.cancer, H.smoke, H.alchohol, " +
@@ -495,28 +495,28 @@ public class EmployeeRepository {
 
             st.setString(1, customerId);
             rs = st.executeQuery();
-            acceptanceReviewCustomer.setCustomerId(rs.getString(customerId));
-            acceptanceReviewCustomer.setName(rs.getString("name"));
-            acceptanceReviewCustomer.setEmail(rs.getString("email"));
-            acceptanceReviewCustomer.setAddress(rs.getString("address"));
-            acceptanceReviewCustomer.setDetailAddress(rs.getString("detailAddress"));
-            acceptanceReviewCustomer.setZipcode(rs.getString("zipcode"));
-            acceptanceReviewCustomer.setPhoneNumber(rs.getString("phoneNumber"));
-            acceptanceReviewCustomer.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
-            acceptanceReviewCustomer.setCancer(rs.getString("cancer"));
-            acceptanceReviewCustomer.setSmoke(rs.getString("smoke"));
-            acceptanceReviewCustomer.setAlcohol(rs.getString("alchohol"));
-            acceptanceReviewCustomer.setCreditGrade(rs.getString("creditGrade"));
+            uwCustomer.setCustomerId(rs.getString(customerId));
+            uwCustomer.setName(rs.getString("name"));
+            uwCustomer.setEmail(rs.getString("email"));
+            uwCustomer.setAddress(rs.getString("address"));
+            uwCustomer.setDetailAddress(rs.getString("detailAddress"));
+            uwCustomer.setZipcode(rs.getString("zipcode"));
+            uwCustomer.setPhoneNumber(rs.getString("phoneNumber"));
+            uwCustomer.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
+            uwCustomer.setCancer(rs.getString("cancer"));
+            uwCustomer.setSmoke(rs.getString("smoke"));
+            uwCustomer.setAlcohol(rs.getString("alchohol"));
+            uwCustomer.setCreditGrade(rs.getString("creditGrade"));
             st.close();
         }catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
         }
-        return acceptanceReviewCustomer;
+        return uwCustomer;
     }
 
-    public AcceptanceReviewInsurance getAcceptanceReviewInsuranceById(int requestInsuranceId) {
+    public UwInsurance getUwInsuranceById(int requestInsuranceId) {
         ResultSet rs = null;
-        AcceptanceReviewInsurance acceptanceReviewInsurance = new AcceptanceReviewInsurance();
+        UwInsurance uwInsurance = new UwInsurance();
         try{
             String sql = "select I.insuranceId, I.insuranceName, I.fee, C.maxAge, C.minAge, C.smoke, C.alchohol, C.cancer, " +
                     " from Insurance I, Insurance_Condition C, " +
@@ -532,20 +532,20 @@ public class EmployeeRepository {
 
             st.setInt(1, requestInsuranceId);
             rs = st.executeQuery();
-            acceptanceReviewInsurance.setInsuranceId(rs.getString("insuranceId"));
-            acceptanceReviewInsurance.setInsuranceName(rs.getString("insuranceName"));
-            acceptanceReviewInsurance.setFee(rs.getInt("fee"));
-            acceptanceReviewInsurance.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
-            acceptanceReviewInsurance.setMaxAge(rs.getInt("maxAge"));
-            acceptanceReviewInsurance.setMinAge(rs.getInt("minAge"));
-            acceptanceReviewInsurance.setSmoke(Grade.getGrade(rs.getString("smoke")));
-            acceptanceReviewInsurance.setCancer(Grade.getGrade(rs.getString("cancer")));
-            acceptanceReviewInsurance.setAlcohol(Grade.getGrade(rs.getString("alcohol")));
+            uwInsurance.setInsuranceId(rs.getString("insuranceId"));
+            uwInsurance.setInsuranceName(rs.getString("insuranceName"));
+            uwInsurance.setFee(rs.getInt("fee"));
+            uwInsurance.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
+            uwInsurance.setMaxAge(rs.getInt("maxAge"));
+            uwInsurance.setMinAge(rs.getInt("minAge"));
+            uwInsurance.setSmoke(Grade.getGrade(rs.getString("smoke")));
+            uwInsurance.setCancer(Grade.getGrade(rs.getString("cancer")));
+            uwInsurance.setAlcohol(Grade.getGrade(rs.getString("alcohol")));
             st.close();
         }catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
         }
-        return acceptanceReviewInsurance;
+        return uwInsurance;
     }
 
     public void insertNewInsurance(NewInsurance newInsurance){
@@ -713,7 +713,7 @@ public class EmployeeRepository {
         }
     }
 
-    public ArrayList<RewardEvaluteResponse> rewardEvaluate() {
+    public ArrayList<RewardEvaluateResponse> rewardEvaluate() {
         ResultSet rs = null;
         try {
             String sql = "SELECT insuranceClaimId,customerId, claimContent, claimCost " +
@@ -724,15 +724,15 @@ public class EmployeeRepository {
 
             rs = st.executeQuery();
 
-            ArrayList<RewardEvaluteResponse> responseArrayList = new ArrayList<>();
+            ArrayList<RewardEvaluateResponse> responseArrayList = new ArrayList<>();
             while (rs.next()){
-                RewardEvaluteResponse rewardEvaluteResponse = new RewardEvaluteResponse(
+                RewardEvaluateResponse rewardEvaluateResponse = new RewardEvaluateResponse(
                         rs.getString("insuranceClaimId"),
                         rs.getString("customerId"),
                         rs.getString("claimContent"),
                         rs.getString("claimCost")
                 );
-                responseArrayList.add(rewardEvaluteResponse);
+                responseArrayList.add(rewardEvaluateResponse);
             }
             return responseArrayList;
 
@@ -742,7 +742,7 @@ public class EmployeeRepository {
         return null;
     }
 
-    public void rewardAssign(RewardEvaluteResponse rewardChoice) {
+    public void rewardAssign(RewardEvaluateResponse rewardChoice) {
         try {
             String sql = "UPDATE InsuranceClaim SET claimStatus = ? WHERE insuranceClaimId=?;";
             PreparedStatement st = this.connection.prepareStatement(sql);

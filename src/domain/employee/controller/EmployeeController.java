@@ -2,7 +2,7 @@ package domain.employee.controller;
 
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
-import domain.customer.dto.AcceptanceReviewRequest;
+import domain.customer.dto.UwRequest;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.*;
@@ -13,20 +13,22 @@ import global.util.EmployeeComment;
 
 import java.util.ArrayList;
 
+import static global.util.constants.EmployeeConstants.*;
+
 public class EmployeeController {
 
-    private EmployeeService employeeService;
-    private SalesEmployeeService salesEmployeeService;
-    private SalesEduEmployeeService salesEduEmployeeService;
-    private ContractGuideEmployeeService contractGuideEmployeeService;
-    private AcceptanceReviewEmployeeService acceptanceReviewEmployeeService;
-    private ContractManageEmployeeService contractManageEmployeeService;
-    private InsuranceDevelopmentEmployeeService insuranceDevelopmentEmployeeService;
-    private CustomerInformationManageService customerInformationManageService;
-    private IncidentManageService incidentManageService;
-    private RewardManageService rewardManageService;
+    private final EmployeeService employeeService;
+    private final SalesEmployeeService salesEmployeeService;
+    private final SalesEduEmployeeService salesEduEmployeeService;
+    private final ContractGuideEmployeeService contractGuideEmployeeService;
+    private final UWEmployeeService UWEmployeeService;
+    private final ContractManageEmployeeService contractManageEmployeeService;
+    private final InsuranceDevelopmentEmployeeService insuranceDevelopmentEmployeeService;
+    private final CustomerInformationManageService customerInformationManageService;
+    private final IncidentManageService incidentManageService;
+    private final RewardManageService rewardManageService;
 
-    private EmployeeComment employeeComment;
+    private final EmployeeComment employeeComment;
 
 
     public EmployeeController() {
@@ -35,7 +37,7 @@ public class EmployeeController {
         this.salesEmployeeService = new SalesEmployeeService();
         this.salesEduEmployeeService = new SalesEduEmployeeService();
         this.contractGuideEmployeeService = new ContractGuideEmployeeService();
-        this.acceptanceReviewEmployeeService = new AcceptanceReviewEmployeeService();
+        this.UWEmployeeService = new UWEmployeeService();
         this.contractManageEmployeeService = new ContractManageEmployeeService();
         this.insuranceDevelopmentEmployeeService = new InsuranceDevelopmentEmployeeService();
         this.customerInformationManageService = new CustomerInformationManageService();
@@ -44,160 +46,73 @@ public class EmployeeController {
     }
 
     public void initial() {
+        Exit:
         while (true){
-            Employee employee = login();
-            if(employee != null){
-                home(employee);
+            switch (employeeComment.getLoginOrExit()){
+                case 1 :
+                    Employee employee = login();
+                    if(employee != null) home(employee);
+                    else new NoEmployeeException();
+                    break;
+                case 0 :
+                    break Exit;
             }
-            break;
         }
-
     }
 
     private Employee login() {
         return employeeService.login(employeeComment.getId(),employeeComment.getPassword());
     }
 
-    private Employee home(Employee employee){
+    private void home(Employee employee){
+        Exit:
         while(true){
             switch (this.employeeComment.home()){
                 case 11:
-                    //상담 대기 신규 고객 명단 조회
-                    if (employee.getDepartmentId().equals("DP1")){
-                        ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
-                        if (!arrayList.isEmpty()){
-                            System.out.println("상담 진행");
-                            salesEmployeeService.consultExecute(employee,
-                                    arrayList.get(employeeComment.customerConsultList(arrayList)));
-                            System.out.println("상담 완료");
-                        }else{
-                            new NoConsultCustomerException();
-                        }
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    doSalesEmployeeService(employee);//상담 대기 신규 고객 명단 조회
                     break;
                 case 12:
-                    //영업 교육 수강
-                    if (employee.getDepartmentId().equals("DP1")){
-
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    registerSalesEdu(employee);//영업 교육 수강
                     break;
                 case 21:
-                    if (employee.getDepartmentId().equals("DP4"))
-                        uploadEducationLecture(employee);
-                    else
-                        new NoAuthorityDPException();
+                    uploadEducationLecture(employee);//영업 교육 강의 업로드
                     break;
-                //영업 교육 강의 업로드
                 case 22:
-                    //강의 자료 리스트 출력
-                    if (employee.getDepartmentId().equals("DP4")){
-                        findLectureList();
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    findLectureList(employee);//강의 자료 리스트 출력
                     break;
                 case 23:
-                    //수강 명단 체크
-                    if (employee.getDepartmentId().equals("DP4")){
-                        findLectureRegistrationList();
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    findLectureRegistrationList(employee);
                     break;
                 case 31:
-                    //계약 보험 상태 안내 고객 명단 조회
-                    /*
-                    * 보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
-                    */
-                    if (employee.getDepartmentId().equals("DP6")){
-                        notifyContractStatus();
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    notifyContractStatus(employee);//보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
+                    break;
                 case 41:
-                    //보험 만기 고객 조회
-                    //건강정보 테이블에 고객 ID들어가야함
-                    if (employee.getDepartmentId().equals("DP6")) {
-                        employeeComment.contractExpriation(this.contractManageEmployeeService.selectContractExpiration());
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    contractExpiration(employee);//보험 만기 고객 조회//건강정보 테이블에 고객 ID 들어가야함
                     break;
                 case 42:
-                    //미납 고객 조회
-                    if (employee.getDepartmentId().equals("DP6")) {
-                        employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    contractDefault(employee); //미납 고객 조회
                     break;
                 case 51:
-                    //인수심사 수행
-                    if (employee.getDepartmentId().equals("DP2")) {
-                        startAcceptanceReview();
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    startUW(employee);//인수심사 수행
                     break;
                 case 61:
-                    if (employee.getDepartmentId().equals("DP3")) developInsurance();
-                    else new NoAuthorityDPException();
+                    developInsurance(employee);
                     break;
                 case 71:
-                    //고객 정보를 제공
-                    if (employee.getDepartmentId().equals("DP7")){
-                        this.provideCustomerInformation();
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    printCustomerInformation(employee);//고객 정보를 제공
                     break;
                 case 81:
-                    //보험 시장 데이터 제공
-                    if (employee.getDepartmentId().equals("DP8")) {
-                        this.provideMarketInformation();
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    printMarketInformation(employee);//보험 시장 데이터 제공
                     break;
                 case 91:
-                    //손해접수팀
-                    //사고 발생 신고를 접수받는다.
-                    if (employee.getDepartmentId().equals("DP9")) {
-                        ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
-                        if(!incidentResponses.isEmpty()){
-                            this.incidentManageService.incidentAssign(employee,
-                                    incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses)));
-                            System.out.println("담당자 설정이 완료되었습니다.");
-                        }else{
-                            new NoIncidentException();
-                        }
-
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    manageIncidentReport(employee);
                     break;
                 case 101:
-                    //보상평가팀
-                    //보상금을 심사하다.
-                    if (employee.getDepartmentId().equals("DP10")) {
-                        ArrayList<RewardEvaluteResponse> rewardEvaluteResponses = this.rewardManageService.rewardEvaluate();
-                        if(!rewardEvaluteResponses.isEmpty()){
-                            this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluteResponses));
-                        }else{
-                            new NoRewardException();
-                        }
-
-                    }else{
-                        new NoAuthorityDPException();
-                    }
+                    evaluateReward(employee);//보상평가팀//보상금을 심사하다
                     break;
                 case 0:
-                    //로그아웃
-                    return null;
+                    System.out.println(TERMINATE_EMPLOYEE_SYSTEM);
+                    break Exit;
                 default:
                     new CheckMenuNumberException();
                     break;
@@ -205,34 +120,113 @@ public class EmployeeController {
         }
     }
 
+    private void evaluateReward(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_REWARD)) {
+            ArrayList<RewardEvaluateResponse> rewardEvaluateResponses = this.rewardManageService.rewardEvaluate();
+            if(!rewardEvaluateResponses.isEmpty()) this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluateResponses));
+            else new NoRewardException();
+        }else new NoAuthorityDPException();
+    }
+
+    private void manageIncidentReport(Employee employee) {
+        //손해접수팀
+        //사고 발생 신고를 접수받는다.
+        if (employee.getDepartmentId().equals(DEPT_INCIDENT_MNG)) {
+            ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
+            if(!incidentResponses.isEmpty()){
+                this.incidentManageService.incidentAssign(
+                        employee,
+                        incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses))
+                );
+                System.out.println("담당자 설정이 완료되었습니다.");
+            }else new NoIncidentException();
+        }else new NoAuthorityDPException();
+        return;
+    }
+
+    private void contractDefault(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
+            employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
+        }else new NoAuthorityDPException();
+    }
+
+    private void contractExpiration(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
+            employeeComment.contractExpiration(((ContractManageEmployeeService)employeeService).selectContractExpiration());
+        }else new NoAuthorityDPException();
+    }
+
+    private void findLectureRegistrationList(Employee employee) {
+        //수강 명단 체크
+        if (employee.getDepartmentId().equals(DEPT_EDU)){
+
+        }else{
+            new NoAuthorityDPException();
+        }
+        return;
+    }
+
+    private void registerSalesEdu(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_SALES)){
+
+        }else{
+            new NoAuthorityDPException();
+        }
+        return;
+    }
+
+    private void doSalesEmployeeService(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_SALES)){
+            ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
+            if (!arrayList.isEmpty()){
+                System.out.println("상담 진행");
+                salesEmployeeService.consultExecute(
+                        employee,
+                        arrayList.get(employeeComment.customerConsultList(arrayList)));
+                System.out.println("상담 완료");
+            }else{
+                new NoConsultCustomerException();
+            }
+        }else{
+            new NoAuthorityDPException();
+        }
+    }
 
 
-    private void startAcceptanceReview() {
+    private void startUW(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_UW)){
+            new NoAuthorityDPException();
+            return;
+        }
         System.out.println("인수 심사 대상 고객 명단을 불러오시겠습니까?");
         switch(employeeComment.yesOrNo()){
             case 1:
-                getAcceptanceReviewCustomerList();
+                getUwCustomerList();
                 break;
             case 2:
                 break;
         }
     }
 
-    private void getAcceptanceReviewCustomerList() {
-        ArrayList<AcceptanceReviewRequest> AcceptanceReviewRequests = acceptanceReviewEmployeeService.getAcceptanceReviewCustomerList();
-        for (AcceptanceReviewRequest acceptanceReviewCustomer : AcceptanceReviewRequests)
+    private void getUwCustomerList() {
+        ArrayList<UwRequest> uwRequests = UWEmployeeService.getUwCustomerList();
+        for (UwRequest acceptanceReviewCustomer : uwRequests)
             System.out.println(acceptanceReviewCustomer);
         String customerId = employeeComment.getCustomerId();
-        AcceptanceReviewRequest acceptanceReviewRequest =
-                AcceptanceReviewRequests.stream()
+        UwRequest uwRequest =
+                uwRequests.stream()
                         .filter((aar) -> aar.getCustomerId().equals(customerId))
                         .findFirst()
                         .orElseThrow(NoEmployeeException::new);
 
-        acceptanceReviewEmployeeService.getAcceptanceReviewDetail(acceptanceReviewRequest);
+        UWEmployeeService.getUwDetail(uwRequest);
     }
 
-    private void notifyContractStatus() {
+    private void notifyContractStatus(Employee employee) {
+        if (!employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)){
+            new NoAuthorityDPException();
+            return;
+        }
         switch(employeeComment.notifyMenu()){
             case 1:
                 getNearExpireContractList();
@@ -261,7 +255,11 @@ public class EmployeeController {
         if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendNearPaymentContract(nearPaymentContractList);
     }
 
-    private void findLectureList() {
+    private void findLectureList(Employee eduEmployee) {
+        if (!(eduEmployee.getDepartmentId().equals(DEPT_EDU)) || !(eduEmployee.getDepartmentId().equals(DEPT_SALES))){
+            new NoAuthorityDPException();
+            return;
+        }
         ArrayList<Lecture> lectureList = salesEduEmployeeService.findLectureList();
         for (Lecture lecture : lectureList) {
             System.out.println(lecture);
@@ -269,6 +267,10 @@ public class EmployeeController {
     }
 
     public void uploadEducationLecture(Employee lecturer){
+        if (!lecturer.getDepartmentId().equals(DEPT_EDU)){
+            new NoAuthorityDPException();
+            return;
+        }
         String lectureName = employeeComment.getText("강의 이름을 입력하세요:");//TODO choice comment로 옮기기
         String lecturePdfName = employeeComment.getText("강의 자료를 이름을 입력하세요.");
         String lectureId = lectureName.length() + lecturer.getEmployeeId();
@@ -277,11 +279,12 @@ public class EmployeeController {
         else System.out.println("강의 등록에 실패했습니다.");
     }
 
-    //TODO
-    public void findLectureRegistrationList(){
-    }
 
-    private void developInsurance() {
+    private void developInsurance(Employee employee) {
+        if (!employee.getDepartmentId().equals(DEPT_INSURANCE_DEV)){
+            new NoAuthorityDPException();
+            return;
+        }
         ArrayList<CustomerAnalysisInformation> customerAnalysisInformations = provideCustomerInformation();
         MarketInsuranceInformationResponse marketInsuranceInformationResponse = provideMarketInformation();
         System.out.println("-------------고객 분석 데이터--------------");
@@ -306,8 +309,26 @@ public class EmployeeController {
             System.out.println("보험 등록이 성공적으로 완료되었습니다.");
     }
 
+    public void printCustomerInformation(Employee employee){
+        if (!employee.getDepartmentId().equals(DEPT_CUSTOMER_INFO)){
+            new NoAuthorityDPException();
+            return;
+        }
+        ArrayList<CustomerAnalysisInformation> customerAnalysisInformations = provideCustomerInformation();
+        for (CustomerAnalysisInformation customerAnalysisInformation : customerAnalysisInformations)
+            System.out.println(customerAnalysisInformation);
+    }
+
     public ArrayList<CustomerAnalysisInformation> provideCustomerInformation(){
         return customerInformationManageService.provideCustomerInformation();
+    }
+
+    private void printMarketInformation(Employee employee) {
+        if (!employee.getDepartmentId().equals(DEPT_MARKET_ANAL)){
+            new NoAuthorityDPException();
+            return;
+        }
+        System.out.println(provideMarketInformation());
     }
 
     public MarketInsuranceInformationResponse provideMarketInformation(){

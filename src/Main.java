@@ -2,11 +2,9 @@ import domain.customer.controller.CustomerController;
 import domain.employee.controller.EmployeeController;
 import global.util.CommonComment;
 
-import java.io.IOException;
-
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         systemInitial();
     }
 
@@ -14,6 +12,7 @@ public class Main {
         CustomerController customerController = new CustomerController();
         EmployeeController employeeController = new EmployeeController();
         CommonComment commonComment = new CommonComment();
+        Exit:
         while (true){
             switch (commonComment.initial()){
                 case 1:
@@ -22,8 +21,8 @@ public class Main {
                 case 2:
                     employeeController.initial();
                     break;
-                case 3:
-                    System.exit(0);
+                case 0:
+                    break Exit;
             }
         }
     }
