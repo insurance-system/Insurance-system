@@ -8,22 +8,17 @@ import domain.customer.exception.excution.CheckMenuNumberException;
 import domain.customer.service.CustomerService;
 import domain.employee.controller.EmployeeController;
 import domain.insurance.entity.Insurance;
-import global.util.Choice;
 import global.util.CustomerComment;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final Choice choice;
     private final CustomerComment customerComment;
 
-    public CustomerController(Choice choice) {
+    public CustomerController() {
         this.customerService = new CustomerService();
-        this.choice = choice;
         this.customerComment = new CustomerComment();
     }
     //시작화면
@@ -114,7 +109,7 @@ public class CustomerController {
     private void afterfindJoinedInsurances(Customer customer) {
         switch(customerComment.afterfindJoinedInsurances()) {
             case 1: //1.보험 해지하기
-                String cancelInsuranceId = choice.getId();
+                String cancelInsuranceId = customerComment.getId();
                 //보험 해지 진행
                 break;
             case 2: //2. 돌아가기
@@ -128,8 +123,8 @@ public class CustomerController {
 
     //로그인
     public void login() {
-        String id = choice.getId();
-        String pw = choice.getPassword();
+        String id = customerComment.getId();
+        String pw = customerComment.getPassword();
 
         CustomerLoginRequest customerLoginRequest
                 = new CustomerLoginRequest(id, pw);
@@ -145,7 +140,7 @@ public class CustomerController {
     //상담사 만족도 평가
     private void evaluateSatisfaction(Customer customer) {
         if(customerService.checkSatisfaction(customer.getCustomerId()) != null) {
-            String satisfaction = choice.getSatisfaction();
+            String satisfaction = customerComment.getSatisfaction();
             customerService.evaluateSatisfaction(satisfaction, customer.getCustomerId());
             System.out.println(customer.getName() + "님 만족도 평가에 참여해주셔서 감사합니다");
         }
@@ -163,12 +158,12 @@ public class CustomerController {
 
     //관심자 상담사 연결
     private void connectSalesEmployee() {
-        String customerId = choice.getId();
-        String password = choice.getPassword();
-        String name = choice.getName();
-        String phoneNumber = choice.getPhoneNumber();
-        int kindOfJob = choice.getKindOfJob();
-        int kindOfInsuranceId = choice.getKindOfInsuranceId();
+        String customerId = customerComment.getId();
+        String password = customerComment.getPassword();
+        String name = customerComment.getName();
+        String phoneNumber = customerComment.getPhoneNumber();
+        int kindOfJob = customerComment.getKindOfJob();
+        int kindOfInsuranceId = customerComment.getKindOfInsuranceId();
 
         Customer interestCustomer = new Customer(
                 customerId,
@@ -193,17 +188,17 @@ public class CustomerController {
 
     //회원가입(고객)
     public void join() {
-        String customerId = choice.getId();
+        String customerId = customerComment.getId();
         if(customerService.checkIdExist(customerId) == 0) {
-            String password = choice.getPassword();
-            String name = choice.getName();
-            String address = choice.getAddress();
-            String detailAddress = choice.getDetailAddress();
-            String zipcode = choice.getZipcode();
-            String email = choice.getEmail();
-            String phoneNumber = choice.getPhoneNumber();
-            int kindOfJob = choice.getKindOfJob();
-            int kindOfInsuranceId = choice.getKindOfInsuranceId();
+            String password = customerComment.getPassword();
+            String name = customerComment.getName();
+            String address = customerComment.getAddress();
+            String detailAddress = customerComment.getDetailAddress();
+            String zipcode = customerComment.getZipcode();
+            String email = customerComment.getEmail();
+            String phoneNumber = customerComment.getPhoneNumber();
+            int kindOfJob = customerComment.getKindOfJob();
+            int kindOfInsuranceId = customerComment.getKindOfInsuranceId();
 
             CustomerJoinRequest customer = new CustomerJoinRequest(
                     customerId,
@@ -251,16 +246,17 @@ public class CustomerController {
                 null,
                 null
         );
-        EmployeeController.doInsuranceContract(contract);
+        EmployeeController employeeController = new EmployeeController();
+        employeeController.doInsuranceContract(contract);
     }
 
     private void addCustomerInformation(Customer interestCustomer) {
-        String name = choice.getName();
-        String address = choice.getAddress();
-        String detailAddress = choice.getDetailAddress();
-        String zipcode = choice.getZipcode();
-        String email = choice.getEmail();
-        int kindOfJob = choice.getKindOfJob();
+        String name = customerComment.getName();
+        String address = customerComment.getAddress();
+        String detailAddress = customerComment.getDetailAddress();
+        String zipcode = customerComment.getZipcode();
+        String email = customerComment.getEmail();
+        int kindOfJob = customerComment.getKindOfJob();
         InterestCustomerJoinRequest customer = new InterestCustomerJoinRequest(
                 name,
                 address,
@@ -275,18 +271,18 @@ public class CustomerController {
     //Payer 설정
     private void joinPayer(Customer customer) {
         String payerId;
-        if(customerComment.checkBeneficiary()==1) payerId = choice.getId();
+        if(customerComment.checkBeneficiary()==1) payerId = customerComment.getId();
         else payerId = customer.getCustomerId();
-        String account = choice.getAccount();
+        String account = customerComment.getAccount();
         customerService.joinPayer(payerId, account, customer);
     }
 
     //Beneficiary 설정
     private void joinBeneficiary(Customer customer) {
         String beneficiaryId;
-        if(customerComment.checkBeneficiary()==1) beneficiaryId = choice.getId();
+        if(customerComment.checkBeneficiary()==1) beneficiaryId = customerComment.getId();
         else beneficiaryId = customer.getCustomerId();
-        String account = choice.getAccount();
+        String account = customerComment.getAccount();
         customerService.joinBeneficiary(beneficiaryId, account, customer);
     }
 
@@ -297,8 +293,8 @@ public class CustomerController {
             try {
                 claimInsurance = new CustomerClaimInsuranceRequest(
                         customer.getCustomerId(),
-                        choice.getclaimContent(),
-                        choice.getclaimCost()
+                        customerComment.getClaimContent(),
+                        customerComment.getClaimCost()
                 );
             } catch (Exception e) {
                 e.printStackTrace();
@@ -314,9 +310,9 @@ public class CustomerController {
             try {
                 incidentHandling = new CustomerHandleIncidentRequest(
                         customer.getCustomerId(),
-                        choice.getIncidentDate(),
-                        choice.getCarNumber(),
-                        choice.getIncidentSite()
+                        customerComment.getIncidentDate(),
+                        customerComment.getCarNumber(),
+                        customerComment.getIncidentSite()
                 );
             } catch (Exception e) {
                 e.printStackTrace();

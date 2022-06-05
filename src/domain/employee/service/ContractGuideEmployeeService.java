@@ -36,8 +36,6 @@ public class ContractGuideEmployeeService extends EmployeeService{
         return nearPaymentContracts;
     }
 
-
-
     public void sendNearPaymentContract(ArrayList<Contract> nearExpireContractList) {
         ArrayList<String> insuranceIds = new ArrayList<>();
         ArrayList<String> customerIds = new ArrayList<>();

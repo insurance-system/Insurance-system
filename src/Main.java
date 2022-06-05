@@ -1,6 +1,6 @@
 import domain.customer.controller.CustomerController;
 import domain.employee.controller.EmployeeController;
-import global.util.Choice;
+import global.util.CommonComment;
 
 import java.io.IOException;
 
@@ -11,12 +11,11 @@ public class Main {
     }
 
     private static void systemInitial(){
-        Choice choice = new Choice();
-        CustomerController customerController = new CustomerController(choice);
-        EmployeeController employeeController = new EmployeeController(choice);
-
+        CustomerController customerController = new CustomerController();
+        EmployeeController employeeController = new EmployeeController();
+        CommonComment commonComment = new CommonComment();
         while (true){
-            switch (choice.initial()){
+            switch (commonComment.initial()){
                 case 1:
                     customerController.initial();
                     break;
