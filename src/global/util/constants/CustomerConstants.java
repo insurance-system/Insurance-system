@@ -38,7 +38,7 @@ public class CustomerConstants extends CommonConstants {
     public static final String PAYMENT_FEE = "  | 납부 금액 : ";
     public static final String PAYDAY = " | 납부 일 : ";
 
-    public static final String SELECT_NUMBER_TO_JOIN = "가입할"+INSURANCE + SELECT_NUM;
+    public static final String SELECT_NUMBER_TO_JOIN = "가입할" + INSURANCE + SELECT_NUM;
     public static final String CHECK_PAYER = "보험금 수익자가 본인이면 0, 아니면 1을 입력해주세요.";
     public static final String CHECK_BENEFICIARY = "보험금 납부자가 본인이면 0, 아니면 1을 입력해주세요.";
     public static final String ASK_INSURANCE_CATEGORY = "생명보험에 관심이 있으시다면 1을, 손해보험에 관심이 있으시다면 2를 입력:";
