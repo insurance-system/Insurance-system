@@ -5,7 +5,7 @@ import domain.employee.dto.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class EmployeeComment {
+public class EmployeeComment extends CommonComment{
 
     Scanner scanner;
 
@@ -199,6 +199,11 @@ public class EmployeeComment {
     public String getCancer() {
         System.out.println("현재 암과 관련된 질병이 없다면   A");
         System.out.println("현재 암과 투병중인 상태        C");
+        return scanner.next();
+    }
+
+    public String getText(String message) {
+        System.out.println(message);
         return scanner.next();
     }
 }

@@ -9,7 +9,6 @@ import domain.employee.exception.excution.*;
 import domain.employee.service.*;
 import domain.insurance.entity.InsuranceCondition;
 import global.dao.Lecture;
-import global.util.Choice;
 import global.util.EmployeeComment;
 
 import java.util.ArrayList;
@@ -27,12 +26,10 @@ public class EmployeeController {
     private IncidentManageService incidentManageService;
     private RewardManageService rewardManageService;
 
-    private Choice choice;
     private EmployeeComment employeeComment;
 
 
-    public EmployeeController(Choice choice) {
-        this.choice = choice;
+    public EmployeeController() {
         this.employeeComment = new EmployeeComment();
         this.employeeService = new EmployeeService();
         this.salesEmployeeService = new SalesEmployeeService();
@@ -58,7 +55,7 @@ public class EmployeeController {
     }
 
     private Employee login() {
-        return employeeService.login(choice.getId(),choice.getPassword());
+        return employeeService.login(employeeComment.getId(),employeeComment.getPassword());
     }
 
     private Employee home(Employee employee){
@@ -82,7 +79,7 @@ public class EmployeeController {
                     break;
                 case 12:
                     //영업 교육 수강
-                    if (employee.getDepartmentId().equals("DP1")) {
+                    if (employee.getDepartmentId().equals("DP1")){
 
                     }else{
                         new NoAuthorityDPException();
@@ -97,7 +94,7 @@ public class EmployeeController {
                 //영업 교육 강의 업로드
                 case 22:
                     //강의 자료 리스트 출력
-                    if (employee.getDepartmentId().equals("DP4")) {
+                    if (employee.getDepartmentId().equals("DP4")){
                         findLectureList();
                     }else{
                         new NoAuthorityDPException();
@@ -105,7 +102,7 @@ public class EmployeeController {
                     break;
                 case 23:
                     //수강 명단 체크
-                    if (employee.getDepartmentId().equals("DP4")) {
+                    if (employee.getDepartmentId().equals("DP4")){
                         findLectureRegistrationList();
                     }else{
                         new NoAuthorityDPException();
@@ -152,7 +149,7 @@ public class EmployeeController {
                     break;
                 case 71:
                     //고객 정보를 제공
-                    if (employee.getDepartmentId().equals("DP7")) {
+                    if (employee.getDepartmentId().equals("DP7")){
                         this.provideCustomerInformation();
                     }else{
                         new NoAuthorityDPException();
@@ -264,7 +261,6 @@ public class EmployeeController {
         if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendNearPaymentContract(nearPaymentContractList);
     }
 
-
     private void findLectureList() {
         ArrayList<Lecture> lectureList = salesEduEmployeeService.findLectureList();
         for (Lecture lecture : lectureList) {
@@ -273,8 +269,8 @@ public class EmployeeController {
     }
 
     public void uploadEducationLecture(Employee lecturer){
-        String lectureName = choice.getText("강의 이름을 입력하세요:");//TODO choice comment로 옮기기
-        String lecturePdfName = choice.getText("강의 자료를 이름을 입력하세요.");
+        String lectureName = employeeComment.getText("강의 이름을 입력하세요:");//TODO choice comment로 옮기기
+        String lecturePdfName = employeeComment.getText("강의 자료를 이름을 입력하세요.");
         String lectureId = lectureName.length() + lecturer.getEmployeeId();
         Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, lecturer.getEmployeeId());
         if(salesEduEmployeeService.uploadEducationLecture(lecture)) System.out.println("강의 등록에 성공했습니다.");
@@ -308,8 +304,6 @@ public class EmployeeController {
         NewInsurance newInsurance = new NewInsurance(insuranceName, kindOfInsurance, insuranceFee, insuranceCondition);
         if(insuranceDevelopmentEmployeeService.developInsurance(newInsurance))
             System.out.println("보험 등록이 성공적으로 완료되었습니다.");
-
-
     }
 
     public ArrayList<CustomerAnalysisInformation> provideCustomerInformation(){
@@ -320,10 +314,11 @@ public class EmployeeController {
         return new MarketInsuranceInformationResponse();
     }
 
-    public static void doInsuranceContract(Contract contract){
-        this.salesEmployeeService.doInsuranceContract(contract);
+    public void doInsuranceContract(Contract contract){
+        salesEmployeeService.doInsuranceContract(contract);
     }
 
+    //TODO
     public void doContractExpiration(){
 
     }
