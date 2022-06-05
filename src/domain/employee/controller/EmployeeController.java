@@ -200,9 +200,28 @@ public class EmployeeController {
                 break;
         }
     }
-    /* -------------------------------------------------------------------------------- */
 
-    /* -------------------------------- ContractGuide --------------------------------- */
+    private void getNearExpireContractList() {
+        ArrayList<Contract> nearExpireContractList = contractGuideEmployeeService.getNearExpireContractList();
+        employeeComment.printNearContractsListMsg();
+        for (Contract contract : nearExpireContractList)
+            System.out.println(contract);
+        employeeComment.printLine();
+        employeeComment.printSendNearExpirationMailMsg();
+        if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendEmailNearExpireContract(nearExpireContractList);
+    }
+
+    private void getNearPaymentContractList() {
+        ArrayList<Contract> nearPaymentContractList = contractGuideEmployeeService.getNearPaymentContractList();
+        employeeComment.printNearPayDayContractsListMsg();
+        for (Contract contract : nearPaymentContractList) System.out.println(contract);
+        employeeComment.printLine();
+        employeeComment.printSendNearExpirationMailMsg();
+        if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendNearPaymentContract(nearPaymentContractList);
+    }
+    /* ------------------------------------------------------------------------------------- */
+
+    /* -------------------------------- Contract Management --------------------------------- */
 
     private void contractExpiration(Employee employee) {
         if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
@@ -215,36 +234,11 @@ public class EmployeeController {
             employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
         }else new NoAuthorityDPException();
     }
+
+
     /* -------------------------------------------------------------------------------- */
 
-    private void evaluateReward(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_REWARD)) {
-            ArrayList<RewardEvaluateResponse> rewardEvaluateResponses = this.rewardManageService.rewardEvaluate();
-            if(!rewardEvaluateResponses.isEmpty()) this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluateResponses));
-            else new NoRewardException();
-        }else new NoAuthorityDPException();
-    }
-
-    private void manageIncidentReport(Employee employee) {
-        //손해접수팀
-        //사고 발생 신고를 접수받는다.
-        if (employee.getDepartmentId().equals(DEPT_INCIDENT_MNG)) {
-            ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
-            if(!incidentResponses.isEmpty()){
-                this.incidentManageService.incidentAssign(
-                        employee,
-                        incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses))
-                );
-                employeeComment.printMngSettingCompleteMsg();
-            }else new NoIncidentException();
-        }else new NoAuthorityDPException();
-        return;
-    }
-
-
-
-
-
+    /* -------------------------------------- U/W ------------------------------------- */
     private void startUW(Employee employee) {
         if (employee.getDepartmentId().equals(DEPT_UW)){
             new NoAuthorityDPException();
@@ -273,32 +267,9 @@ public class EmployeeController {
 
         UWEmployeeService.getUwDetail(uwRequest);
     }
+    /* -------------------------------------------------------------------------------- */
 
-
-
-
-    private void getNearExpireContractList() {
-        ArrayList<Contract> nearExpireContractList = contractGuideEmployeeService.getNearExpireContractList();
-        employeeComment.printNearContractsListMsg();
-        for (Contract contract : nearExpireContractList)
-            System.out.println(contract);
-        employeeComment.printLine();
-        employeeComment.printSendNearExpirationMailMsg();
-        if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendEmailNearExpireContract(nearExpireContractList);
-    }
-
-    private void getNearPaymentContractList() {
-        ArrayList<Contract> nearPaymentContractList = contractGuideEmployeeService.getNearPaymentContractList();
-        employeeComment.printNearPayDayContractsListMsg();
-        for (Contract contract : nearPaymentContractList) System.out.println(contract);
-        employeeComment.printLine();
-        employeeComment.printSendNearExpirationMailMsg();
-        if(employeeComment.yesOrNo() == 1) contractGuideEmployeeService.sendNearPaymentContract(nearPaymentContractList);
-    }
-
-
-
-
+    /* -------------------------- development Insurance -------------------------------- */
     private void developInsurance(Employee employee) {
         if (!employee.getDepartmentId().equals(DEPT_INSURANCE_DEV)){
             new NoAuthorityDPException();
@@ -321,8 +292,6 @@ public class EmployeeController {
             employeeComment.printSuccessInsuranceRegistrationMsg();
     }
 
-
-
     private NewInsurance getNewInsurance(InsuranceCondition insuranceCondition) {
         String insuranceName = employeeComment.getInsuranceName();
         int kindOfInsurance = employeeComment.getKindOfInsurance();
@@ -338,6 +307,9 @@ public class EmployeeController {
         String cancer = employeeComment.getCancer();
         return new InsuranceCondition(maxAge,minAge,smoke,alcohol,cancer);
     }
+    /* -------------------------------------------------------------------------------- */
+
+    /*------------------------- information analysis --------------------------*/
 
     public void printCustomerInformation(Employee employee){
         if (!employee.getDepartmentId().equals(DEPT_CUSTOMER_INFO)){
@@ -364,13 +336,43 @@ public class EmployeeController {
     public MarketInsuranceInformationResponse provideMarketInformation(){
         return new MarketInsuranceInformationResponse();
     }
+    /*---------------------------------------------------------------------------*/
 
+    /*------------------------- evaluate reward --------------------------*/
+
+    private void evaluateReward(Employee employee) {
+        if (employee.getDepartmentId().equals(DEPT_REWARD)) {
+            ArrayList<RewardEvaluateResponse> rewardEvaluateResponses = this.rewardManageService.rewardEvaluate();
+            if(!rewardEvaluateResponses.isEmpty()) this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluateResponses));
+            else new NoRewardException();
+        }else new NoAuthorityDPException();
+    }
+    /*---------------------------------------------------------------------------*/
+
+    /*------------------------- manage incident --------------------------*/
+    private void manageIncidentReport(Employee employee) {
+        //손해접수팀
+        //사고 발생 신고를 접수받는다.
+        if (employee.getDepartmentId().equals(DEPT_INCIDENT_MNG)) {
+            ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
+            if(!incidentResponses.isEmpty()){
+                this.incidentManageService.incidentAssign(
+                        employee,
+                        incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses))
+                );
+                employeeComment.printMngSettingCompleteMsg();
+            }else new NoIncidentException();
+        }else new NoAuthorityDPException();
+        return;
+    }
+    /*---------------------------------------------------------------------------*/
+
+    /* ------------ FROM CUSTOMER CONTROLLER ----------- */
+    public void doContractExpiration(){}
     public void doInsuranceContract(Contract contract){
         salesEmployeeService.doInsuranceContract(contract);
     }
+    /* -------------------------------------------------- */
 
-    //TODO
-    public void doContractExpiration(){
 
-    }
 }
