@@ -2,7 +2,7 @@ package domain.customer.dto;
 
 import domain.customer.enumeration.KindOfJob;
 
-public class AcceptanceReviewCustomer {
+public class UwCustomer {
     private String customerId;
     private String name;
     private String email;

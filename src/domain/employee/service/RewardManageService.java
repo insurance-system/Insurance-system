@@ -1,17 +1,16 @@
 package domain.employee.service;
 
-import domain.employee.dto.RewardEvaluteResponse;
-import domain.employee.entity.Employee;
+import domain.employee.dto.RewardEvaluateResponse;
 
 import java.util.ArrayList;
 
 public class RewardManageService extends EmployeeService{
 
-    public ArrayList<RewardEvaluteResponse> rewardEvaluate() {
+    public ArrayList<RewardEvaluateResponse> rewardEvaluate() {
         return this.employeeRepository.rewardEvaluate();
     }
 
-    public void rewardAssign(RewardEvaluteResponse rewardChoice) {
+    public void rewardAssign(RewardEvaluateResponse rewardChoice) {
         this.employeeRepository.rewardAssign(rewardChoice);
     }
 }

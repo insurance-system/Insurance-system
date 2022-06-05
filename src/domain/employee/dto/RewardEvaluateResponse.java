@@ -1,13 +1,13 @@
 package domain.employee.dto;
 
-public class RewardEvaluteResponse {
+public class RewardEvaluateResponse {
     private String insuranceClaimId;
     private String customerId;
     private String claimContent;
     private String claimCost;
     private String claimStatus;
 
-    public RewardEvaluteResponse(String insuranceClaimId, String customerId, String claimContent, String claimCost) {
+    public RewardEvaluateResponse(String insuranceClaimId, String customerId, String claimContent, String claimCost) {
         this.insuranceClaimId = insuranceClaimId;
         this.customerId = customerId;
         this.claimContent = claimContent;

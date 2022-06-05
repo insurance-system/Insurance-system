@@ -2,14 +2,14 @@ package domain.employee.repository;
 
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
-import domain.customer.dto.AcceptanceReviewCustomer;
-import domain.customer.dto.AcceptanceReviewRequest;
+import domain.customer.dto.UwCustomer;
+import domain.customer.dto.UwRequest;
 import domain.customer.entity.Grade;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.NoEmployeeException;
-import domain.insurance.dto.AcceptanceReviewInsurance;
+import domain.insurance.dto.UwInsurance;
 import domain.insurance.entity.Insurance;
 import domain.insurance.entity.InsuranceCondition;
 import domain.insurance.entity.enumeration.InsuranceStatus;
@@ -286,7 +286,7 @@ public class EmployeeRepository {
         return contractList;
     }
 
-    public void consultExecute(Employee employee, EmpCustomer customerConsultResponse) {
+    public void executeConsult(Employee employee, EmpCustomer customerConsultResponse){
         try {
             String sql = "UPDATE Emp_Cus SET employeeId = ? WHERE emp_CusId=?";
             PreparedStatement st = this.connection.prepareStatement(sql);
@@ -298,7 +298,7 @@ public class EmployeeRepository {
         }
     }
 
-    public ArrayList<domain.customer.entity.Customer> selectEmployeeByIds(ArrayList<String> nearExpiredContractsCustomerIds) {
+    public ArrayList<domain.customer.entity.Customer> selectEmployeeByIds(ArrayList<String> nearExpiredContractsCustomerIds){
         ArrayList<domain.customer.entity.Customer> customerList = new ArrayList<>();
         String args = "";
         for (String nearExpiredContractsCustomerId : nearExpiredContractsCustomerIds) {
@@ -454,8 +454,8 @@ public class EmployeeRepository {
         return insuranceList;
     }
 
-    public ArrayList<AcceptanceReviewRequest> getAcceptanceReviewCustomerList() {
-        ArrayList<AcceptanceReviewRequest> AcceptanceReviewRequestLists = new ArrayList<>();
+    public ArrayList<UwRequest> getUwCustomerList() {
+        ArrayList<UwRequest> uwRequestLists = new ArrayList<>();
 
         String sql = "select * from AcceptanceReviewRequest;";
         try {
@@ -464,20 +464,21 @@ public class EmployeeRepository {
             rs = st.executeQuery();
 
             while (rs.next()){
-                AcceptanceReviewRequest AcceptanceReviewRequest = new AcceptanceReviewRequest();
-                AcceptanceReviewRequest.setCustomerId(rs.getString("customerId"));
-                AcceptanceReviewRequest.setRequestInsuranceId(rs.getInt("insuranceId"));
-                AcceptanceReviewRequestLists.add(AcceptanceReviewRequest);
+                UwRequest uwRequest = new UwRequest();
+                uwRequest.setId(rs.getString("acceptanceReviewRequestId"));
+                uwRequest.setCustomerId(rs.getString("customerId"));
+                uwRequest.setRequestInsuranceId(rs.getString("insuranceId"));
+                uwRequestLists.add(uwRequest);
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return AcceptanceReviewRequestLists;
+        return uwRequestLists;
     }
 
-    public AcceptanceReviewCustomer getAcceptanceReviewCustomerById(String customerId){
+    public UwCustomer getAcceptanceReviewCustomerById(String customerId){
         ResultSet rs = null;
-        AcceptanceReviewCustomer acceptanceReviewCustomer = new AcceptanceReviewCustomer();
+        UwCustomer uwCustomer = new UwCustomer();
         try{
             String sql = "select C.customerId, C.name, C.email, C.address, C.detailAddress, C.zipcode, C.phoneNumber, C.kindOfJob, " +
                     " H.cancer, H.smoke, H.alchohol, " +
@@ -495,28 +496,28 @@ public class EmployeeRepository {
 
             st.setString(1, customerId);
             rs = st.executeQuery();
-            acceptanceReviewCustomer.setCustomerId(rs.getString(customerId));
-            acceptanceReviewCustomer.setName(rs.getString("name"));
-            acceptanceReviewCustomer.setEmail(rs.getString("email"));
-            acceptanceReviewCustomer.setAddress(rs.getString("address"));
-            acceptanceReviewCustomer.setDetailAddress(rs.getString("detailAddress"));
-            acceptanceReviewCustomer.setZipcode(rs.getString("zipcode"));
-            acceptanceReviewCustomer.setPhoneNumber(rs.getString("phoneNumber"));
-            acceptanceReviewCustomer.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
-            acceptanceReviewCustomer.setCancer(rs.getString("cancer"));
-            acceptanceReviewCustomer.setSmoke(rs.getString("smoke"));
-            acceptanceReviewCustomer.setAlcohol(rs.getString("alchohol"));
-            acceptanceReviewCustomer.setCreditGrade(rs.getString("creditGrade"));
+            uwCustomer.setCustomerId(rs.getString(customerId));
+            uwCustomer.setName(rs.getString("name"));
+            uwCustomer.setEmail(rs.getString("email"));
+            uwCustomer.setAddress(rs.getString("address"));
+            uwCustomer.setDetailAddress(rs.getString("detailAddress"));
+            uwCustomer.setZipcode(rs.getString("zipcode"));
+            uwCustomer.setPhoneNumber(rs.getString("phoneNumber"));
+            uwCustomer.setKindOfJob(KindOfJob.getKindOfJobBy(rs.getString("kindOfJob")));
+            uwCustomer.setCancer(rs.getString("cancer"));
+            uwCustomer.setSmoke(rs.getString("smoke"));
+            uwCustomer.setAlcohol(rs.getString("alchohol"));
+            uwCustomer.setCreditGrade(rs.getString("creditGrade"));
             st.close();
         }catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
         }
-        return acceptanceReviewCustomer;
+        return uwCustomer;
     }
 
-    public AcceptanceReviewInsurance getAcceptanceReviewInsuranceById(int requestInsuranceId) {
+    public UwInsurance getUwInsuranceById(String requestInsuranceId) {
         ResultSet rs = null;
-        AcceptanceReviewInsurance acceptanceReviewInsurance = new AcceptanceReviewInsurance();
+        UwInsurance uwInsurance = new UwInsurance();
         try{
             String sql = "select I.insuranceId, I.insuranceName, I.fee, C.maxAge, C.minAge, C.smoke, C.alchohol, C.cancer, " +
                     " from Insurance I, Insurance_Condition C, " +
@@ -530,22 +531,22 @@ public class EmployeeRepository {
                     Constants.PW);
             PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
 
-            st.setInt(1, requestInsuranceId);
+            st.setString(1, requestInsuranceId);
             rs = st.executeQuery();
-            acceptanceReviewInsurance.setInsuranceId(rs.getString("insuranceId"));
-            acceptanceReviewInsurance.setInsuranceName(rs.getString("insuranceName"));
-            acceptanceReviewInsurance.setFee(rs.getInt("fee"));
-            acceptanceReviewInsurance.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
-            acceptanceReviewInsurance.setMaxAge(rs.getInt("maxAge"));
-            acceptanceReviewInsurance.setMinAge(rs.getInt("minAge"));
-            acceptanceReviewInsurance.setSmoke(Grade.getGrade(rs.getString("smoke")));
-            acceptanceReviewInsurance.setCancer(Grade.getGrade(rs.getString("cancer")));
-            acceptanceReviewInsurance.setAlcohol(Grade.getGrade(rs.getString("alcohol")));
+            uwInsurance.setInsuranceId(rs.getString("insuranceId"));
+            uwInsurance.setInsuranceName(rs.getString("insuranceName"));
+            uwInsurance.setFee(rs.getInt("fee"));
+            uwInsurance.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
+            uwInsurance.setMaxAge(rs.getInt("maxAge"));
+            uwInsurance.setMinAge(rs.getInt("minAge"));
+            uwInsurance.setSmoke(Grade.getGrade(rs.getString("smoke")));
+            uwInsurance.setCancer(Grade.getGrade(rs.getString("cancer")));
+            uwInsurance.setAlcohol(Grade.getGrade(rs.getString("alcohol")));
             st.close();
         }catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
         }
-        return acceptanceReviewInsurance;
+        return uwInsurance;
     }
 
     public void insertNewInsurance(NewInsurance newInsurance){
@@ -664,8 +665,8 @@ public class EmployeeRepository {
             }
             return defaultResponses;
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -694,8 +695,8 @@ public class EmployeeRepository {
             }
             return responseArrayList;
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -708,12 +709,12 @@ public class EmployeeRepository {
             st.setString(2, incidentChoice.getIncidentId());
             st.executeUpdate();
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public ArrayList<RewardEvaluteResponse> rewardEvaluate() {
+    public ArrayList<RewardEvaluateResponse> rewardEvaluate() {
         ResultSet rs = null;
         try {
             String sql = "SELECT insuranceClaimId,customerId, claimContent, claimCost " +
@@ -724,37 +725,37 @@ public class EmployeeRepository {
 
             rs = st.executeQuery();
 
-            ArrayList<RewardEvaluteResponse> responseArrayList = new ArrayList<>();
+            ArrayList<RewardEvaluateResponse> responseArrayList = new ArrayList<>();
             while (rs.next()){
-                RewardEvaluteResponse rewardEvaluteResponse = new RewardEvaluteResponse(
+                RewardEvaluateResponse rewardEvaluateResponse = new RewardEvaluateResponse(
                         rs.getString("insuranceClaimId"),
                         rs.getString("customerId"),
                         rs.getString("claimContent"),
                         rs.getString("claimCost")
                 );
-                responseArrayList.add(rewardEvaluteResponse);
+                responseArrayList.add(rewardEvaluateResponse);
             }
             return responseArrayList;
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public void rewardAssign(RewardEvaluteResponse rewardChoice) {
+    public void rewardAssign(RewardEvaluateResponse rewardChoice) {
         try {
             String sql = "UPDATE InsuranceClaim SET claimStatus = ? WHERE insuranceClaimId=?;";
             PreparedStatement st = this.connection.prepareStatement(sql);
             st.setString(1, rewardChoice.getClaimStatus());
             st.setString(2, rewardChoice.getInsuranceClaimId());
             st.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public void doInsuranceContract(Contract contract) {
+    public void makeInsuranceContract(Contract contract) {
         try {
             String sql = "INSERT INTO Contract (contractId, customerId, chargeOfEmployeeId, insuranceId, expiredDate, contractStatus, paymentDate)" +
                     "        VALUE (?,?,?,?,?,?,?)";
@@ -767,10 +768,22 @@ public class EmployeeRepository {
             st.setString(6,contract.getContractStatus());
             st.setString(7,contract.getPaymentDate().toString());
             st.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
 
+    public void expireContract(String insuranceId, String customerId) {
+        try {
+            String sql = "UPDATE Contract SET contractStatus = ? WHERE insuranceId=? AND custoerId=?;";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, "expiration");
+            st.setString(2, insuranceId);
+            st.setString(3, customerId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
