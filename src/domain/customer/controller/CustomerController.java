@@ -26,7 +26,7 @@ public class CustomerController {
     public void initial() {
         Exit:
         while(true){
-            switch (customerComment.customerInitial()) {
+            switch (customerComment.customerInitial()){
                 case 1 : login();
                 case 2 : join(); //2.회원가입
                 case 3 : connectSalesEmployee();//3.상담사 연결
@@ -196,19 +196,19 @@ public class CustomerController {
     }
 
     //보험 가입
-    private void joinInsurance(Customer customer) {
+    private void joinInsurance(Customer customer){
         ArrayList<Insurance> interestInsuranceArrayList = customerService.findInterestInsurance(customer);
         String joinInsuranceId = customerComment.interestInsurances(interestInsuranceArrayList);
         if(customer.getAddress()==null) addCustomerInformation(customer);
         //추가정보받아오기
-        /*
-        PolicyholderJoinRequest policyholderJoinRequest = new PolicyholderJoinRequest(
-                policyholderId, customerId, contractId, healthInformationId, creditInformationId
-        )
-        HealthInformationRequest healthInformationRequest = new HealthInformationRequest(
-               healthInformationId, cancer, smoke, alchohol
-        )
-        */
+//        PolicyholderJoinRequest policyholderJoinRequest = new PolicyholderJoinRequest(
+//                policyholderId, customerId, contractId, healthInformationId, creditInformationId
+//        )
+//
+//        HealthInformationRequest healthInformationRequest = new HealthInformationRequest(
+//               healthInformationId, cancer, smoke, alchohol
+//        )
+
         this.joinPayer(customer);
         this.joinBeneficiary(customer);
         Contract contract = new Contract(
@@ -224,7 +224,7 @@ public class CustomerController {
         employeeController.doInsuranceContract(contract);
     }
 
-    private void addCustomerInformation(Customer interestCustomer) {
+    private void addCustomerInformation(Customer interestCustomer){
         String name = customerComment.getName();
         String address = customerComment.getAddress();
         String detailAddress = customerComment.getDetailAddress();

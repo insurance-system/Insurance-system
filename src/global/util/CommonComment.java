@@ -2,6 +2,8 @@ package global.util;
 
 import java.util.Scanner;
 
+import static global.util.constants.CommonConstants.END_LINE;
+
 public class CommonComment {
 
     Scanner scanner;
@@ -32,5 +34,9 @@ public class CommonComment {
         System.out.println("1. 직원 로그인 하기");
         System.out.println("0. 뒤로가기");
         return scanner.nextInt();
+    }
+
+    public void printLine() {
+        System.out.println(END_LINE);
     }
 }
