@@ -1,30 +1,28 @@
 import domain.customer.controller.CustomerController;
 import domain.employee.controller.EmployeeController;
-import global.util.Choice;
-
-import java.io.IOException;
+import global.util.CommonComment;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         systemInitial();
     }
 
     private static void systemInitial(){
-        Choice choice = new Choice();
-        CustomerController customerController = new CustomerController(choice);
-        EmployeeController employeeController = new EmployeeController(choice);
-
+        CustomerController customerController = new CustomerController();
+        EmployeeController employeeController = new EmployeeController();
+        CommonComment commonComment = new CommonComment();
+        Exit:
         while (true){
-            switch (choice.initial()){
+            switch (commonComment.initial()){
                 case 1:
                     customerController.initial();
                     break;
                 case 2:
                     employeeController.initial();
                     break;
-                case 3:
-                    System.exit(0);
+                case 0:
+                    break Exit;
             }
         }
     }

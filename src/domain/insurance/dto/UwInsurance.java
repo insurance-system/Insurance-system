@@ -3,7 +3,7 @@ package domain.insurance.dto;
 import domain.customer.entity.Grade;
 import domain.insurance.entity.enumeration.KindOfInsurance;
 
-public class AcceptanceReviewInsurance {
+public class UwInsurance {
     private String insuranceId;
     private String insuranceName;
     private int fee;

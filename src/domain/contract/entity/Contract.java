@@ -28,6 +28,9 @@ public class Contract {
         this.contractStatus = contractStatus;
     }
 
+    public Contract() {
+    }
+
     public String getContractId() {
         return contractId;
     }
