@@ -137,10 +137,10 @@ public class EmployeeController {
 
     private void doSalesEmployeeService(Employee employee) {
         if(!isAccessableEmployee(employee, DEPT_SALES)) return;
-        ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
-            if (!arrayList.isEmpty()){
+        ArrayList<EmpCustomer> empCustomers = salesEmployeeService.customerConsult(employee);
+            if (!empCustomers.isEmpty()){
                 employeeComment.startConsult();
-                salesEmployeeService.executeConsult(employee, arrayList.get(employeeComment.customerConsultList(arrayList)));//TODO 9를 누르면 Index 9 out of bounds for length 3
+                salesEmployeeService.executeConsult(employee, empCustomers.get(employeeComment.customerConsultList(empCustomers)));//TODO 9를 누르면 Index 9 out of bounds for length 3
                 employeeComment.completeConsult();
             }else{
                 new NoConsultCustomerException();

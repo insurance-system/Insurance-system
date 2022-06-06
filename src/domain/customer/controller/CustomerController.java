@@ -206,8 +206,6 @@ public class CustomerController {
             customerComment.notifyCompleteJoining(name);
             initial();
         } else join(); // TODO 재귀 없애기
-
-
     }
 
     //보험 가입
@@ -256,7 +254,7 @@ public class CustomerController {
     //Payer 설정
     private void joinPayer(Customer customer) {
         String payerId;
-        if(customerComment.checkBeneficiary()==1) payerId = customerComment.getId();
+        if(customerComment.checkPayer()==1) payerId = customerComment.getId();
         else payerId = customer.getCustomerId();
         String account = customerComment.getAccount();
         customerService.joinPayer(payerId, account, customer);
