@@ -183,7 +183,7 @@ public class EmployeeRepository {
         try {
             String sql = "Select Emp_Cus.emp_CusId, Customer.customerId, Customer.name, Customer.phoneNumber, Customer.kindOfInsurance, Customer.kindOfJob" +
                     " from Emp_Cus, Customer " +
-                    "where Customer.customerId = Emp_Cus.customerId and Emp_Cus.satisfaction is null;";
+                    "where Customer.customerId = Emp_Cus.customerId and Emp_Cus.satisfaction is null and Emp_Cus.EmployeeId is null;";
             PreparedStatement st = this.connection.prepareStatement(sql);
 
             rs = st.executeQuery();
