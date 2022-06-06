@@ -1,14 +1,11 @@
 package domain.employee.exception.excution;
 
 import domain.employee.exception.EmployeeException;
-import domain.employee.exception.EmployeeExceptionList;
 
-import static domain.employee.exception.EmployeeExceptionList.NOAUTHORITYDP;
+import static domain.employee.exception.EmployeeExceptionList.NO_AUTHORITY_DEPARTMENT;
 
 public class NoAuthorityDPException extends EmployeeException {
     public NoAuthorityDPException() {
-        super(
-                NOAUTHORITYDP.getErrorCode(),
-                NOAUTHORITYDP.getMessage());
+        super(NO_AUTHORITY_DEPARTMENT.getErrorCode(), NO_AUTHORITY_DEPARTMENT.getMessage());
     }
 }

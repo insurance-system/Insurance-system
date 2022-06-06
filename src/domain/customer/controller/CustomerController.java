@@ -66,23 +66,25 @@ public class CustomerController {
     public void enter(Customer customer){
         customerComment.greetToCustomer(customer.getName());
         switch (customerComment.afterLogin()) {
-            case 1 : connectSalesEmployee();//1. 상담사 연결하기
-            case 2 : evaluateSatisfaction(customer);//2. 상담사 평가하기
+            case 1 : connectSalesEmployee(); break; //1. 상담사 연결하기
+            case 2 : evaluateSatisfaction(customer); break;//2. 상담사 평가하기
             case 3 : { //3. 가입된 보험 조회하기
                 ArrayList<Insurance> insuranceArrayList = findJoinedInsurances(customer.getCustomerId());
                 if (!insuranceArrayList.isEmpty()) {
                     customerComment.joinedInsurances(insuranceArrayList);
                     afterFindJoinedInsurances(customer);
                 }
+                break;
             }
             case 4 : { //4. 보험급 납부내역
                 ArrayList<FindPayment> findPayment = findPaymentHistory(customer.getCustomerId());
                 if (findPayment != null) customerComment.findPaymentHistory(findPayment);
             }
-            case 5 : incidentHandling(customer);//5. 사고 처리 접수
-            case 6 : joinInsurance(customer); //6. 보험 가입하기
-            case 7 : claimInsurance(customer);//7. 보험금 청구하기
-            case 8 : initial();//8. 로그아웃
+            break;
+            case 5 : incidentHandling(customer); break;//5. 사고 처리 접수
+            case 6 : joinInsurance(customer); break;//6. 보험 가입하기
+            case 7 : claimInsurance(customer); break;//7. 보험금 청구하기
+            case 8 : initial(); break;//8. 로그아웃
             default : new CheckMenuNumberException();
         }
         enter(customer);
@@ -114,7 +116,7 @@ public class CustomerController {
 
     //상담사 만족도 평가
     private void evaluateSatisfaction(Customer customer) {
-        if(customerService.checkSatisfaction(customer.getCustomerId()) != null) {
+        if(customerService.checkSatisfaction(customer.getCustomerId()) == null) {
             String satisfaction = customerComment.getSatisfaction();
             customerService.evaluateSatisfaction(satisfaction, customer.getCustomerId());
             customerComment.thanksForEvaluation(customer.getName());
@@ -150,7 +152,8 @@ public class CustomerController {
                 null,
                 phoneNumber,
                 kindOfJob,
-                kindOfInsuranceId
+                kindOfInsuranceId,
+                null
         );
         connectSalesEmployee(interestCustomer);
     }
@@ -174,6 +177,7 @@ public class CustomerController {
             String phoneNumber = customerComment.getPhoneNumber();
             int kindOfJob = customerComment.getKindOfJob();
             int kindOfInsuranceId = customerComment.getKindOfInsuranceId();
+            String ssn = customerComment.getSsn();
 
             CustomerJoinRequest customer = new CustomerJoinRequest(
                     customerId,
@@ -185,7 +189,8 @@ public class CustomerController {
                     email,
                     phoneNumber,
                     kindOfJob,
-                    kindOfInsuranceId
+                    kindOfInsuranceId,
+                    ssn
             );
             customerService.join(customer);
             customerComment.notifyCompleteJoining(name);
@@ -225,19 +230,15 @@ public class CustomerController {
     }
 
     private void addCustomerInformation(Customer interestCustomer){
-        String name = customerComment.getName();
         String address = customerComment.getAddress();
         String detailAddress = customerComment.getDetailAddress();
         String zipcode = customerComment.getZipcode();
         String email = customerComment.getEmail();
-        int kindOfJob = customerComment.getKindOfJob();
         InterestCustomerJoinRequest customer = new InterestCustomerJoinRequest(
-                name,
                 address,
                 detailAddress,
                 zipcode,
-                email,
-                kindOfJob
+                email
         );
         customerService.addCustomerInformation(customer, interestCustomer.getCustomerId());
     }

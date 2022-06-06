@@ -20,6 +20,7 @@ public class CommonConstants {
     public static final String INCIDENT_DATE = "사고일자 (ex. 2022-01-01 ): ";
     public static final String CLAIM_CONTENTS = "청구 내용: ";
     public static final String CLAIM_MONEY = "청구 금액: ";
+    public static final String SSN = "주민등록번호: ";
     public static final String VERTICAL_BAR = "|";
     public static final String LINE_BREAK = "\n";
     public static final String END_LINE = "--------------------------------------------------";

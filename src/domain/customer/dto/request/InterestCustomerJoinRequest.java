@@ -9,30 +9,20 @@ import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsur
 
 public class InterestCustomerJoinRequest {
 
-    private String name;
     private String address;
     private String detailAddress;
     private String zipcode;
     private String email;
-    private KindOfJob kindOfJob;
 
     public InterestCustomerJoinRequest(
-                    String name,
                     String address,
                     String detailAddress,
                     String zipcode,
-                    String email,
-                    int kindOfJobId) {
-        this.name = name;
+                    String email) {
         this.address = address;
         this.detailAddress = detailAddress;
         this.zipcode = zipcode;
         this.email = email;
-        this.kindOfJob = getKindOfJobBy(kindOfJobId);
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getAddress() {
@@ -51,8 +41,5 @@ public class InterestCustomerJoinRequest {
         return email;
     }
 
-    public KindOfJob getKindOfJob() {
-        return kindOfJob;
-    }
 
 }

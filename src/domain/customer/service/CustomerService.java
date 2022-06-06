@@ -53,7 +53,7 @@ public class CustomerService {
     }
 
     public String checkSatisfaction(String customerId) {
-        if(customerRepository.checkSatisfaction(customerId) == null) new NoEvaluateSatisfactionException();
+        if(customerRepository.checkSatisfaction(customerId) != null) new NoEvaluateSatisfactionException();
         return customerRepository.checkSatisfaction(customerId);
     }
 
