@@ -237,7 +237,30 @@ public class CustomerController {
         return customerService.findJoinedInsurances(id);
     }
 
+    //관심자 상담사 연결
+    private void connectSalesEmployee() {
+        String customerId = customerComment.getId();
+        String password = customerComment.getPassword();
+        String name = customerComment.getName();
+        String phoneNumber = customerComment.getPhoneNumber();
+        int kindOfJob = customerComment.getKindOfJob();
+        int kindOfInsuranceId = customerComment.getKindOfInsuranceId();
 
+        Customer interestCustomer = new Customer(
+                customerId,
+                password,
+                name,
+                null,
+                null,
+                null,
+                null,
+                phoneNumber,
+                kindOfJob,
+                kindOfInsuranceId,
+                null
+        );
+        connectSalesEmployee(interestCustomer);
+    }
 
     // 상담사 연결
     private void connectSalesEmployee(Customer customer) {
@@ -245,7 +268,43 @@ public class CustomerController {
         customerComment.notifyCompleteConsultRequest(customer.getName());
     }
 
+    //회원가입(고객)
+    public void join() { // TODO 유효성 검사
+        String customerId = customerComment.getId();
+        if(customerService.checkIdExist(customerId) == 0) {
+            String password = customerComment.getPassword();
+            String name = customerComment.getName();
+            String address1 = customerComment.getAddress1();
+            String address2 = customerComment.getAddress2();
+            String address = address1+address2;
+            String detailAddress1 = customerComment.getDetailAddress1();
+            String detailAddress2 = customerComment.getDetailAddress2();
+            String detailAddress = detailAddress1 + detailAddress2;
+            String zipcode = customerComment.getZipcode();
+            String email = customerComment.getEmail();
+            String phoneNumber = customerComment.getPhoneNumber();
+            int kindOfJob = customerComment.getKindOfJob();
+            int kindOfInsuranceId = customerComment.getKindOfInsuranceId();
+            String ssn = customerComment.getSsn();
 
+            CustomerJoinRequest customer = new CustomerJoinRequest(
+                    customerId,
+                    password,
+                    name,
+                    address,
+                    detailAddress,
+                    zipcode,
+                    email,
+                    phoneNumber,
+                    kindOfJob,
+                    kindOfInsuranceId,
+                    ssn
+            );
+            customerService.join(customer);
+            customerComment.notifyCompleteJoining(name);
+            initial();
+        } else join(); // TODO 재귀 없애기
+    }
 
     //보험 가입
     private void joinInsurance(Customer customer){
