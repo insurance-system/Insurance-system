@@ -18,6 +18,9 @@ public class CommonConstants {
     public static final String CAR_NUMBER = "차량번호: ";
     public static final String INCIDENT_SITE = "사고장소: ";
     public static final String INCIDENT_DATE = "사고일자 (ex. 2022-01-01 ): ";
+    public static final String INCIDENT_NAME = "사고 이름(ex. 차대차, 차대인, 단독사고): ";
+    public static final String INCIDENT_PHONENUM = "통화 가능한 번호: ";
+
     public static final String CLAIM_CONTENTS = "청구 내용: ";
     public static final String CLAIM_MONEY = "청구 금액: ";
     public static final String SSN = "주민등록번호: ";

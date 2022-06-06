@@ -361,16 +361,16 @@ public class CustomerRepository {
             String sql =
                     "insert into Incident_handling (incidentId, customerId, incidentDate, incidentName, incidentPhoneNum, errorRate, carNumber, incidentSite, employeeId) values (?,?,?,?,?,?,?,?,?);";
 
-            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, incidentId);
             st.setString(2, incidentHandling.getCustomerId());
             st.setDate(3, incidentHandling.getIncidentDate());
-            st.setString(4, null);
-            st.setString(5, null);
+            st.setString(4, incidentHandling.getIncidentName());
+            st.setString(5,  incidentHandling.getIncidentPhoneNum());
             st.setString(6, null);
             st.setString(7, incidentHandling.getCarNumber());
-            st.setString(8, incidentHandling.getCarNumber());
+            st.setString(8, incidentHandling.getIncidentSite());
             st.setString(9, null);
             int result = st.executeUpdate();
             st.close();

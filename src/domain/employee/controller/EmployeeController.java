@@ -354,8 +354,3 @@ public class EmployeeController {
     }
     /* -------------------------------------------------- */
 }
-/*
-* 1. customer 회원가입시 Exception 처리하기
-* 2. 데이터 타입 Exception 처리
-* 3.
-* */
