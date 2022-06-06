@@ -66,7 +66,7 @@ public class CustomerController {
                 new CheckMenuNumberException();
                 break;
         }
-        enterInterest(customer); // TODO 재귀 없애기
+        enterInterest(customer);
     }
 
     //로그인 후 고객화면
@@ -83,56 +83,32 @@ public class CustomerController {
                 ArrayList<Insurance> insuranceArrayList = findJoinedInsurances(customer.getCustomerId());
                 if (!insuranceArrayList.isEmpty()) {
                     customerComment.joinedInsurances(insuranceArrayList);
-                    printJoinedInsurances(customer);
+                    afterFindJoinedInsurances(customer);
                 }
                 break;
             }
             case 4 : { //4. 보험급 납부내역
                 ArrayList<FindPayment> findPayment = findPaymentHistory(customer.getCustomerId());
                 if (findPayment != null) customerComment.findPaymentHistory(findPayment);
-                break;
             }
-            case 5 :
-                incidentHandling(customer);//5. 사고 처리 접수
-                break;
-            case 6 :
-                joinInsurance(customer); //6. 보험 가입하기
-                break;
-            case 7 :
-                claimInsurance(customer);//7. 보험금 청구하기
-                break;
-            case 8 :
-                initial();//8. 로그아웃
-                break;
-            default :
-                new CheckMenuNumberException();
-                break;
+            case 5 : incidentHandling(customer);//5. 사고 처리 접수
+            case 6 : joinInsurance(customer); //6. 보험 가입하기
+            case 7 : claimInsurance(customer);//7. 보험금 청구하기
+            case 8 : initial();//8. 로그아웃
+            default : new CheckMenuNumberException();
         }
-        enter(customer); // TODO 재귀 없애기
+        enter(customer);
     }
 
     //보험 목록 확인 후 화면
-    private void printJoinedInsurances(Customer customer) {
+    private void afterFindJoinedInsurances(Customer customer) {
         switch(customerComment.printJoinedInsurances()) {
-            case 1 :
-                cancelInsurance(customer);//1.보험 해지하기
-                break;
-            case 2 :
-                enter(customer);//2. 돌아가기
-                break;
-            default :
-                new CheckMenuNumberException();
-                break;
+            case 1 : {
+                String cancelInsuranceId = customerComment.getId();
+            }//1.보험 해지하기 //TODO
+            case 2 : enter(customer);//2. 돌아가기
+            default : new CheckMenuNumberException();
         }
-    }
-
-    //TODO
-    private void cancelInsurance(Customer customer) {
-        ArrayList<Insurance> insurances = customerService.getJoinedInsurances();//1.가입된 보험 목록 가져오기
-        //2. 고객한테 가입된 보험 목록 콘솔에 뿌려주고
-        String insuranceId = "보험ID";//3. 해지할 보험 선택하게 하고
-        customerService.cancelInsurance(insuranceId, customer.getCustomerId());//3.여기에 해당 하는 보험 아이디 넘겨주면
-        System.out.println("보험 해지 신청이 완료되었습니다.");
     }
 
     //로그인
@@ -140,17 +116,17 @@ public class CustomerController {
         String id = customerComment.getId();
         String pw = customerComment.getPassword();
         CustomerLoginRequest customerLoginRequest = new CustomerLoginRequest(id, pw);
-        Customer customer = customerService.login(customerLoginRequest);
-        if(customer != null){
-            if(customer.getAddress() == null) enterInterest(customer);
-            else enter(customer);
-        }
-        else login(); // TODO 재귀 없애기
+            Customer customer = customerService.login(customerLoginRequest);
+            if(customer != null){
+                if(customer.getAddress() == null) enterInterest(customer);
+                else enter(customer);
+            }
+            else login();
     }
 
     //상담사 만족도 평가
     private void evaluateSatisfaction(Customer customer) {
-        if(customerService.checkSatisfaction(customer.getCustomerId()) != null) {
+        if(customerService.checkSatisfaction(customer.getCustomerId()) == null) {
             String satisfaction = customerComment.getSatisfaction();
             customerService.evaluateSatisfaction(satisfaction, customer.getCustomerId());
             customerComment.thanksForEvaluation(customer.getName());
@@ -186,7 +162,8 @@ public class CustomerController {
                 null,
                 phoneNumber,
                 kindOfJob,
-                kindOfInsuranceId
+                kindOfInsuranceId,
+                null
         );
         connectSalesEmployee(interestCustomer);
     }
@@ -210,6 +187,7 @@ public class CustomerController {
             String phoneNumber = customerComment.getPhoneNumber();
             int kindOfJob = customerComment.getKindOfJob();
             int kindOfInsuranceId = customerComment.getKindOfInsuranceId();
+            String ssn = customerComment.getSsn();
 
             CustomerJoinRequest customer = new CustomerJoinRequest(
                     customerId,
@@ -221,7 +199,8 @@ public class CustomerController {
                     email,
                     phoneNumber,
                     kindOfJob,
-                    kindOfInsuranceId
+                    kindOfInsuranceId,
+                    ssn
             );
             customerService.join(customer);
             customerComment.notifyCompleteJoining(name);
@@ -261,19 +240,15 @@ public class CustomerController {
     }
 
     private void addCustomerInformation(Customer interestCustomer){
-        String name = customerComment.getName();
         String address = customerComment.getAddress();
         String detailAddress = customerComment.getDetailAddress();
         String zipcode = customerComment.getZipcode();
         String email = customerComment.getEmail();
-        int kindOfJob = customerComment.getKindOfJob();
         InterestCustomerJoinRequest customer = new InterestCustomerJoinRequest(
-                name,
                 address,
                 detailAddress,
                 zipcode,
-                email,
-                kindOfJob
+                email
         );
         customerService.addCustomerInformation(customer, interestCustomer.getCustomerId());
     }

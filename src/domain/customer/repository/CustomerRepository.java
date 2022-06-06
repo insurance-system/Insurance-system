@@ -48,8 +48,9 @@ public class CustomerRepository {
                             "detailAddress," +
                             "zipcode," +
                             "kindOfInsurance," +
-                            "kindOfJob)" +
-                            "values (?,?,?,?,?,?,?,?,?,?);";
+                            "kindOfJob," +
+                            "ssn)" +
+                            "values (?,?,?,?,?,?,?,?,?,?,?);";
 
             PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
 
@@ -63,6 +64,7 @@ public class CustomerRepository {
             st.setString(8, customer.getZipcode());
             st.setString(9, customer.getKindOfInsurance().name());
             st.setString(10, customer.getKindOfJob().name());
+            st.setString(11, customer.getSsn());
 
             int result = st.executeUpdate();
             st.close();
@@ -533,7 +535,7 @@ public class CustomerRepository {
         Statement statement = null;
         ResultSet rs = null;
         try {
-            String sql = "update Customer set name=? address=? detailAddress=? zipcode=? email=? kindOfJobId=? where customerId = ?;";
+            String sql = "update Customer set  address=?, detailAddress=?, zipcode=?, email=? where customerId = ?;";
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = null;
@@ -543,13 +545,12 @@ public class CustomerRepository {
                     Constants.PW);
             PreparedStatement st = conn.prepareStatement(sql);
 
-            st.setString(1, customer.getName());
-            st.setString(2, customer.getAddress());
-            st.setString(3, customer.getDetailAddress());
-            st.setString(4, customer.getZipcode());
-            st.setString(5, customer.getEmail());
-            st.setString(6, customer.getKindOfJob().name());
-            st.setString(7, customerId);
+            st.setString(1, customer.getAddress());
+            st.setString(2, customer.getDetailAddress());
+            st.setString(3, customer.getZipcode());
+            st.setString(4, customer.getEmail());
+            st.setString(5, customerId);
+
             int result = st.executeUpdate();
             st.close();
         } catch (SQLException e) {
@@ -587,7 +588,7 @@ public class CustomerRepository {
             rs = st.executeQuery();
             while(rs.next()) {
                 String lastId = rs.getString("contractId");
-                return lastId;
+                return Integer.toString(Integer.parseInt(lastId)+1);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
