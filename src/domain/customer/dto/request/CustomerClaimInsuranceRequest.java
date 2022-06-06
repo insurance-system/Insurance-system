@@ -1,6 +1,5 @@
 package domain.customer.dto.request;
 
-import java.sql.Date;
 
 public class CustomerClaimInsuranceRequest {
 

@@ -1,9 +1,20 @@
 package domain.customer.dto;
 
 public class UwRequest {
-    private String id;
+    private String contractId;
     private String customerId;
-    private String requestInsuranceId;
+    private String customerName;
+    private String expiredDate;
+    private String contractStatus;
+    private String paymentDate;
+
+    public String getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
+    }
 
     public String getCustomerId() {
         return customerId;
@@ -13,19 +24,37 @@ public class UwRequest {
         this.customerId = customerId;
     }
 
-    public String getRequestInsuranceId() {
-        return requestInsuranceId;
+    public String getExpiredDate() {
+        return expiredDate;
     }
 
-    public void setRequestInsuranceId(String requestInsuranceId) {
-        this.requestInsuranceId = requestInsuranceId;
+    public void setExpiredDate(String expiredDate) {
+        this.expiredDate = expiredDate;
     }
 
-    public String getId() {
-        return id;
+    public String getContractStatus() {
+        return contractStatus;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setContractStatus(String contractStatus) {
+        this.contractStatus = contractStatus;
     }
+
+    public String getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(String paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+
 }
