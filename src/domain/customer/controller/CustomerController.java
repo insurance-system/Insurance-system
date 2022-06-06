@@ -79,6 +79,7 @@ public class CustomerController {
                     break;
                 case 3: //3. 보험 가입하기
                     if(customerService.checkConnection(customer)!=null) joinInsurance(customer);
+                    System.out.println("보험 가입 완료");
                     break;
                 case 4: //4. 로그아웃
                     break Exit;
@@ -309,13 +310,15 @@ public class CustomerController {
 
     //보험금 청구하기
     private void claimInsurance(Customer customer) {
-        if(customerService.checkJoinLifeInsurance(customer)!=null) {
+        String contractId = customerService.checkJoinLifeInsurance(customer);
+        if(contractId!=null) {
             CustomerClaimInsuranceRequest claimInsurance = null;
             try {
                 claimInsurance = new CustomerClaimInsuranceRequest(
                         customer.getCustomerId(),
                         customerComment.getClaimContent(),
-                        customerComment.getClaimCost()
+                        customerComment.getClaimCost(),
+                        contractId
                 );
             } catch (Exception e) {
                 e.printStackTrace();
