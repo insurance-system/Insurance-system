@@ -14,7 +14,7 @@ public class CommonConstants {
     public static final String ENTER_ZIPCODE = "우편번호 입력: ";
     public static final String ENTER_EMAIL = "이메일 입력: ";
     public static final String ENTER_PHONE = "핸드폰 번호 입력: ";
-    public static final String ACCOUNT = "계좌번호: ";
+    public static final String ACCOUNT = "계좌번호: ('-을 넣어주세요')";
     public static final String CAR_NUMBER = "차량번호: ";
     public static final String INCIDENT_SITE = "사고장소: ";
     public static final String INCIDENT_DATE = "사고일자 (ex. 2022-01-01 ): ";
