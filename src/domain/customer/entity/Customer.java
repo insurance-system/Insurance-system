@@ -19,6 +19,8 @@ public class Customer{
     private KindOfInsurance kindOfInsurance;
     private KindOfJob kindOfJob;
     private String ssn;
+    private String healthInformationId;
+
 
     public Customer() {}
 
@@ -56,7 +58,8 @@ public class Customer{
                     String phoneNumber,
                     KindOfJob kindOfJobId,
                     KindOfInsurance kindOfInsuranceId,
-                    String ssn){
+                    String ssn,
+                    String healthInformationId){
         this.customerId = customerId;
         this.password = password;
         this.name = name;
@@ -68,6 +71,11 @@ public class Customer{
         this.phoneNumber = phoneNumber;
         this.kindOfJob = kindOfJobId;
         this.ssn = ssn;
+        this.healthInformationId = healthInformationId;
+    }
+
+    public String getHealthInformationId() {
+        return healthInformationId;
     }
 
     public String getCustomerId() {

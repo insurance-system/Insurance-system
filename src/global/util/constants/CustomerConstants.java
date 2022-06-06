@@ -50,6 +50,16 @@ public class CustomerConstants extends CommonConstants {
     public static final String JOB_3 = "3. 주부";
     public static final String JOB_4 = "4. 위 중 해당사항 없음";
 
+    public static final String SMOKE_CONDITION_A = "하루 기준 담배 3개비는 이하, 10개비 미만은    A";
+    public static final String SMOKE_CONDITION_B = "하루 기준 담배 10개비는 이상, 20개비 이하는   B";
+    public static final String SMOKE_CONDITION_C = "하루 기준 담배 20개비 이상은               C";
 
+    public static final String ALCOHOL_CONDITION_A = "일주일 기준 소주 0.5병 이하, 1병 미만  A";
+    public static final String ALCOHOL_CONDITION_B = "일주일 기준 소주 1병 이하, 2병 미만    B";
+    public static final String ALCOHOL_CONDITION_C = "일주일 기준 소주 2병 이상은           C";
+
+    public static final String CANCER_CONDITION_A = "현재 암과 관련된 질병이 없다면     A";
+    public static final String CANCER_CONDITION_B = "현재 암 1기에 해당한다면         B";
+    public static final String CANCER_CONDITION_C = "현재 암 1기 이상과 투병중인 상태   C";
 
 }
