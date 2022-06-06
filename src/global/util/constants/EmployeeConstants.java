@@ -2,7 +2,7 @@ package global.util.constants;
 
 public class EmployeeConstants extends CommonConstants{
 
-    public static final String HOME_START = "\n\n------------------- 🏠 Home 🏠 -------------------";
+    public static final String HOME_START = "\n\n------------------- 🏠 Employee Home 🏠 -------------------";
     public static final String HOME_SALES_EMP =" •• 영업 활동 팀 •• ";
     public static final String HOME_SALES_EMP_ ="11. 상담 대기 신규 고객 명단 조회 \n12. 영업 교육 수강";
     public static final String HOME_SALES_EDU_EMP =" •• 영업 교육 팀 •• ";
@@ -92,8 +92,8 @@ public class EmployeeConstants extends CommonConstants{
     public static final String CONSULT_COMPLETE = "상담 완료";
     public static final String CONSULT_START = "상담 진행";
 
-    public static final String PHONE_NUMBER = " 전화번호: ";
-    public static final String NUMBER = " 번호: ";
+    public static final String PHONE_NUMBER = " 전화번호:";
+    public static final String NUMBER = " 번호:";
     public static final String NAME = " 이름: ";
     public static final String KIND_OF_JOB = " 직군: ";
     public static final String ADDRESS = " 주소: ";

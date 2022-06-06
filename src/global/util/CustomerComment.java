@@ -35,6 +35,7 @@ public class CustomerComment extends CommonComment{
     }
 
     public int customerInitial(){
+        System.out.println(INITIAL_LINE);
         System.out.println(INITIAL_MSG);
         System.out.println(INITIAL_MENU);
         System.out.print(SELECT_NUM);

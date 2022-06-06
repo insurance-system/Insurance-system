@@ -8,8 +8,8 @@ public enum EmployeeExceptionList {
     NO_CUSTOMER("E0004", "찾으시는 고객 ID를 잘못입력하셨거나 없는 고객 ID입니다."),
     NO_CONSULT_CUSTOMER("E0005","상담 대기 고객이 없습니다."),
     NO_INCIDENT("E0006","담당자 미배정 사건이 없습니다."),
-    NO_REWARD("E0007","보상금 심사 대상이 없습니다.");
-
+    NO_REWARD("E0007","보상금 심사 대상이 없습니다."),
+    MENU_HAVE_TO_NUMBER("E0008","메뉴 선택은 숫자만 입력 가능합니다.");
     private String ErrorCode;
     private String Message;
 

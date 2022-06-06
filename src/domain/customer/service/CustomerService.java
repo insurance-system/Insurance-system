@@ -49,7 +49,7 @@ public class CustomerService {
     }
 
     public void connectSalesEmployee(Customer interestCustomer) {
-        customerRepository.joinInterestCustomer(interestCustomer);
+//        customerRepository.joinInterestCustomer(interestCustomer);
         customerRepository.connectSalesEmployee(interestCustomer);
     }
 
