@@ -1,6 +1,7 @@
 package global.util;
 
 import domain.customer.entity.FindPayment;
+import domain.employee.exception.excution.CheckMenuNumberException;
 import domain.insurance.entity.Insurance;
 
 import java.sql.Date;
@@ -34,10 +35,11 @@ public class CustomerComment extends CommonComment{
     }
 
     public int customerInitial(){
+        System.out.println(INITIAL_LINE);
         System.out.println(INITIAL_MSG);
         System.out.println(INITIAL_MENU);
         System.out.print(SELECT_NUM);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public int afterLogin() {
@@ -50,14 +52,14 @@ public class CustomerComment extends CommonComment{
         System.out.println(INITIAL_MENU_7);
         System.out.println(INITIAL_MENU_8);
         System.out.println(SELECT_NUM);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public int printJoinedInsurances() {
         System.out.println(JOINED_INSURANCE_MENU_1);
         System.out.println(JOINED_INSURANCE_MENU_2);
         System.out.print(SELECT_NUM);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public int afterLoginInterest() {
@@ -65,7 +67,7 @@ public class CustomerComment extends CommonComment{
         System.out.println(AFTER_LOGIN_INTEREST_MENU_2);
         System.out.println(AFTER_LOGIN_INTEREST_MENU_3);
         System.out.println(AFTER_LOGIN_INTEREST_MENU_4);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public void findPaymentHistory(ArrayList<FindPayment> findPayment) {
@@ -98,54 +100,75 @@ public class CustomerComment extends CommonComment{
         }
         System.out.println(END_LINE);
         System.out.print(SELECT_NUMBER_TO_JOIN);
-        return insuranceArrayList.get(scanner.nextInt()).getInsuranceId();
+        return insuranceArrayList.get(vaildateInt()).getInsuranceId();
     }
 
     public int checkPayer() {
         System.out.println(CHECK_PAYER);
         System.out.print(SELECT_NUM);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public int checkBeneficiary() {
         System.out.println(CHECK_BENEFICIARY);
         System.out.print(SELECT_NUM);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public String getName() {
-        System.out.println(ENTER_NAME);
-        return scanner.next();
+        System.out.print(ENTER_NAME);
+        return validateString();
     }
 
     public int getKindOfInsuranceId() {
-        System.out.println(ASK_INSURANCE_CATEGORY);
-        return scanner.nextInt();
+        System.out.print(ASK_INSURANCE_CATEGORY);
+        return vaildateInt();
     }
 
     public String getAddress() {
-        System.out.println(ENTER_ADDRESS);
+        System.out.print(ENTER_ADDRESS);
+        return scanner.next();
+    }
+
+
+    public String getAddress1() {
+        System.out.print("주소입력 (OO시): ");
+        return scanner.next();
+    }
+
+    public String getAddress2() {
+        System.out.print("주소입력 (OO구, OO동):");
+        return scanner.next();
+    }
+
+    public String getDetailAddress2() {
+        System.out.print("상세 주소입력 (OO호):");
+        return scanner.next();
+    }
+
+    public String getDetailAddress1() {
+        System.out.print("상세 주소입력 (OO로):");
         return scanner.next();
     }
 
     public String getDetailAddress() {
-        System.out.println(ENTER_DETAIL_ADDRESS);
-        return scanner.next();
+        System.out.print(ENTER_DETAIL_ADDRESS);
+        return validateString();
     }
 
     public String getZipcode() {
-        System.out.println(ENTER_ZIPCODE);
+        System.out.print(ENTER_ZIPCODE);
         return scanner.next();
     }
 
     public String getEmail() {
-        System.out.println(ENTER_EMAIL);
-        return scanner.next();
+        System.out.print(ENTER_EMAIL);
+        return validateString();
     }
 
     public String getPhoneNumber() {
         System.out.println(ENTER_PHONE);
-        return scanner.next();
+        return validateString();
     }
 
     public String getSatisfaction() {
@@ -159,7 +182,7 @@ public class CustomerComment extends CommonComment{
         System.out.println(JOB_3);
         System.out.println(JOB_4);
         System.out.print(SELECT_NUM);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public String getAccount() {
@@ -190,11 +213,37 @@ public class CustomerComment extends CommonComment{
 
     public int getClaimCost() {
         System.out.println(CLAIM_MONEY);
-        return scanner.nextInt();
+        return vaildateInt();
     }
 
     public String getSsn() {
         System.out.println(SSN);
         return scanner.next();
     }
+
+    public int vaildateInt(){
+        while(true){
+            String next = scanner.next();
+            boolean isNumeric =  next.matches("[+-]?\\d*(\\.\\d+)?");
+            if(isNumeric){
+                return Integer.parseInt(next);
+            }else{
+                new CheckMenuNumberException();
+            }
+        }
+    }
+
+    public String validateString(){
+        while(true){
+            String next = scanner.next();
+            boolean isNumeric =  next.matches("[+-]?\\d*(\\.\\d+)?");
+            if(!isNumeric){
+                return next;
+            }else{
+                new CheckMenuNumberException();
+            }
+        }
+    }
+
+
 }

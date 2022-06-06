@@ -1,13 +1,6 @@
 package domain.customer.dto.request;
 
-import domain.customer.entity.Customer;
-import domain.customer.enumeration.KindOfJob;
-import domain.insurance.entity.enumeration.KindOfInsurance;
-
 import java.sql.Date;
-
-import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
-import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceBy;
 
 public class CustomerHandleIncidentRequest {
 

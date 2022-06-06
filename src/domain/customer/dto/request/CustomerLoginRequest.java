@@ -1,6 +1,5 @@
 package domain.customer.dto.request;
 
-import domain.customer.entity.Customer;
 
 public class CustomerLoginRequest {
     String id;

@@ -20,7 +20,6 @@ public class CustomerService {
     }
 
     public boolean join(CustomerJoinRequest joinReq){
-        //TODO 아이디, 패스워드, 주소 등 유효성 검사
         Customer customer = CustomerJoinRequest.toEntity(joinReq);
         customerRepository.insert(customer);
         return true;
@@ -49,7 +48,7 @@ public class CustomerService {
     }
 
     public void connectSalesEmployee(Customer interestCustomer) {
-        customerRepository.joinInterestCustomer(interestCustomer);
+//        customerRepository.joinInterestCustomer(interestCustomer);
         customerRepository.connectSalesEmployee(interestCustomer);
     }
 

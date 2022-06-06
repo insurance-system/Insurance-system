@@ -3,12 +3,13 @@ package domain.employee.controller;
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.UwRequest;
+import domain.customer.dto.UwResponse;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.*;
 import domain.employee.service.*;
 import domain.insurance.entity.InsuranceCondition;
-import global.dao.Lecture;
+import domain.employee.dto.Lecture;
 import global.util.EmployeeComment;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class EmployeeController {
     private final SalesEmployeeService salesEmployeeService;
     private final SalesEduEmployeeService salesEduEmployeeService;
     private final ContractGuideEmployeeService contractGuideEmployeeService;
-    private final UWEmployeeService UWEmployeeService;
+    private final UWEmployeeService uwEmployeeService;
     private final ContractManageEmployeeService contractManageEmployeeService;
     private final InsuranceDevelopmentEmployeeService insuranceDevelopmentEmployeeService;
     private final CustomerInformationManageService customerInformationManageService;
@@ -37,7 +38,7 @@ public class EmployeeController {
         this.salesEmployeeService = new SalesEmployeeService();
         this.salesEduEmployeeService = new SalesEduEmployeeService();
         this.contractGuideEmployeeService = new ContractGuideEmployeeService();
-        this.UWEmployeeService = new UWEmployeeService();
+        this.uwEmployeeService = new UWEmployeeService();
         this.contractManageEmployeeService = new ContractManageEmployeeService();
         this.insuranceDevelopmentEmployeeService = new InsuranceDevelopmentEmployeeService();
         this.customerInformationManageService = new CustomerInformationManageService();
@@ -71,17 +72,11 @@ public class EmployeeController {
                     case 11:
                         doSalesEmployeeService(employee);//상담 대기 신규 고객 명단 조회
                         break;
-                    case 12:
-                        registerSalesEdu(employee);//영업 교육 수강
-                        break;
                     case 21:
                         uploadEducationLecture(employee);//영업 교육 강의 업로드
                         break;
                     case 22:
                         findLectureList(employee);//강의 자료 리스트 출력
-                        break;
-                    case 23:
-                        findLectureRegistrationList(employee);
                         break;
                     case 31:
                         notifyContractStatus(employee);//보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
@@ -137,22 +132,16 @@ public class EmployeeController {
 
     private void doSalesEmployeeService(Employee employee) {
         if(!isAccessableEmployee(employee, DEPT_SALES)) return;
-        ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
-            if (!arrayList.isEmpty()){
+        ArrayList<EmpCustomer> empCustomers = salesEmployeeService.customerConsult(employee);
+            if (!empCustomers.isEmpty()){
                 employeeComment.startConsult();
-                salesEmployeeService.executeConsult(employee, arrayList.get(employeeComment.customerConsultList(arrayList)));//TODO 9를 누르면 Index 9 out of bounds for length 3
+                salesEmployeeService.executeConsult(employee, empCustomers.get(employeeComment.customerConsultList(empCustomers)));
                 employeeComment.completeConsult();
             }else{
                 new NoConsultCustomerException();
             }
         }
 
-
-    private void registerSalesEdu(Employee employee) {
-        if(!isAccessableEmployee(employee, DEPT_SALES)) return;
-        System.out.println("영업교육 수강하기"); //TODO
-
-    }
     /* ---------------------------------------------------------------------- */
 
 
@@ -172,10 +161,6 @@ public class EmployeeController {
         for (Lecture lecture : salesEduEmployeeService.findLectureList()) System.out.println(lecture);
     }
 
-    private void findLectureRegistrationList(Employee employee) {
-        if(!isAccessableEmployee(employee, DEPT_EDU)) return;
-        System.out.println("강의 수강 명단 확인하기");//TODO
-    }
     /* -------------------------------------------------------------------------------- */
 
 
@@ -234,31 +219,45 @@ public class EmployeeController {
     /* -------------------------------------- U/W ------------------------------------- */
     private void startUW(Employee employee) {
         if(!isAccessableEmployee(employee, DEPT_UW)) return;
-        employeeComment.getUwCustomerList();
+        employeeComment.askUwCustomerList();
         Exit:
         while(true){
             switch(employeeComment.yesOrNo()){
                 case 1:
                     getUwCustomerList();
-                    break;
+                    break Exit;
                 case 2:
                     break Exit;
             }
         }
     }
 
-    private void getUwCustomerList() {
-        ArrayList<UwRequest> uwRequests = UWEmployeeService.getUwCustomerList();
-        for (UwRequest acceptanceReviewCustomer : uwRequests)
-            System.out.println(acceptanceReviewCustomer);
-        String customerId = employeeComment.getCustomerId();
-        UwRequest uwRequest =
-                uwRequests.stream()
-                        .filter((aar) -> aar.getCustomerId().equals(customerId))
-                        .findFirst()
-                        .orElseThrow(NoEmployeeException::new);
-
-        UWEmployeeService.getUwDetail(uwRequest);
+    private void getUwCustomerList(){
+        ArrayList<UwRequest> uwRequests = uwEmployeeService.getUwCustomerList();
+        UwRequest uwRequest = null;
+        if(!uwRequests.isEmpty()) uwRequest = employeeComment.selectUwList(uwRequests);
+        else System.out.println("현재 인수 심사를 진행할 고객이 없습니다.");
+        if(uwRequest!=null){
+            UwResponse uwResponse = uwEmployeeService.getUwInformation(uwRequest.getContractId());
+            System.out.println(uwResponse);
+            System.out.println("해당 고객의 보험 가입 요청을 허가 하시겠습니까?");
+            switch(employeeComment.askPermit()){
+                case 1:
+                    uwEmployeeService.activateContract(uwResponse.getContractId());
+                    System.out.println("보험 가입 요청을 허가했습니다.");
+                    break;
+                case 2:
+                    System.out.println("보험 가입 요청을 불허합니다.");
+                    uwEmployeeService.failContract(uwResponse.getContractId());//non pass
+                    break;
+                case 3:
+                    System.out.println("보험 가입 요청을 보류합니다.");
+                    break;
+                default:
+                    new CheckMenuNumberException();
+                    break;
+            }
+        }
     }
     /* -------------------------------------------------------------------------------- */
 
@@ -355,3 +354,8 @@ public class EmployeeController {
     }
     /* -------------------------------------------------- */
 }
+/*
+* 1. customer 회원가입시 Exception 처리하기
+* 2. 데이터 타입 Exception 처리
+* 3.
+* */
