@@ -192,4 +192,9 @@ public class CustomerComment extends CommonComment{
         System.out.println(CLAIM_MONEY);
         return scanner.nextInt();
     }
+
+    public String getSsn() {
+        System.out.println(SSN);
+        return scanner.next();
+    }
 }

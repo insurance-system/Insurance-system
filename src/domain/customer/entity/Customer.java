@@ -18,6 +18,7 @@ public class Customer{
     private String phoneNumber;
     private KindOfInsurance kindOfInsurance;
     private KindOfJob kindOfJob;
+    private String ssn;
 
     public Customer() {}
 
@@ -30,18 +31,19 @@ public class Customer{
                     String email,
                     String phoneNumber,
                     int kindOfJobId,
-                    int kindOfInsuranceId){
+                    int kindOfInsuranceId,
+                    String ssn){
         this.customerId = customerId;
         this.password = password;
         this.name = name;
         this.kindOfInsurance = getKindOfInsuranceBy(kindOfInsuranceId);
-
         this.address = address;
         this.detailAddress = detailAddress;
         this.zipcode = zipcode;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.kindOfJob = getKindOfJobBy(kindOfJobId);
+        this.ssn = ssn;
     }
 
     public Customer(String customerId,
@@ -53,7 +55,8 @@ public class Customer{
                     String email,
                     String phoneNumber,
                     KindOfJob kindOfJobId,
-                    KindOfInsurance kindOfInsuranceId){
+                    KindOfInsurance kindOfInsuranceId,
+                    String ssn){
         this.customerId = customerId;
         this.password = password;
         this.name = name;
@@ -64,6 +67,7 @@ public class Customer{
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.kindOfJob = kindOfJobId;
+        this.ssn = ssn;
     }
 
     public String getCustomerId() {
@@ -144,4 +148,8 @@ public class Customer{
     public void setKindOfJob(KindOfJob kindOfJob) {
         this.kindOfJob = kindOfJob;
     }
+
+    public String getSsn() {return ssn;}
+
+    public void setSsn(String ssn) {this.ssn = ssn;}
 }
