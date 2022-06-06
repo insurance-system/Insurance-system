@@ -53,8 +53,8 @@ public class CustomerRepository {
                             "zipcode," +
                             "kindOfInsurance," +
                             "kindOfJob," +
-                            "ssn)" +
-                            "values (?,?,?,?,?,?,?,?,?,?,?);";
+                            "ssn, healthInformationId)" +
+                            "values (?,?,?,?,?,?,?,?,?,?,?,?);";
 
             PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
@@ -69,6 +69,8 @@ public class CustomerRepository {
             st.setString(9, customer.getKindOfInsurance().name());
             st.setString(10, customer.getKindOfJob().name());
             st.setString(11, customer.getSsn());
+            st.setString(12, customer.getHealthInformationId());
+
 
             int result = st.executeUpdate();
             st.close();
@@ -541,6 +543,29 @@ public class CustomerRepository {
             while(rs.next()) {
                 String lastId = rs.getString("contractId");
                 return Integer.toString(Integer.parseInt(lastId)+1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getHealthInfo(String cancer, String smoke, String alcohol) {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT healthInformationId " +
+                    "FROM HealthInformation " +
+                    "WHERE cancer=? and smoke=? and alcohol=?";
+
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, cancer);
+            st.setString(2, smoke);
+            st.setString(3, alcohol);
+
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String healthInformationId = rs.getString("healthInformationId");
+                return healthInformationId;
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

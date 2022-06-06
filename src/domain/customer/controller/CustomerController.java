@@ -229,6 +229,12 @@ public class CustomerController {
             int kindOfInsuranceId = customerComment.getKindOfInsuranceId();
             String ssn = customerComment.getSsn();
 
+            String cancer = customerComment.getCancer();
+            String smoke = customerComment.getSmoke();
+            String alcohol = customerComment.getAlcohol();
+
+
+
             CustomerJoinRequest customer = new CustomerJoinRequest(
                     customerId,
                     password,
@@ -240,7 +246,8 @@ public class CustomerController {
                     phoneNumber,
                     kindOfJob,
                     kindOfInsuranceId,
-                    ssn
+                    ssn,
+                    customerService.getHealthInfo(cancer,smoke,alcohol)
             );
             customerService.join(customer);
             customerComment.notifyCompleteJoining(name);
