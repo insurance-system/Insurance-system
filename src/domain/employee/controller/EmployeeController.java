@@ -249,6 +249,11 @@ public class EmployeeController {
 
     private void getUwCustomerList() {
         ArrayList<UwRequest> uwRequests = UWEmployeeService.getUwCustomerList();
+        if(!uwRequests.isEmpty()){
+            this.employeeComment.selectUwList(uwRequests);
+        }else {
+            //TODO 예외처리
+        }
         for (UwRequest acceptanceReviewCustomer : uwRequests)
             System.out.println(acceptanceReviewCustomer);
         String customerId = employeeComment.getCustomerId();

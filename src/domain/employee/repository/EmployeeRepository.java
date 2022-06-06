@@ -457,7 +457,10 @@ public class EmployeeRepository {
     public ArrayList<UwRequest> getUwCustomerList() {
         ArrayList<UwRequest> uwRequestLists = new ArrayList<>();
 
-        String sql = "select * from AcceptanceReviewRequest;";
+        String sql = "select contractId, Contract.customerId, Customer.name ,expiredDate, contractStatus, paymentDate " +
+                "from Contract, Customer " +
+                "where Contract.customerId = Customer.customerId and " +
+                "      contractStatus is null;";
         try {
             PreparedStatement st = this.connection.prepareStatement(sql);
             ResultSet rs = null;
@@ -465,9 +468,12 @@ public class EmployeeRepository {
 
             while (rs.next()){
                 UwRequest uwRequest = new UwRequest();
-                uwRequest.setId(rs.getString("acceptanceReviewRequestId"));
+                uwRequest.setContractId(rs.getString("contractId"));
                 uwRequest.setCustomerId(rs.getString("customerId"));
-                uwRequest.setRequestInsuranceId(rs.getString("insuranceId"));
+                uwRequest.setCustomerName(rs.getString("name"));
+                uwRequest.setExpiredDate(rs.getString("expiredDate"));
+                uwRequest.setContractStatus(rs.getString("contractStatus"));
+                uwRequest.setPaymentDate(rs.getString("paymentDate"));
                 uwRequestLists.add(uwRequest);
             }
         }catch(SQLException e){
@@ -757,8 +763,8 @@ public class EmployeeRepository {
 
     public void makeInsuranceContract(Contract contract) {
         try {
-            String sql = "INSERT INTO Contract (contractId, customerId, chargeOfEmployeeId, insuranceId, expiredDate, contractStatus, paymentDate)" +
-                    "        VALUE (?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO Contract (contractId, customerId, chargeOfEmployeeId, insuranceId, expiredDate, contractStatus, paymentDate, UWReview)" +
+                    "        VALUE (?,?,?,?,?,?,?,?)";
             PreparedStatement st = this.connection.prepareStatement(sql);
             st.setString(1, contract.getContractId());
             st.setString(2, contract.getCustomerId());
@@ -767,6 +773,7 @@ public class EmployeeRepository {
             st.setString(5,contract.getExpiredDate().toString());
             st.setString(6,contract.getContractStatus());
             st.setString(7,contract.getPaymentDate().toString());
+            st.setString(8,null);
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
