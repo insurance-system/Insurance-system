@@ -83,7 +83,7 @@ public class CustomerController {
                 ArrayList<Insurance> insuranceArrayList = findJoinedInsurances(customer.getCustomerId());
                 if (!insuranceArrayList.isEmpty()) {
                     customerComment.joinedInsurances(insuranceArrayList);
-                    printJoinedInsurances(customer);
+                    afterFindJoinedInsurances(customer);
                 }
                 break;
             }
@@ -102,7 +102,7 @@ public class CustomerController {
 
     //보험 목록 확인 후 화면
     private void afterFindJoinedInsurances(Customer customer) {
-        switch(customerComment.afterFindJoinedInsurances()) {
+        switch(customerComment.printJoinedInsurances()) {
             case 1 : {
                 String cancelInsuranceId = customerComment.getId();
             }//1.보험 해지하기 //TODO
