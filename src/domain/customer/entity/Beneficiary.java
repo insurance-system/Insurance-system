@@ -1,8 +1,8 @@
 package domain.customer.entity;
 
 public class Beneficiary {
-    private int beneficiaryId;
-    private int customerId;
-    private int contractId;
+    private String beneficiaryId;
+    private String customerId;
+    private String contractId;
     private String account;
 }

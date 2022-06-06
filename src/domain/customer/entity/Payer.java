@@ -1,9 +1,9 @@
 package domain.customer.entity;
 
 public class Payer {
-    private int payerId;
-    private int customerId;
-    private int contractId;
+    private String payerId;
+    private String customerId;
+    private String contractId;
     private String account; //TODO 이거 Payer가 납부해야하는 account? right?
 
     @Override
