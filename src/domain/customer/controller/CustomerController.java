@@ -332,11 +332,14 @@ public class CustomerController {
                         customer.getCustomerId(),
                         customerComment.getIncidentDate(),
                         customerComment.getCarNumber(),
-                        customerComment.getIncidentSite()
+                        customerComment.getIncidentSite(),
+                        customerComment.getIncidentPhoneNum(),
+                        customerComment.getIncidentName()
                 );
             } catch (Exception e) {
                 e.printStackTrace();
             }
             customerService.handleIncident(incidentHandling);
+            System.out.println("사고처리가 완료 되었습니다. \n담당자를 배정 후 연락드리겠습니다.");
     }
 }

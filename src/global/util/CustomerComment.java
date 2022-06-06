@@ -267,5 +267,13 @@ public class CustomerComment extends CommonComment{
     }
 
 
+    public String getIncidentName() {
+        System.out.println(INCIDENT_NAME);
+        return validateString();
+    }
 
+    public String getIncidentPhoneNum() {
+        System.out.println(INCIDENT_PHONENUM);
+        return validateString();
+    }
 }

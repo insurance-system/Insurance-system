@@ -8,16 +8,22 @@ public class CustomerHandleIncidentRequest {
     private Date incidentDate;
     private String carNumber;
     private String incidentSite;
+    private String incidentPhoneNum;
+    private String incidentName;
 
     public CustomerHandleIncidentRequest(
                     String customerId,
                     Date incidentDate,
                     String carNumber,
-                    String incidentSite) {
+                    String incidentSite,
+                    String incidentPhoneNum,
+                    String incidentName) {
         this.customerId = customerId;
         this.incidentDate = incidentDate;
         this.carNumber = carNumber;
         this.incidentSite = incidentSite;
+        this.incidentPhoneNum = incidentPhoneNum;
+        this.incidentName = incidentName;
     }
 
     public String getCustomerId() {
@@ -30,6 +36,14 @@ public class CustomerHandleIncidentRequest {
 
     public Date getIncidentDate() {
         return incidentDate;
+    }
+
+    public String getIncidentPhoneNum() {
+        return incidentPhoneNum;
+    }
+
+    public String getIncidentName() {
+        return incidentName;
     }
 
     public void setIncidentDate(Date incidentDate) {
