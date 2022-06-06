@@ -5,29 +5,33 @@ import domain.customer.dto.request.CustomerHandleIncidentRequest;
 import domain.customer.dto.request.InterestCustomerJoinRequest;
 import domain.customer.entity.Customer;
 import domain.customer.entity.FindPayment;
-import domain.customer.exception.excution.*;
+import domain.customer.exception.excution.NoCustomerException;
 import domain.insurance.entity.Insurance;
-import global.util.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 import static domain.customer.enumeration.KindOfJob.getKindOfJobBy;
 import static domain.insurance.entity.enumeration.KindOfInsurance.getKindOfInsuranceNByName;
+import static global.util.constants.DataBaseConstants.*;
 
 public class CustomerRepository {
 
-    private Connection connection;
+    private final Connection connection;
+
+    public CustomerRepository() {
+        this.connection = sqlConnection();
+    }
 
     private Connection sqlConnection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            return conn;
+            Class.forName(DB_DRIVER);
+            Connection connection = null;
+            connection = DriverManager.getConnection(
+                    URL,
+                    USER,
+                    PW);
+            return connection;
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -52,7 +56,7 @@ public class CustomerRepository {
                             "ssn)" +
                             "values (?,?,?,?,?,?,?,?,?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, customer.getCustomerId());
             st.setString(2, customer.getPassword());
@@ -78,7 +82,7 @@ public class CustomerRepository {
         ResultSet rs = null;
         try {
             String sql = "select * from Customer where customerId = ? and password = ?;";
-            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, customerId);
             st.setString(2, password);
@@ -113,7 +117,7 @@ public class CustomerRepository {
             String sql = "select Insurance.insuranceId, Insurance.insuranceConditionId, Insurance.kindOfInsurance, insuranceName, fee, insuranceStatus " +
                     "from Insurance, Customer, Contract " +
                     "where Customer.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId and Customer.customerId = ?";
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, id);
             rs = st.executeQuery();
@@ -145,7 +149,7 @@ public class CustomerRepository {
                     "where C.customerId = Ct.customerId and Ct.contractId = Ph.contractId and P.payerId = Ph.payerId " +
                     "and Ct.insuranceId = I.insuranceId and C.customerId = ?";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, id);
             rs = st.executeQuery();
@@ -172,58 +176,13 @@ public class CustomerRepository {
         try {
             String sql = "update Emp_Cus set satisfaction = ? where customerId = ?;";
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            PreparedStatement st = conn.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, satisfaction);
             st.setString(2, id);
             int result = st.executeUpdate();
             st.close();
 //            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void joinInterestCustomer(Customer interestCustomer) {
-        ResultSet rs = null;
-        try {
-            String sql =
-                    "insert into Customer (" +
-                            "customerId," +
-                            "password," +
-                            "name," +
-                            "email," +
-                            "phoneNumber," +
-                            "address," +
-                            "detailAddress," +
-                            "zipcode," +
-                            "kindOfInsurance," +
-                            "kindOfJob)" +
-                            "values (?,?,?,?,?,?,?,?,?,?);";
-
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
-
-            st.setString(1, interestCustomer.getCustomerId());
-            st.setString(2, interestCustomer.getPassword());
-            st.setString(3, interestCustomer.getName());
-            st.setString(4, interestCustomer.getEmail());
-            st.setString(5, interestCustomer.getPhoneNumber());
-            st.setString(6, interestCustomer.getAddress());
-            st.setString(7, interestCustomer.getDetailAddress());
-            st.setString(8, interestCustomer.getZipcode());
-            st.setString(9, interestCustomer.getKindOfInsurance().name());
-            st.setString(10, interestCustomer.getKindOfJob().name());
-
-            int result = st.executeUpdate();
-            st.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -236,7 +195,7 @@ public class CustomerRepository {
             String sql =
                     "insert into Emp_Cus (emp_CusId,employeeId,customerId,satisfaction) values (?,?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, emp_CusId);
             st.setString(2, null);
@@ -255,7 +214,7 @@ public class CustomerRepository {
         try {
             String sql = "select satisfaction from Emp_Cus where customerId=?;";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, id);
             rs = st.executeQuery();
@@ -273,7 +232,7 @@ public class CustomerRepository {
         ResultSet rs = null;
         try {
             String sql = "select * from Insurance where kindOfInsurance=?";
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, customer.getKindOfInsurance().name());
             rs = st.executeQuery();
@@ -303,7 +262,7 @@ public class CustomerRepository {
             String sql =
                     "insert into Payer (payerId, customerId, account) values (?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, payerId);
             st.setString(2, customer.getCustomerId());
@@ -320,7 +279,7 @@ public class CustomerRepository {
         try {
             String sql = "select payerId from Payer where customerId=?;";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, customer.getCustomerId());
             rs = st.executeQuery();
@@ -339,7 +298,7 @@ public class CustomerRepository {
         try {
             String sql = "select beneficiaryId from Beneficiary where customerId=?;";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, customer.getCustomerId());
             rs = st.executeQuery();
@@ -359,7 +318,7 @@ public class CustomerRepository {
             String sql =
                     "insert into Beneficiary (beneficiaryId, customerId, account) values (?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, beneficiaryId);
             st.setString(2, customer.getCustomerId());
@@ -379,7 +338,7 @@ public class CustomerRepository {
                     " where C.customerId = Ct.customerId and Ct.customerId = Ih.customerId and Ct.insuranceId = I.insuranceId\n" +
                     " and C.customerId = ? and I.kindOfInsurance = 'LIFE';";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, customer.getCustomerId());
             rs = st.executeQuery();
@@ -400,7 +359,7 @@ public class CustomerRepository {
             String sql =
                     "insert into Incident_handling (incidentId, customerId, incidentDate, incidentName, incidentPhoneNum, errorRate, carNumber, incidentSite, employeeId) values (?,?,?,?,?,?,?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, incidentId);
             st.setString(2, incidentHandling.getCustomerId());
@@ -423,12 +382,13 @@ public class CustomerRepository {
     public String checkJoinLifeInsurance(Customer customer) {
         ResultSet rs = null;
         try {
-            String sql = "select Ic.insuranceClaimId\n" +
+            String sql =
+                    "select Ic.insuranceClaimId " +
                     " from Customer C, Contract Ct, Insurance I, InsuranceClaim Ic\n" +
                     " where C.customerId = Ct.customerId and Ct.customerId = Ic.customerId and Ct.insuranceId = I.insuranceId\n" +
                     " and C.customerId = ? and I.kindOfInsurance = 'NON_LIFE';";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, customer.getCustomerId());
             rs = st.executeQuery();
@@ -449,7 +409,7 @@ public class CustomerRepository {
             String sql =
                     "insert into InsuranceClaim (insuranceClaimId, customerId, claimContent, claimCost) values (?,?,?,?);";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
             st.setString(1, insuranceClaimId);
             st.setString(2, claimInsurance.getCustomerId());
@@ -467,7 +427,7 @@ public class CustomerRepository {
         try {
             String sql = "SELECT insuranceClaimId FROM InsuranceClaim ORDER BY insuranceClaimId DESC LIMIT 1";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             rs = st.executeQuery();
             while(rs.next()) {
                 String lastId = rs.getString("insuranceClaimId");
@@ -484,7 +444,7 @@ public class CustomerRepository {
         try {
             String sql = "SELECT emp_CusId FROM Emp_Cus ORDER BY emp_CusId DESC LIMIT 1";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             rs = st.executeQuery();
             while(rs.next()) {
                 String lastId = rs.getString("emp_CusId");
@@ -501,7 +461,7 @@ public class CustomerRepository {
         try {
             String sql = "SELECT incidentId FROM Incident_handling ORDER BY incidentId DESC LIMIT 1";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             rs = st.executeQuery();
             while(rs.next()) {
                 String lastId = rs.getString("incidentId");
@@ -518,7 +478,7 @@ public class CustomerRepository {
         try {
             String sql = "SELECT count(*) FROM Customer WHERE customerId = ?;";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, customerId);
             rs = st.executeQuery();
             while(rs.next()) {
@@ -537,13 +497,7 @@ public class CustomerRepository {
         try {
             String sql = "update Customer set  address=?, detailAddress=?, zipcode=?, email=? where customerId = ?;";
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            PreparedStatement st = conn.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, customer.getAddress());
             st.setString(2, customer.getDetailAddress());
@@ -555,8 +509,6 @@ public class CustomerRepository {
             st.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
@@ -565,7 +517,7 @@ public class CustomerRepository {
         try {
             String sql = "SELECT employeeId FROM Emp_Cus WHERE customerId = ?;";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, customer.getCustomerId());
             rs = st.executeQuery();
             while(rs.next()) {
@@ -584,7 +536,7 @@ public class CustomerRepository {
         try {
             String sql = "SELECT contractId FROM Contract ORDER BY contractId DESC LIMIT 1";
 
-            PreparedStatement st = sqlConnection().prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             rs = st.executeQuery();
             while(rs.next()) {
                 String lastId = rs.getString("contractId");

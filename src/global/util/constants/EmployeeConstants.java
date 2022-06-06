@@ -4,9 +4,9 @@ public class EmployeeConstants extends CommonConstants{
 
     public static final String HOME_START = "\n\n------------------- 🏠 Employee Home 🏠 -------------------";
     public static final String HOME_SALES_EMP =" •• 영업 활동 팀 •• ";
-    public static final String HOME_SALES_EMP_ ="11. 상담 대기 신규 고객 명단 조회 \n12. 영업 교육 수강";
+    public static final String HOME_SALES_EMP_ ="11. 상담 대기 신규 고객 명단 조회";
     public static final String HOME_SALES_EDU_EMP =" •• 영업 교육 팀 •• ";
-    public static final String HOME_SALES_EDU_EMP_ ="21. 영업 교육 강의 자료 업로드 \n22. 강의 자료 리스트 출력 \n23. 수강 명단 체크";
+    public static final String HOME_SALES_EDU_EMP_ ="21. 영업 교육 강의 자료 업로드 \n22. 강의 자료 리스트 출력";
     public static final String HOME_CONTRACT_GUIDE_EMP =" •• 사후 관리 팀 •• ";
     public static final String HOME_CONTRACT_GUIDE_EMP_ ="31. 보험 정보 안내 해당 고객 명단 조회";
     public static final String HOME_CONTRACT_MNG_EMP =" •• 계약 관리 팀 •• ";

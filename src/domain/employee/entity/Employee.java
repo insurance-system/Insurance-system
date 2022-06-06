@@ -11,26 +11,6 @@ public class Employee {
     private String detailAddress;
     private String zipcode;
 
-
-    //TODO
-    public static Employee toEntity(String employee){
-        //파일 시스템에 데이터들이 저장되는 위치를 알야한다.
-        return null;
-    }
-
-    public Employee() {
-    }
-
-    public Employee(String employeeId, String name, String email, String phoneNumber, String address, String detailAddress, String zipcode) {
-        this.employeeId = employeeId;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.detailAddress = detailAddress;
-        this.zipcode = zipcode;
-    }
-
     public Employee(String employeeId, String password, String departmentId, String name, String email, String phoneNumber, String address, String detailAddress, String zipcode) {
         this.employeeId = employeeId;
         this.password = password;

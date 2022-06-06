@@ -29,21 +29,6 @@ public class UwResponse {
 
     public UwResponse() {}
 
-    public UwResponse(String contractId, String customerId, HealthInformation customerHealthInformation, String insuranceId, String insuranceName, String fee, KindOfInsurance kindOfInsurance, int maxAge, int minAge, Grade smoke, Grade alcohol, Grade cancer) {
-        this.contractId = contractId;
-        this.customerId = customerId;
-        this.customerHealthInformation = customerHealthInformation;
-        this.insuranceId = insuranceId;
-        this.insuranceName = insuranceName;
-        this.fee = fee;
-        this.kindOfInsurance = kindOfInsurance;
-        this.maxAge = maxAge;
-        this.minAge = minAge;
-        this.smoke = smoke;
-        this.alcohol = alcohol;
-        this.cancer = cancer;
-    }
-
     public String getContractId() {
         return contractId;
     }

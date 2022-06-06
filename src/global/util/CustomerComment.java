@@ -117,7 +117,7 @@ public class CustomerComment extends CommonComment{
 
     public String getName() {
         System.out.print(ENTER_NAME);
-        return vaildateString();
+        return validateString();
     }
 
     public int getKindOfInsuranceId() {
@@ -153,7 +153,7 @@ public class CustomerComment extends CommonComment{
 
     public String getDetailAddress() {
         System.out.print(ENTER_DETAIL_ADDRESS);
-        return vaildateString();
+        return validateString();
     }
 
     public String getZipcode() {
@@ -163,12 +163,12 @@ public class CustomerComment extends CommonComment{
 
     public String getEmail() {
         System.out.print(ENTER_EMAIL);
-        return vaildateString();
+        return validateString();
     }
 
     public String getPhoneNumber() {
         System.out.println(ENTER_PHONE);
-        return vaildateString();
+        return validateString();
     }
 
     public String getSatisfaction() {
@@ -233,7 +233,7 @@ public class CustomerComment extends CommonComment{
         }
     }
 
-    public String vaildateString(){
+    public String validateString(){
         while(true){
             String next = scanner.next();
             boolean isNumeric =  next.matches("[+-]?\\d*(\\.\\d+)?");

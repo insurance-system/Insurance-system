@@ -9,7 +9,7 @@ import domain.employee.entity.Employee;
 import domain.employee.exception.excution.*;
 import domain.employee.service.*;
 import domain.insurance.entity.InsuranceCondition;
-import global.dao.Lecture;
+import domain.employee.dto.Lecture;
 import global.util.EmployeeComment;
 
 import java.util.ArrayList;
@@ -72,17 +72,11 @@ public class EmployeeController {
                     case 11:
                         doSalesEmployeeService(employee);//상담 대기 신규 고객 명단 조회
                         break;
-                    case 12:
-                        registerSalesEdu(employee);//영업 교육 수강
-                        break;
                     case 21:
                         uploadEducationLecture(employee);//영업 교육 강의 업로드
                         break;
                     case 22:
                         findLectureList(employee);//강의 자료 리스트 출력
-                        break;
-                    case 23:
-                        findLectureRegistrationList(employee);
                         break;
                     case 31:
                         notifyContractStatus(employee);//보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
@@ -141,19 +135,13 @@ public class EmployeeController {
         ArrayList<EmpCustomer> empCustomers = salesEmployeeService.customerConsult(employee);
             if (!empCustomers.isEmpty()){
                 employeeComment.startConsult();
-                salesEmployeeService.executeConsult(employee, empCustomers.get(employeeComment.customerConsultList(empCustomers)));//TODO 9를 누르면 Index 9 out of bounds for length 3
+                salesEmployeeService.executeConsult(employee, empCustomers.get(employeeComment.customerConsultList(empCustomers)));
                 employeeComment.completeConsult();
             }else{
                 new NoConsultCustomerException();
             }
         }
 
-
-    private void registerSalesEdu(Employee employee) {
-        if(!isAccessableEmployee(employee, DEPT_SALES)) return;
-        System.out.println("영업교육 수강하기"); //TODO
-
-    }
     /* ---------------------------------------------------------------------- */
 
 
@@ -173,10 +161,6 @@ public class EmployeeController {
         for (Lecture lecture : salesEduEmployeeService.findLectureList()) System.out.println(lecture);
     }
 
-    private void findLectureRegistrationList(Employee employee) {
-        if(!isAccessableEmployee(employee, DEPT_EDU)) return;
-        System.out.println("강의 수강 명단 확인하기");//TODO
-    }
     /* -------------------------------------------------------------------------------- */
 
 

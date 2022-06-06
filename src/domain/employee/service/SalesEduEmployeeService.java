@@ -1,6 +1,6 @@
 package domain.employee.service;
 
-import global.dao.Lecture;
+import domain.employee.dto.Lecture;
 
 import java.util.ArrayList;
 
