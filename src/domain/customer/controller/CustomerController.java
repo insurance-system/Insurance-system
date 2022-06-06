@@ -180,8 +180,12 @@ public class CustomerController {
         if(customerService.checkIdExist(customerId) == 0) {
             String password = customerComment.getPassword();
             String name = customerComment.getName();
-            String address = customerComment.getAddress();
-            String detailAddress = customerComment.getDetailAddress();
+            String address1 = customerComment.getAddress1();
+            String address2 = customerComment.getAddress2();
+            String address = address1+address2;
+            String detailAddress1 = customerComment.getDetailAddress1();
+            String detailAddress2 = customerComment.getDetailAddress2();
+            String detailAddress = detailAddress1 + detailAddress2;
             String zipcode = customerComment.getZipcode();
             String email = customerComment.getEmail();
             String phoneNumber = customerComment.getPhoneNumber();

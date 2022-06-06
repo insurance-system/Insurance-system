@@ -9,7 +9,7 @@ public class CommonConstants {
     public static final String SELECT_NUM = "번호 입력: ";
     public static final String GO_BACK = "돌아가기";
     public static final String ENTER_NAME = "이름 입력: ";
-    public static final String ENTER_ADDRESS = "주소 입력 (ex: OO시 OO구 OO동): ";
+    public static final String ENTER_ADDRESS = "주소 입력 (ex: OO시): ";
     public static final String ENTER_DETAIL_ADDRESS = "상세주소 입력 (ex: 12동 501호): ";
     public static final String ENTER_ZIPCODE = "우편번호 입력: ";
     public static final String ENTER_EMAIL = "이메일 입력: ";

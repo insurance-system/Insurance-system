@@ -115,32 +115,53 @@ public class CustomerComment extends CommonComment{
     }
 
     public String getName() {
-        System.out.println(ENTER_NAME);
+        System.out.print(ENTER_NAME);
         return vaildateString();
     }
 
     public int getKindOfInsuranceId() {
-        System.out.println(ASK_INSURANCE_CATEGORY);
+        System.out.print(ASK_INSURANCE_CATEGORY);
         return vaildateInt();
     }
 
     public String getAddress() {
-        System.out.println(ENTER_ADDRESS);
-        return vaildateString();
+        System.out.print(ENTER_ADDRESS);
+        return scanner.next();
+    }
+
+
+    public String getAddress1() {
+        System.out.print("주소입력 (OO시): ");
+        return scanner.next();
+    }
+
+    public String getAddress2() {
+        System.out.print("주소입력 (OO구, OO동):");
+        return scanner.next();
+    }
+
+    public String getDetailAddress2() {
+        System.out.print("상세 주소입력 (OO호):");
+        return scanner.next();
+    }
+
+    public String getDetailAddress1() {
+        System.out.print("상세 주소입력 (OO로):");
+        return scanner.next();
     }
 
     public String getDetailAddress() {
-        System.out.println(ENTER_DETAIL_ADDRESS);
+        System.out.print(ENTER_DETAIL_ADDRESS);
         return vaildateString();
     }
 
     public String getZipcode() {
-        System.out.println(ENTER_ZIPCODE);
+        System.out.print(ENTER_ZIPCODE);
         return scanner.next();
     }
 
     public String getEmail() {
-        System.out.println(ENTER_EMAIL);
+        System.out.print(ENTER_EMAIL);
         return vaildateString();
     }
 
@@ -222,4 +243,6 @@ public class CustomerComment extends CommonComment{
             }
         }
     }
+
+
 }
