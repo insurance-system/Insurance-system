@@ -1,16 +1,9 @@
 package domain.customer.entity;
 
-import java.util.Date;
 
 public class FindPayment {
     private String insuranceName;
     private int fee;
-
-    public FindPayment(String insuranceName, int fee, String payDate) {
-        this.insuranceName = insuranceName;
-        this.fee = fee;
-        this.payDate = payDate;
-    }
 
     private String payDate;
 

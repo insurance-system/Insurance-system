@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class UWEmployeeService extends EmployeeService{
 
-    // TODO 인수심사 대기 명단 고객 테이블에서 select ALL 해오기
     public ArrayList<UwRequest> getUwCustomerList() {
         return this.employeeRepository.getUwCustomerList();
     }

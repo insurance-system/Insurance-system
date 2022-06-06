@@ -24,4 +24,6 @@ public class CommonConstants {
     public static final String VERTICAL_BAR = "|";
     public static final String LINE_BREAK = "\n";
     public static final String END_LINE = "--------------------------------------------------";
+
+
 }

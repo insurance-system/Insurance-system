@@ -4,16 +4,6 @@ import domain.contract.dto.InsuranceNearExpireAlarm;
 
 public class makeForm {
 
-//    private String customerId;
-//    private String email;
-//    private String customerName;
-//    private String phoneNumber;
-//
-//    private int InsuranceId;
-//    private String insuranceName;
-//    private int fee;
-//    private LocalDate expiredDate;
-
     public static void sendExpireAlarmEmail(InsuranceNearExpireAlarm insuranceNearExpireAlarm) {
         String email = makeExpireAlarmEmail(insuranceNearExpireAlarm);
         System.out.println(email);

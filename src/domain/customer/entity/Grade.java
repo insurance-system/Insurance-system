@@ -1,6 +1,5 @@
 package domain.customer.entity;
 
-import domain.insurance.entity.enumeration.KindOfInsurance;
 
 public enum Grade {
     A(1, "A"), B(2, "B"), C(3, "C");

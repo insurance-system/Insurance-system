@@ -1,4 +1,4 @@
-package global.dao;
+package domain.employee.dto;
 
 public class Lecture {
     private String lectureId;
