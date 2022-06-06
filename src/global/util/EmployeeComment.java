@@ -1,5 +1,6 @@
 package global.util;
 
+import domain.customer.dto.UwRequest;
 import domain.employee.dto.*;
 
 import java.util.ArrayList;
@@ -298,5 +299,18 @@ public class EmployeeComment extends CommonComment{
 
     public void printMngSettingCompleteMsg() {
         System.out.println(REGISTRATION_MNG_SUCCESS);
+    }
+
+    public UwRequest selectUwList(ArrayList<UwRequest> uwRequests) {
+        System.out.println(LINE_BREAK+ CUSTOMER_CUNSULT_LIST_START);
+        for(int i=0; uwRequests.size() > i; i++){
+            System.out.println(VERTICAL_BAR+NUMBER+i+NAME+uwRequests.get(i).getContractId()+PHONE_NUMBER+uwRequests.get(i).getContractStatus());
+            System.out.println(VERTICAL_BAR+NUMBER+i+NAME+uwRequests.get(i).getCustomerId()+PHONE_NUMBER+uwRequests.get(i).getPaymentDate());
+            System.out.println(VERTICAL_BAR+NUMBER+i+NAME+uwRequests.get(i).getExpiredDate());
+        }
+        System.out.print(ASK_CONSULT_CUSTOMER+SELECT_NUM);
+
+
+        return uwRequests.get(scanner.nextInt());
     }
 }

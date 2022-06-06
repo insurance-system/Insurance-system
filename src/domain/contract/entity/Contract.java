@@ -101,7 +101,7 @@ public class Contract {
     }
 
     public Contract toEntity(Contract contract){
-        contract.setContractStatus("Active");
+        contract.setContractStatus(null);
         contract.setExpiredDate(LocalDate.now().plusYears(2));
         contract.setPaymentDate(LocalDate.now());
         contract.setChargeOfEmployeeId("E0100");
