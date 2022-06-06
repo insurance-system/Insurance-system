@@ -182,6 +182,7 @@ public class EmployeeComment extends CommonComment{
         }else{
             rewardEvaluateRespons.get(choice).setClaimStatus(UNDER_EXAMINATION);
         }
+
         return rewardEvaluateRespons.get(choice);
     }
 

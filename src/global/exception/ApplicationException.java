@@ -7,7 +7,6 @@ public abstract class ApplicationException extends RuntimeException{
     public static final String RESET = "\u001B[0m";
     public static final String FONT_RED = "\u001B[31m";
 
-
     public ApplicationException(String errorCode, String message) {
         this.errorCode = errorCode;
         this.message = message;

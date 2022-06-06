@@ -20,6 +20,7 @@ public class CustomerJoinRequest {
     private String email;
     private String phoneNumber;
     private KindOfJob kindOfJob;
+    private String ssn;
 
     public CustomerJoinRequest(
                     String customerId,
@@ -31,18 +32,19 @@ public class CustomerJoinRequest {
                     String email,
                     String phoneNumber,
                     int kindOfJobId,
-                    int kindOfInsuranceId) {
+                    int kindOfInsuranceId,
+                    String ssn) {
         this.customerId = customerId;
         this.password = password;
         this.name = name;
-        this.kindOfInsurance = getKindOfInsuranceBy(kindOfInsuranceId);
-
         this.address = address;
         this.detailAddress = detailAddress;
         this.zipcode = zipcode;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.kindOfJob = getKindOfJobBy(kindOfJobId);
+        this.kindOfInsurance = getKindOfInsuranceBy(kindOfInsuranceId);
+        this.ssn = ssn;
     }
 
     public static Customer toEntity(CustomerJoinRequest joinReq) {
@@ -56,7 +58,8 @@ public class CustomerJoinRequest {
                 joinReq.getEmail(),
                 joinReq.getPhoneNumber(),
                 joinReq.getKindOfJob(),
-                joinReq.getKindOfInsurance()
+                joinReq.getKindOfInsurance(),
+                joinReq.getSsn()
         );
     }
 
@@ -104,6 +107,10 @@ public class CustomerJoinRequest {
     public KindOfJob getKindOfJob() {
         return kindOfJob;
     }
+
+    public String getSsn() {return ssn;}
+
+    public void setSsn(String ssn) {this.ssn = ssn;}
 
     @Override
     public String toString() {

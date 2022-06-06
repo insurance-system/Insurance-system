@@ -65,132 +65,125 @@ public class EmployeeController {
     }
 
     private void home(Employee employee){
-        Exit:
-        while(true){
-            switch (this.employeeComment.home()){
-                case 11:
-                    doSalesEmployeeService(employee);//상담 대기 신규 고객 명단 조회
-                    break;
-                case 12:
-                    registerSalesEdu(employee);//영업 교육 수강
-                    break;
-                case 21:
-                    uploadEducationLecture(employee);//영업 교육 강의 업로드
-                    break;
-                case 22:
-                    findLectureList(employee);//강의 자료 리스트 출력
-                    break;
-                case 23:
-                    findLectureRegistrationList(employee);
-                    break;
-                case 31:
-                    notifyContractStatus(employee);//보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
-                    break;
-                case 41:
-                    contractExpiration(employee);//보험 만기 고객 조회//건강정보 테이블에 고객 ID 들어가야함
-                    break;
-                case 42:
-                    contractDefault(employee); //미납 고객 조회
-                    break;
-                case 51:
-                    startUW(employee);//인수심사 수행
-                    break;
-                case 61:
-                    developInsurance(employee);
-                    break;
-                case 71:
-                    printCustomerInformation(employee);//고객 정보를 제공
-                    break;
-                case 81:
-                    printMarketInformation(employee);//보험 시장 데이터 제공
-                    break;
-                case 91:
-                    manageIncidentReport(employee);
-                    break;
-                case 101:
-                    evaluateReward(employee);//보상평가팀//보상금을 심사하다
-                    break;
-                case 0:
-                    System.out.println(TERMINATE_EMPLOYEE_SYSTEM);
-                    break Exit;
-                default:
-                    new CheckMenuNumberException();
-                    break;
+            Exit:
+            while(true){
+                switch (this.employeeComment.home()){
+                    case 11:
+                        doSalesEmployeeService(employee);//상담 대기 신규 고객 명단 조회
+                        break;
+                    case 12:
+                        registerSalesEdu(employee);//영업 교육 수강
+                        break;
+                    case 21:
+                        uploadEducationLecture(employee);//영업 교육 강의 업로드
+                        break;
+                    case 22:
+                        findLectureList(employee);//강의 자료 리스트 출력
+                        break;
+                    case 23:
+                        findLectureRegistrationList(employee);
+                        break;
+                    case 31:
+                        notifyContractStatus(employee);//보험 가입자에게 보험 계약 상태(고객 만기 및 미납 여부)를 안내한다.
+                        break;
+                    case 41:
+                        printExpirationContract(employee);//보험 만기 고객 조회//건강정보 테이블에 고객 ID 들어가야함
+                        break;
+                    case 42:
+                        printDefaultContract(employee); //미납 고객 조회
+                        break;
+                    case 51:
+                        startUW(employee);//인수심사 수행
+                        break;
+                    case 61:
+                        developInsurance(employee);
+                        break;
+                    case 71:
+                        printCustomerInformation(employee);//고객 정보를 제공
+                        break;
+                    case 81:
+                        printMarketInformation(employee);//보험 시장 데이터 제공
+                        break;
+                    case 91:
+                        manageIncidentReport(employee);
+                        break;
+                    case 101:
+                        evaluateReward(employee);//보상평가팀//보상금을 심사하다
+                        break;
+                    case 0:
+                        System.out.println(TERMINATE_EMPLOYEE_SYSTEM);
+                        break Exit;
+                    default:
+                        new CheckMenuNumberException();
+                        break;
+                }
             }
-        }
     }
 
     /* -------------------------------- sales -------------------------------- */
 
+    private boolean isAccessableEmployee(Employee employee, String DEPT) {
+        if (!employee.getDepartmentId().equals(DEPT)) {
+            new NoAuthorityDPException();
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+        else return true;
+    }
+
     private void doSalesEmployeeService(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_SALES)){
-            ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
+        if(!isAccessableEmployee(employee, DEPT_SALES)) return;
+        ArrayList<EmpCustomer> arrayList = salesEmployeeService.customerConsult(employee);
             if (!arrayList.isEmpty()){
                 employeeComment.startConsult();
-                salesEmployeeService.consultExecute(employee, arrayList.get(employeeComment.customerConsultList(arrayList)));
+                salesEmployeeService.executeConsult(employee, arrayList.get(employeeComment.customerConsultList(arrayList)));//TODO 9를 누르면 Index 9 out of bounds for length 3
                 employeeComment.completeConsult();
             }else{
                 new NoConsultCustomerException();
             }
-        }else{
-            new NoAuthorityDPException();
         }
-    }
+
 
     private void registerSalesEdu(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_SALES)){
+        if(!isAccessableEmployee(employee, DEPT_SALES)) return;
+        System.out.println("영업교육 수강하기"); //TODO
 
-        }else{
-            new NoAuthorityDPException();
-        }
-        return;
     }
     /* ---------------------------------------------------------------------- */
 
 
     /* -------------------------------- Edu --------------------------------- */
-    public void uploadEducationLecture(Employee lecturer){
-        if (!lecturer.getDepartmentId().equals(DEPT_EDU)){
-            new NoAuthorityDPException();
-            return;
-        }
-        String lectureName = employeeComment.getLectureName();//TODO choice comment로 옮기기
+    public void uploadEducationLecture(Employee employee){
+        if(!isAccessableEmployee(employee, DEPT_EDU)) return;
+        String lectureName = employeeComment.getLectureName();
         String lecturePdfName = employeeComment.getLecturePdfName();
-        String lectureId = lectureName.length() + lecturer.getEmployeeId();
-        Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, lecturer.getEmployeeId());
+        String lectureId = lectureName.length() + employee.getEmployeeId();
+        Lecture lecture = new Lecture(lectureId, lectureName, lecturePdfName, employee.getEmployeeId());
         if(salesEduEmployeeService.uploadEducationLecture(lecture)) employeeComment.printSuccessRegistrationMessage();
         else employeeComment.printFailRegistrationMessage();
     }
 
-    private void findLectureList(Employee eduEmployee) {
-        if (!(eduEmployee.getDepartmentId().equals(DEPT_EDU)) || !(eduEmployee.getDepartmentId().equals(DEPT_SALES))){
-            new NoAuthorityDPException();
-            return;
-        }
-        ArrayList<Lecture> lectureList = salesEduEmployeeService.findLectureList();
-        for (Lecture lecture : lectureList) {
-            System.out.println(lecture);
-        }
+    private void findLectureList(Employee employee) {
+        if(!isAccessableEmployee(employee, DEPT_EDU) && !isAccessableEmployee(employee, DEPT_SALES)) return;
+        for (Lecture lecture : salesEduEmployeeService.findLectureList()) System.out.println(lecture);
     }
 
     private void findLectureRegistrationList(Employee employee) {
-        //수강 명단 체크
-        if (employee.getDepartmentId().equals(DEPT_EDU)){
-
-        }else{
-            new NoAuthorityDPException();
-        }
-        return;
+        if(!isAccessableEmployee(employee, DEPT_EDU)) return;
+        System.out.println("강의 수강 명단 확인하기");//TODO
     }
     /* -------------------------------------------------------------------------------- */
 
 
     /* -------------------------------- ContractGuide --------------------------------- */
     private void notifyContractStatus(Employee employee){
-        if (!employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)){
-            new NoAuthorityDPException();
-            return;
-        }
+        if(!isAccessableEmployee(employee, DEPT_CONTRACT_GUIDE)) return;
+        Exit:
+        while(true)
         switch(employeeComment.notifyMenu()){
             case 1:
                 getNearExpireContractList();
@@ -198,6 +191,8 @@ public class EmployeeController {
             case 2:
                 getNearPaymentContractList();
                 break;
+            case 0:
+                break Exit;
         }
     }
 
@@ -223,16 +218,14 @@ public class EmployeeController {
 
     /* -------------------------------- Contract Management --------------------------------- */
 
-    private void contractExpiration(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
-            employeeComment.contractExpiration(((ContractManageEmployeeService)employeeService).selectContractExpiration());
-        }else new NoAuthorityDPException();
+    private void printExpirationContract(Employee employee) {
+        if(!isAccessableEmployee(employee, DEPT_CONTRACT_MNG)) return;
+        employeeComment.contractExpiration(contractManageEmployeeService.selectContractExpiration());
     }
 
-    private void contractDefault(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_CONTRACT_GUIDE)) {
-            employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
-        }else new NoAuthorityDPException();
+    private void printDefaultContract(Employee employee) {
+        if(!isAccessableEmployee(employee, DEPT_CONTRACT_MNG)) return;
+        employeeComment.contractDefault(this.contractManageEmployeeService.selectDefaultCustomer());
     }
 
 
@@ -240,17 +233,17 @@ public class EmployeeController {
 
     /* -------------------------------------- U/W ------------------------------------- */
     private void startUW(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_UW)){
-            new NoAuthorityDPException();
-            return;
-        }
+        if(!isAccessableEmployee(employee, DEPT_UW)) return;
         employeeComment.getUwCustomerList();
-        switch(employeeComment.yesOrNo()){
-            case 1:
-                getUwCustomerList();
-                break;
-            case 2:
-                break;
+        Exit:
+        while(true){
+            switch(employeeComment.yesOrNo()){
+                case 1:
+                    getUwCustomerList();
+                    break;
+                case 2:
+                    break Exit;
+            }
         }
     }
 
@@ -271,25 +264,23 @@ public class EmployeeController {
 
     /* -------------------------- development Insurance -------------------------------- */
     private void developInsurance(Employee employee) {
-        if (!employee.getDepartmentId().equals(DEPT_INSURANCE_DEV)){
-            new NoAuthorityDPException();
-            return;
-        }
-        ArrayList<CustomerAnalysisInformation> customerAnalysisInformations = provideCustomerInformation();
+        if(!isAccessableEmployee(employee, DEPT_INSURANCE_DEV)) return;
+        ArrayList<CustomerAnalysisInformation> customerAnalysisInformationList = provideCustomerInformation();
         MarketInsuranceInformationResponse marketInsuranceInformationResponse = provideMarketInformation();
+        printAnalysisInformation(customerAnalysisInformationList, marketInsuranceInformationResponse);
+        InsuranceCondition insuranceCondition = getInsuranceCondition();
+        NewInsurance newInsurance = getNewInsurance(insuranceCondition);
+        if(insuranceDevelopmentEmployeeService.developInsurance(newInsurance)) employeeComment.printSuccessInsuranceRegistrationMsg();
+    }
+
+    private void printAnalysisInformation(ArrayList<CustomerAnalysisInformation> customerAnalysisInformationList, MarketInsuranceInformationResponse marketInsuranceInformationResponse) {
         employeeComment.printCustomerAnalysisDataMsg();
-        for (CustomerAnalysisInformation customerAnalysisInformation : customerAnalysisInformations)
+        for (CustomerAnalysisInformation customerAnalysisInformation : customerAnalysisInformationList)
             System.out.println(customerAnalysisInformation);
         employeeComment.printLine();
         employeeComment.printMarketAnalysisDataMsg();
         System.out.println(marketInsuranceInformationResponse);
         employeeComment.printLine();
-
-        InsuranceCondition insuranceCondition = getInsuranceCondition();
-        NewInsurance newInsurance = getNewInsurance(insuranceCondition);
-
-        if(insuranceDevelopmentEmployeeService.developInsurance(newInsurance))
-            employeeComment.printSuccessInsuranceRegistrationMsg();
     }
 
     private NewInsurance getNewInsurance(InsuranceCondition insuranceCondition) {
@@ -312,10 +303,7 @@ public class EmployeeController {
     /*------------------------- information analysis --------------------------*/
 
     public void printCustomerInformation(Employee employee){
-        if (!employee.getDepartmentId().equals(DEPT_CUSTOMER_INFO)){
-            new NoAuthorityDPException();
-            return;
-        }
+        if(!isAccessableEmployee(employee, DEPT_CUSTOMER_INFO)) return;
         ArrayList<CustomerAnalysisInformation> customerAnalysisInformations = provideCustomerInformation();
         for (CustomerAnalysisInformation customerAnalysisInformation : customerAnalysisInformations)
             System.out.println(customerAnalysisInformation);
@@ -326,10 +314,7 @@ public class EmployeeController {
     }
 
     private void printMarketInformation(Employee employee) {
-        if (!employee.getDepartmentId().equals(DEPT_MARKET_ANAL)){
-            new NoAuthorityDPException();
-            return;
-        }
+        if(!isAccessableEmployee(employee, DEPT_MARKET_ANAL)) return;
         System.out.println(provideMarketInformation());
     }
 
@@ -341,11 +326,10 @@ public class EmployeeController {
     /*------------------------- evaluate reward --------------------------*/
 
     private void evaluateReward(Employee employee) {
-        if (employee.getDepartmentId().equals(DEPT_REWARD)) {
-            ArrayList<RewardEvaluateResponse> rewardEvaluateResponses = this.rewardManageService.rewardEvaluate();
-            if(!rewardEvaluateResponses.isEmpty()) this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluateResponses));
-            else new NoRewardException();
-        }else new NoAuthorityDPException();
+        if(!isAccessableEmployee(employee, DEPT_REWARD)) return;
+        ArrayList<RewardEvaluateResponse> rewardEvaluateResponses = this.rewardManageService.rewardEvaluate();
+        if(!rewardEvaluateResponses.isEmpty()) this.rewardManageService.rewardAssign(this.employeeComment.rewardChoice(rewardEvaluateResponses));
+        else new NoRewardException();
     }
     /*---------------------------------------------------------------------------*/
 
@@ -353,17 +337,15 @@ public class EmployeeController {
     private void manageIncidentReport(Employee employee) {
         //손해접수팀
         //사고 발생 신고를 접수받는다.
-        if (employee.getDepartmentId().equals(DEPT_INCIDENT_MNG)) {
-            ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
-            if(!incidentResponses.isEmpty()){
-                this.incidentManageService.incidentAssign(
-                        employee,
-                        incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses))
-                );
-                employeeComment.printMngSettingCompleteMsg();
-            }else new NoIncidentException();
-        }else new NoAuthorityDPException();
-        return;
+        if(!isAccessableEmployee(employee, DEPT_INCIDENT_MNG)) return;
+        ArrayList<IncidentResponse> incidentResponses = this.incidentManageService.IncidentAccept(employee);
+        if(!incidentResponses.isEmpty()){
+            this.incidentManageService.incidentAssign(
+                    employee,
+                    incidentResponses.get(this.employeeComment.incidentChoice(incidentResponses))
+            );
+            employeeComment.printMngSettingCompleteMsg();
+        }else new NoIncidentException();
     }
     /*---------------------------------------------------------------------------*/
 
