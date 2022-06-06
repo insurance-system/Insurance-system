@@ -4,7 +4,9 @@ import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.UwCustomer;
 import domain.customer.dto.UwRequest;
+import domain.customer.dto.UwResponse;
 import domain.customer.entity.Grade;
+import domain.customer.entity.HealthInformation;
 import domain.customer.enumeration.KindOfJob;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
@@ -89,55 +91,6 @@ public class EmployeeRepository {
 
             st.close();
 //            conn.close();
-        }catch(SQLException e){
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String select(int employeeId) throws IOException {
-        Statement statement = null;
-        ResultSet rs = null;
-        try{
-            String sql = "select * from Employee where id = ?;";
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
-
-            st.setInt(1, employeeId);
-            int result = st.executeUpdate();
-            st.close();
-//            conn.close();
-        }catch(SQLException | ClassNotFoundException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String delete(int employeeId) throws IOException {
-        Statement statement = null;
-        ResultSet rs = null;
-        try{
-            String sql = "delete from Employee where id = ?;";
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection(
-                    Constants.URL,
-                    Constants.USER,
-                    Constants.PW);
-            PreparedStatement st = conn.prepareStatement(sql);//미리 쿼리문 준비
-
-            st.setInt(1, employeeId);
-            int result = st.executeUpdate();
-            st.close();
         }catch(SQLException e){
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -790,6 +743,89 @@ public class EmployeeRepository {
             st.setString(3, customerId);
             st.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+//    String sql = "SELECT * from Employee where employeeId = ? and password = ?";
+//    PreparedStatement st = this.connection.prepareStatement(sql);
+//
+//            st.setString(1, employeeId);
+//            st.setString(2, password);
+//            rs = st.executeQuery();
+//            if (rs.next()){
+//        Employee employee = new Employee(
+//                rs.getString("employeeId"),
+//                rs.getString("password"),
+//                rs.getString("departmentId"),
+//                rs.getString("name"),
+//                rs.getString("email"),
+//                rs.getString("phoneNumber"),
+//                rs.getString("address"),
+//                rs.getString("detailAddress"),
+//                rs.getString("zipCode")
+//        );
+//        System.out.println(employee.getEmployeeId());
+//        return employee;
+//    }
+
+    public UwResponse getUwInformation(String contractId) {
+        UwResponse uwResponse = new UwResponse();
+        HealthInformation healthInformation = new HealthInformation();
+        try {
+                String sql =
+                        "select distinct contractId, customerId, Insurance.insuranceId, insuranceName, " +
+                                "Insurance.fee, kindOfInsurance, Insurance_Condition.insuranceConditionId, " +
+                                "maxAge, minAge, Insurance_Condition.smoke, Insurance_Condition.alcohol, Insurance_Condition.cancer, " +
+                                "HealthInformation.smoke, HealthInformation.alcohol, HealthInformation.cancer " +
+                                "from Contract, Insurance, Insurance_Condition, HealthInformation " +
+                                "where contractId = ? " +
+                                "and Contract.insuranceId = Insurance.insuranceId " +
+                                "and Insurance.insuranceConditionId = Insurance_Condition.insuranceConditionId; ";
+                PreparedStatement st = this.connection.prepareStatement(sql);
+                st.setString(1, contractId);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    uwResponse.setContractId(rs.getString("contractId"));
+                    uwResponse.setCustomerId(rs.getString("customerId"));
+                    uwResponse.setInsuranceId(rs.getString("insuranceId"));
+                    uwResponse.setInsuranceName(rs.getString("insuranceName"));
+                    uwResponse.setFee(rs.getString("fee"));
+                    uwResponse.setKindOfInsurance(KindOfInsurance.getKindOfInsuranceBy(rs.getString("kindOfInsurance")));
+    //                rs.getString("insuranceConditionId");
+                    healthInformation.setSmoke(Grade.getGrade(rs.getString("HealthInformation.smoke")));
+                    healthInformation.setAlcohol(Grade.getGrade(rs.getString("HealthInformation.alcohol")));
+                    healthInformation.setCancer(Grade.getGrade(rs.getString("HealthInformation.cancer")));
+                    uwResponse.setCustomerHealthInformation(healthInformation);
+                    uwResponse.setMaxAge(rs.getInt("maxAge"));
+                    uwResponse.setMinAge(rs.getInt("minAge"));
+                    uwResponse.setSmoke(Grade.getGrade(rs.getString("Insurance_Condition.smoke")));
+                    uwResponse.setAlcohol(Grade.getGrade(rs.getString("Insurance_Condition.alcohol")));
+                    uwResponse.setCancer(Grade.getGrade(rs.getString("Insurance_Condition.cancer")));
+                }
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+            return uwResponse;
+        }
+
+    public void activateContract(String contractId) {
+        try {
+            String sql = "UPDATE Contract SET contractStatus = 'active' , UWReview ='PASS' WHERE contractId=?;";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, contractId);
+            st.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void failContract(String contractId) {
+        try {
+            String sql = "UPDATE Contract SET UWReview='NONPASS' WHERE contractId=?;";
+            PreparedStatement st = this.connection.prepareStatement(sql);
+            st.setString(1, contractId);
+            st.executeUpdate();
+        }catch (SQLException e) {
             e.printStackTrace();
         }
     }

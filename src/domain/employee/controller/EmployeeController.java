@@ -3,6 +3,7 @@ package domain.employee.controller;
 import domain.contract.dto.NewInsurance;
 import domain.contract.entity.Contract;
 import domain.customer.dto.UwRequest;
+import domain.customer.dto.UwResponse;
 import domain.employee.dto.*;
 import domain.employee.entity.Employee;
 import domain.employee.exception.excution.*;
@@ -21,7 +22,7 @@ public class EmployeeController {
     private final SalesEmployeeService salesEmployeeService;
     private final SalesEduEmployeeService salesEduEmployeeService;
     private final ContractGuideEmployeeService contractGuideEmployeeService;
-    private final UWEmployeeService UWEmployeeService;
+    private final UWEmployeeService uwEmployeeService;
     private final ContractManageEmployeeService contractManageEmployeeService;
     private final InsuranceDevelopmentEmployeeService insuranceDevelopmentEmployeeService;
     private final CustomerInformationManageService customerInformationManageService;
@@ -37,7 +38,7 @@ public class EmployeeController {
         this.salesEmployeeService = new SalesEmployeeService();
         this.salesEduEmployeeService = new SalesEduEmployeeService();
         this.contractGuideEmployeeService = new ContractGuideEmployeeService();
-        this.UWEmployeeService = new UWEmployeeService();
+        this.uwEmployeeService = new UWEmployeeService();
         this.contractManageEmployeeService = new ContractManageEmployeeService();
         this.insuranceDevelopmentEmployeeService = new InsuranceDevelopmentEmployeeService();
         this.customerInformationManageService = new CustomerInformationManageService();
@@ -234,36 +235,45 @@ public class EmployeeController {
     /* -------------------------------------- U/W ------------------------------------- */
     private void startUW(Employee employee) {
         if(!isAccessableEmployee(employee, DEPT_UW)) return;
-        employeeComment.getUwCustomerList();
+        employeeComment.askUwCustomerList();
         Exit:
         while(true){
             switch(employeeComment.yesOrNo()){
                 case 1:
                     getUwCustomerList();
-                    break;
+                    break Exit;
                 case 2:
                     break Exit;
             }
         }
     }
 
-    private void getUwCustomerList() {
-        ArrayList<UwRequest> uwRequests = UWEmployeeService.getUwCustomerList();
-        if(!uwRequests.isEmpty()){
-            this.employeeComment.selectUwList(uwRequests);
-        }else {
-            //TODO 예외처리
+    private void getUwCustomerList(){
+        ArrayList<UwRequest> uwRequests = uwEmployeeService.getUwCustomerList();
+        UwRequest uwRequest = null;
+        if(!uwRequests.isEmpty()) uwRequest = employeeComment.selectUwList(uwRequests);
+        else System.out.println("현재 인수 심사를 진행할 고객이 없습니다.");
+        if(uwRequest!=null){
+            UwResponse uwResponse = uwEmployeeService.getUwInformation(uwRequest.getContractId());
+            System.out.println(uwResponse);
+            System.out.println("해당 고객의 보험 가입 요청을 허가 하시겠습니까?");
+            switch(employeeComment.askPermit()){
+                case 1:
+                    uwEmployeeService.activateContract(uwResponse.getContractId());
+                    System.out.println("보험 가입 요청을 허가했습니다.");
+                    break;
+                case 2:
+                    System.out.println("보험 가입 요청을 불허합니다.");
+                    uwEmployeeService.failContract(uwResponse.getContractId());//non pass
+                    break;
+                case 3:
+                    System.out.println("보험 가입 요청을 보류합니다.");
+                    break;
+                default:
+                    new CheckMenuNumberException();
+                    break;
+            }
         }
-        for (UwRequest acceptanceReviewCustomer : uwRequests)
-            System.out.println(acceptanceReviewCustomer);
-        String customerId = employeeComment.getCustomerId();
-        UwRequest uwRequest =
-                uwRequests.stream()
-                        .filter((aar) -> aar.getCustomerId().equals(customerId))
-                        .findFirst()
-                        .orElseThrow(NoEmployeeException::new);
-
-        UWEmployeeService.getUwDetail(uwRequest);
     }
     /* -------------------------------------------------------------------------------- */
 
@@ -360,3 +370,8 @@ public class EmployeeController {
     }
     /* -------------------------------------------------- */
 }
+/*
+* 1. customer 회원가입시 Exception 처리하기
+* 2. 데이터 타입 Exception 처리
+* 3.
+* */

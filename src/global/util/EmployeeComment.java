@@ -2,6 +2,7 @@ package global.util;
 
 import domain.customer.dto.UwRequest;
 import domain.employee.dto.*;
+import domain.employee.exception.excution.MenuHaveToNumberException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,6 +10,7 @@ import java.util.Scanner;
 import static global.util.constants.EmployeeConstants.*;
 
 public class EmployeeComment extends CommonComment{
+
     Scanner scanner;
 
     public EmployeeComment(){
@@ -29,64 +31,84 @@ public class EmployeeComment extends CommonComment{
         printRewardManagementEmployeeMenu();
         System.out.println(HOME_MENU_LAST);
         System.out.print(SELECT_NUM);
-        return scanner.nextInt();
+        return choice();
     }
 
-    private void printRewardManagementEmployeeMenu() {
+    private int choice(){
+        int number;
+        while (true) {
+            String next = scanner.next();
+            try {
+                number = validate(next);
+                break;
+            } catch (NumberFormatException e) {
+                new MenuHaveToNumberException();
+            }
+        }
+        return number;
+    }
+
+    private int validate(String next) throws NumberFormatException{
+        int n =  Integer.parseInt(next);
+        System.out.println();
+        return n;
+    }
+
+    private void printRewardManagementEmployeeMenu(){
         System.out.println(HOME_REWARD_EMP_MENU);
         System.out.println(HOME_REWARD_EMP_MENU_);
         System.out.println(END_LINE);
     }
 
-    private void printIncidentManagementEmployeeMenu() {
+    private void printIncidentManagementEmployeeMenu(){
         System.out.println(HOME_INCIDENT_EMP_MENU);
         System.out.println(HOME_INCIDENT_EMP_MENU_);
         System.out.println(END_LINE);
     }
 
-    private void printMarketAnalysisEmployeeMenu() {
+    private void printMarketAnalysisEmployeeMenu(){
         System.out.println(HOME_MARKET_ANALYSIS_EMP);
         System.out.println(HOME_MARKET_ANALYSIS_EMP_);
         System.out.println(END_LINE);
     }
 
-    private void printCustomerInformationEmployeeMenu() {
+    private void printCustomerInformationEmployeeMenu(){
         System.out.println(HOME_CUS_INFORMATION_EMP);
         System.out.println(HOME_CUS_INFORMATION_EMP_);
         System.out.println(END_LINE);
     }
 
-    private void printInsuranceDevelopmentEmployeeMenu() {
+    private void printInsuranceDevelopmentEmployeeMenu(){
         System.out.println(HOME_INSURANCE_DEV_EMP);
         System.out.println(HOME_INSURANCE_DEV_EMP_);
         System.out.println(END_LINE);
     }
 
-    private void printUWEmployeeMenu() {
+    private void printUWEmployeeMenu(){
         System.out.println(HOME_UW_EMP);
         System.out.println(HOME_UW_EMP_);
         System.out.println(END_LINE);
     }
 
-    private void printContractManagementEmployeeMenu() {
+    private void printContractManagementEmployeeMenu(){
         System.out.println(HOME_CONTRACT_MNG_EMP);
         System.out.println(HOME_CONTRACT_MNG_EMP_);
         System.out.println(END_LINE);
     }
 
-    private void printContractGuideMenu() {
+    private void printContractGuideMenu(){
         System.out.println(HOME_CONTRACT_GUIDE_EMP);
         System.out.println(HOME_CONTRACT_GUIDE_EMP_);
         System.out.println(END_LINE);
     }
 
-    private void printSalesEducationEmployeeMenu() {
+    private void printSalesEducationEmployeeMenu(){
         System.out.println(HOME_SALES_EDU_EMP);
         System.out.println(HOME_SALES_EDU_EMP_);
         System.out.println(END_LINE);
     }
 
-    private void printSalesEmployeeMenu() {
+    private void printSalesEmployeeMenu(){
         System.out.println(HOME_SALES_EMP);
         System.out.println(HOME_SALES_EMP_);
         System.out.println(END_LINE);
@@ -135,6 +157,13 @@ public class EmployeeComment extends CommonComment{
     public int yesOrNo() {
         System.out.println(YES_OR_NO_1);
         System.out.println(YES_OR_NO_2);
+        return scanner.nextInt();
+    }
+
+    public int askPermit() {
+        System.out.println(EXAMINATION_1);
+        System.out.println(EXAMINATION_2);
+        System.out.println(EXAMINATION_3);
         return scanner.nextInt();
     }
 
@@ -269,7 +298,7 @@ public class EmployeeComment extends CommonComment{
         System.out.println(CONSULT_START);
     }
 
-    public void getUwCustomerList() {
+    public void askUwCustomerList() {
         System.out.println(ASK_TO_GET_UW_CUSTOMER_LIST);
     }
 
@@ -303,14 +332,14 @@ public class EmployeeComment extends CommonComment{
 
     public UwRequest selectUwList(ArrayList<UwRequest> uwRequests) {
         System.out.println(LINE_BREAK+ CUSTOMER_CUNSULT_LIST_START);
-        for(int i=0; uwRequests.size() > i; i++){
-            System.out.println(VERTICAL_BAR+NUMBER+i+NAME+uwRequests.get(i).getContractId()+PHONE_NUMBER+uwRequests.get(i).getContractStatus());
-            System.out.println(VERTICAL_BAR+NUMBER+i+NAME+uwRequests.get(i).getCustomerId()+PHONE_NUMBER+uwRequests.get(i).getPaymentDate());
-            System.out.println(VERTICAL_BAR+NUMBER+i+NAME+uwRequests.get(i).getExpiredDate());
+        for(int i=0; uwRequests.size() > i; i++){//.getContractId()
+            System.out.println(VERTICAL_BAR+NUMBER+i+" "+NAME+uwRequests.get(i).getCustomerName());
+            System.out.println("   "+"고객 ID:"+uwRequests.get(i).getCustomerId());
+            System.out.println("   "+"계약 ID:"+uwRequests.get(i).getContractId());
+//            System.out.println("   "+uwRequests.get(i).getExpiredDate());
         }
-        System.out.print(ASK_CONSULT_CUSTOMER+SELECT_NUM);
-
-
+        System.out.println(ASK_CONSULT_CUSTOMER);
+        System.out.print(SELECT_NUM);
         return uwRequests.get(scanner.nextInt());
     }
 }
