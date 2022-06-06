@@ -2,13 +2,14 @@ package domain.employee.exception.excution;
 
 import domain.employee.exception.EmployeeException;
 
-import static domain.employee.exception.EmployeeExceptionList.CHECK_MENU_NUMBER;
+import static domain.customer.exception.CustomerExceptionList.CHECKMENUNUMBER;
+
 
 public class CheckMenuNumberException extends EmployeeException {
 
     public CheckMenuNumberException() {
         super(
-                CHECK_MENU_NUMBER.getErrorCode(),
-                CHECK_MENU_NUMBER.getMessage());
+                CHECKMENUNUMBER.getErrorCode(),
+                CHECKMENUNUMBER.getMessage());
     }
 }
