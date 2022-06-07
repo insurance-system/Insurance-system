@@ -19,7 +19,6 @@ public class UwResponse {
     private Grade smoke;
     private Grade alcohol;
     private Grade cancer;
-
     @Override
     public String toString() {
         return "\n\n계약 ID: "+contractId + "\n--고객 정보--\n고객 ID: " +customerId  +"\n고객 건강 정보:[흡연:"+customerHealthInformation.getSmoke()+"  / 음주:"+customerHealthInformation.getAlcohol()+"  / 암(cancer):"+customerHealthInformation.getCancer() +" ]\n"+
