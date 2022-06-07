@@ -118,7 +118,7 @@ public class CustomerRepository {
         try {
             String sql = "select Insurance.insuranceId, Insurance.insuranceConditionId, Insurance.kindOfInsurance, insuranceName, fee, insuranceStatus " +
                     "from Insurance, Customer, Contract " +
-                    "where Customer.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId and Customer.customerId = ?";
+                    "where Customer.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId and Customer.customerId = ? and Contract.UWReview IS NOT NULL";
             PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, id);
