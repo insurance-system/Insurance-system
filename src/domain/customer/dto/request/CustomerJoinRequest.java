@@ -21,6 +21,7 @@ public class CustomerJoinRequest {
     private String phoneNumber;
     private KindOfJob kindOfJob;
     private String ssn;
+    private String healthInformationId;
 
     public CustomerJoinRequest(
                     String customerId,
@@ -33,7 +34,8 @@ public class CustomerJoinRequest {
                     String phoneNumber,
                     int kindOfJobId,
                     int kindOfInsuranceId,
-                    String ssn) {
+                    String ssn,
+                    String healthInformationId) {
         this.customerId = customerId;
         this.password = password;
         this.name = name;
@@ -45,6 +47,7 @@ public class CustomerJoinRequest {
         this.kindOfJob = getKindOfJobBy(kindOfJobId);
         this.kindOfInsurance = getKindOfInsuranceBy(kindOfInsuranceId);
         this.ssn = ssn;
+        this.healthInformationId = healthInformationId;
     }
 
     public static Customer toEntity(CustomerJoinRequest joinReq) {
@@ -59,7 +62,8 @@ public class CustomerJoinRequest {
                 joinReq.getPhoneNumber(),
                 joinReq.getKindOfJob(),
                 joinReq.getKindOfInsurance(),
-                joinReq.getSsn()
+                joinReq.getSsn(),
+                joinReq.getHealthInformationId()
         );
     }
 
@@ -111,6 +115,10 @@ public class CustomerJoinRequest {
     public String getSsn() {return ssn;}
 
     public void setSsn(String ssn) {this.ssn = ssn;}
+
+    public String getHealthInformationId() {
+        return healthInformationId;
+    }
 
     @Override
     public String toString() {

@@ -338,7 +338,7 @@ public class EmployeeComment extends CommonComment{
     }
 
     public UwRequest selectUwList(ArrayList<UwRequest> uwRequests) {
-        System.out.println(LINE_BREAK+ CUSTOMER_CUNSULT_LIST_START);
+        System.out.println(LINE_BREAK+ CUSTOMER_UW_LIST_START);
         for(int i=0; uwRequests.size() > i; i++){//.getContractId()
             System.out.println(VERTICAL_BAR+NUMBER+i+" "+NAME+uwRequests.get(i).getCustomerName());
             System.out.println("   "+"고객 ID:"+uwRequests.get(i).getCustomerId());

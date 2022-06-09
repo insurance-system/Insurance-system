@@ -37,6 +37,7 @@ public class EmployeeConstants extends CommonConstants{
     public static final String DEPT_REWARD = "DP10";
 
     public static final String CUSTOMER_CUNSULT_LIST_START = "-----미 상담 고객 목록-----";
+    public static final String CUSTOMER_UW_LIST_START = "-----인수심사 대상 고객 목록-----";
     public static final String EXPIRED_CUSTOMER_LIST_START = "-----보험 만기 고객 목록-----";
     public static final String DEFAULT_CUSTOMER_LIST_START = "-----미납 고객 목록-----";
     public static final String UNCHOICED_INCIDENT_LIST_START = "-----담당자 미배정 사건 목록-----";

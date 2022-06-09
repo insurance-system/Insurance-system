@@ -167,12 +167,12 @@ public class CustomerComment extends CommonComment{
     }
 
     public String getPhoneNumber() {
-        System.out.println(ENTER_PHONE);
+        System.out.print(ENTER_PHONE);
         return validateString();
     }
 
     public String getSatisfaction() {
-        System.out.println(SATISFACTION);
+        System.out.print(SATISFACTION);
         return scanner.next();
     }
 
@@ -183,6 +183,27 @@ public class CustomerComment extends CommonComment{
         System.out.println(JOB_4);
         System.out.print(SELECT_NUM);
         return vaildateInt();
+    }
+
+    public String getCancer() {
+        System.out.println(CANCER_CONDITION_A);
+        System.out.println(CANCER_CONDITION_B);
+        System.out.println(CANCER_CONDITION_C);
+        return validateString();
+    }
+
+    public String getSmoke() {
+        System.out.println(SMOKE_CONDITION_A);
+        System.out.println(SMOKE_CONDITION_B);
+        System.out.println(SMOKE_CONDITION_C);
+        return validateString();
+    }
+
+    public String getAlcohol() {
+        System.out.println(ALCOHOL_CONDITION_A);
+        System.out.println(ALCOHOL_CONDITION_B);
+        System.out.println(ALCOHOL_CONDITION_C);
+        return validateString();
     }
 
     public String getAccount() {
@@ -217,7 +238,7 @@ public class CustomerComment extends CommonComment{
     }
 
     public String getSsn() {
-        System.out.println(SSN);
+        System.out.print(SSN);
         return scanner.next();
     }
 
@@ -246,4 +267,13 @@ public class CustomerComment extends CommonComment{
     }
 
 
+    public String getIncidentName() {
+        System.out.println(INCIDENT_NAME);
+        return validateString();
+    }
+
+    public String getIncidentPhoneNum() {
+        System.out.println(INCIDENT_PHONENUM);
+        return validateString();
+    }
 }

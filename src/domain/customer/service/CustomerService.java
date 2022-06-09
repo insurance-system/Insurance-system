@@ -115,4 +115,8 @@ public class CustomerService {
     public void cancelInsurance(String insuranceId, String customerId) {
         contractManageEmployeeService.cancelInsurance(insuranceId, customerId);
     }
+
+    public String getHealthInfo(String cancer, String smoke, String alcohol) {
+        return customerRepository.getHealthInfo(cancer,smoke,alcohol);
+    }
 }

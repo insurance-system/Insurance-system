@@ -53,8 +53,8 @@ public class CustomerRepository {
                             "zipcode," +
                             "kindOfInsurance," +
                             "kindOfJob," +
-                            "ssn)" +
-                            "values (?,?,?,?,?,?,?,?,?,?,?);";
+                            "ssn, healthInformationId)" +
+                            "values (?,?,?,?,?,?,?,?,?,?,?,?);";
 
             PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
@@ -69,6 +69,8 @@ public class CustomerRepository {
             st.setString(9, customer.getKindOfInsurance().name());
             st.setString(10, customer.getKindOfJob().name());
             st.setString(11, customer.getSsn());
+            st.setString(12, customer.getHealthInformationId());
+
 
             int result = st.executeUpdate();
             st.close();
@@ -116,7 +118,7 @@ public class CustomerRepository {
         try {
             String sql = "select Insurance.insuranceId, Insurance.insuranceConditionId, Insurance.kindOfInsurance, insuranceName, fee, insuranceStatus " +
                     "from Insurance, Customer, Contract " +
-                    "where Customer.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId and Customer.customerId = ?";
+                    "where Customer.customerId = Contract.customerId and Contract.insuranceId = Insurance.insuranceId and Customer.customerId = ? and Contract.UWReview IS NOT NULL";
             PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, id);
@@ -359,16 +361,16 @@ public class CustomerRepository {
             String sql =
                     "insert into Incident_handling (incidentId, customerId, incidentDate, incidentName, incidentPhoneNum, errorRate, carNumber, incidentSite, employeeId) values (?,?,?,?,?,?,?,?,?);";
 
-            PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
+            PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, incidentId);
             st.setString(2, incidentHandling.getCustomerId());
             st.setDate(3, incidentHandling.getIncidentDate());
-            st.setString(4, null);
-            st.setString(5, null);
+            st.setString(4, incidentHandling.getIncidentName());
+            st.setString(5,  incidentHandling.getIncidentPhoneNum());
             st.setString(6, null);
             st.setString(7, incidentHandling.getCarNumber());
-            st.setString(8, incidentHandling.getCarNumber());
+            st.setString(8, incidentHandling.getIncidentSite());
             st.setString(9, null);
             int result = st.executeUpdate();
             st.close();
@@ -383,17 +385,17 @@ public class CustomerRepository {
         ResultSet rs = null;
         try {
             String sql =
-                    "select Ic.insuranceClaimId " +
-                    " from Customer C, Contract Ct, Insurance I, InsuranceClaim Ic\n" +
-                    " where C.customerId = Ct.customerId and Ct.customerId = Ic.customerId and Ct.insuranceId = I.insuranceId\n" +
-                    " and C.customerId = ? and I.kindOfInsurance = 'NON_LIFE';";
+                    "SELECT contractId " +
+                            "FROM Contract, Customer " +
+                            "where Contract.customerId = Customer.customerId and  contractStatus = 'active'" +
+                            "and Contract.customerId = ?";
 
             PreparedStatement st = connection.prepareStatement(sql);
 
             st.setString(1, customer.getCustomerId());
             rs = st.executeQuery();
             while(rs.next()) {
-                String checkJoinLifeInsurance = rs.getString("insuranceClaimId");
+                String checkJoinLifeInsurance = rs.getString("contractId");
                 return checkJoinLifeInsurance;
             }
         } catch (SQLException throwables) {
@@ -407,7 +409,7 @@ public class CustomerRepository {
         String insuranceClaimId = Integer.toString(Integer.parseInt(findLastInsuranceClaimId())+1);
         try {
             String sql =
-                    "insert into InsuranceClaim (insuranceClaimId, customerId, claimContent, claimCost) values (?,?,?,?);";
+                    "insert into InsuranceClaim (insuranceClaimId, customerId, claimContent, claimCost, contractId) values (?,?,?,?,?);";
 
             PreparedStatement st = connection.prepareStatement(sql);//미리 쿼리문 준비
 
@@ -415,6 +417,7 @@ public class CustomerRepository {
             st.setString(2, claimInsurance.getCustomerId());
             st.setString(3, claimInsurance.getClaimContent());
             st.setInt(4, claimInsurance.getClaimCost());
+            st.setString(5,claimInsurance.getContractId());
             int result = st.executeUpdate();
             st.close();
         } catch (SQLException e) {
@@ -541,6 +544,29 @@ public class CustomerRepository {
             while(rs.next()) {
                 String lastId = rs.getString("contractId");
                 return Integer.toString(Integer.parseInt(lastId)+1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getHealthInfo(String cancer, String smoke, String alcohol) {
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT healthInformationId " +
+                    "FROM HealthInformation " +
+                    "WHERE cancer=? and smoke=? and alcohol=?";
+
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, cancer);
+            st.setString(2, smoke);
+            st.setString(3, alcohol);
+
+            rs = st.executeQuery();
+            while(rs.next()) {
+                String healthInformationId = rs.getString("healthInformationId");
+                return healthInformationId;
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
